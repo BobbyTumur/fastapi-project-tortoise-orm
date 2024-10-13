@@ -39,5 +39,5 @@ pytest__pycache__
 
 #GLOBAL
 .env
-.traefik-env
+.traefik_env
 
