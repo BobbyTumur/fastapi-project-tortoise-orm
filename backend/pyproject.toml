@@ -1,0 +1,7 @@
+[tool.aerich]
+tortoise_orm = "app.core.config.tortoise_orm"
+location = "./migrations"
+src_folder = "./."
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

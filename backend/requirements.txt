@@ -1,0 +1,10 @@
+fastapi[standard]
+tortoise-orm[asyncmy]
+pyjwt[crypto]
+passlib[bcrypt]
+bcrypt==4.0.1
+pydantic_settings
+aerich
+sendgrid
+asgi-lifespan==2.*
+pytest
