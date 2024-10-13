@@ -58,7 +58,7 @@ services:
       - .env
     environment:
       - DOMAIN=${DOMAIN}
-      - FRONTEND_HOST=https://${DOMAIN?Variable not set}
+      - FRONTEND_HOST=https://www.${DOMAIN?Variable not set}
       - BACKEND_CORS_ORIGINS=https://${DOMAIN?Variable not set},https://dashboard.${DOMAIN?Variable not set}, https://www.${DOMAIN?Variable not set}
       - SECRET_KEY=${SECRET_KEY?Variable not set}
       - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
