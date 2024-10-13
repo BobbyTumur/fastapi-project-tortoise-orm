@@ -22,6 +22,7 @@ function Dashboard() {
             href="https://github.com/BobbyTumur/fastapi-project-tortoise-orm"
             color="blue.500"
             _hover={{ textDecoration: "underline" }}
+            isExternal
           >
             Check out my github for this project!
           </Link>
