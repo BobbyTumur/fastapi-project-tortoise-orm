@@ -112,8 +112,8 @@ services:
       - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
 
       # Middleware to redirect from naked domain to www
-      - traefik.http.middlewares.naked-to-www.redirectto.host=https://www.${DOMAIN?Variable not set}
-      - traefik.http.middlewares.naked-to-www.redirectto.permanent=true 
+      - traefik.http.middlewares.naked-to-www.replacepath.path=https://www.${DOMAIN?Variable not set}
+      - traefik.http.middlewares.naked-to-www.replacepath.permanent=true 
 
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-naked.rule=Host(`${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-naked.entrypoints=http
