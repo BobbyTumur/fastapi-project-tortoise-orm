@@ -1,4 +1,4 @@
-import { Box, Container, Text } from "@chakra-ui/react";
+import { Box, Container, Text, Link } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import useAuth from "../../hooks/useAuth";
@@ -18,6 +18,13 @@ function Dashboard() {
             Hi, {currentUser?.username || currentUser?.email} 👋🏼
           </Text>
           <Text>Welcome back, nice to see you again!</Text>
+          <Link
+            href="https://github.com/BobbyTumur/fastapi-project-tortoise-orm"
+            color="blue.500"
+            _hover={{ textDecoration: "underline" }}
+          >
+            Check out my github for this project!
+          </Link>
         </Box>
       </Container>
     </>
