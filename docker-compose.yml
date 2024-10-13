@@ -119,7 +119,7 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-naked.entrypoints=http
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-naked.middlewares=naked-to-www
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.rule=Host(`${www.DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.rule=Host(`www.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.entrypoints=http
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.middlewares=https-redirect
 
