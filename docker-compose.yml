@@ -116,7 +116,7 @@ services:
       - traefik.http.middlewares.to-https-www.redirectregex.replacement=https://www.${DOMAIN?Variable not set}/$${1}
       - traefik.http.middlewares.to-https-www.redirectregex.permanent=true 
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`${DOMAIN?Variable not set}`, `www.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=HostRegexp(`(www\.)?${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.entrypoints=http
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=to-https-www
 
