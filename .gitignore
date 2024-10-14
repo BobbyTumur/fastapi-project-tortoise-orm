@@ -40,4 +40,4 @@ pytest__pycache__
 #GLOBAL
 .env
 .traefik_env
-
+docker-compose.test.yml
