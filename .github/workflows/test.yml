@@ -3,27 +3,27 @@ name: Test on push
 on:
   push:
     paths:
-      - 'backend/**'
+      - "backend/**" # Only run when files in the backend directory change
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-      
-      -name: Install dependencies
+          python-version: "3.8" # Specify your Python version
+
+      - name: Install dependencies
         run: |
-          cd backend
-          pip install -r requirement.txt
+          cd backend  # Change to the backend directory
+          pip install -r requirements.txt
 
       - name: Test the push
         run: |
-          cd backend
+          cd backend  # Change to the backend directory again
           pytest
