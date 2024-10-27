@@ -8,3 +8,4 @@ aerich
 sendgrid
 asgi-lifespan==2.*
 pytest
+python-multipart
