@@ -13,5 +13,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      -name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirement.txt
+
       - name: Test the push
-        run: pytest
+        run: |
+          cd backend
+          pytest
