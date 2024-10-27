@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "backend/**" # Only run when files in the backend directory change
-  workflow-dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
