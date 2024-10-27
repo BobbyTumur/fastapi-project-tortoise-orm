@@ -34,10 +34,10 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]    
 
-    MYSQL_USER: str | None = None
-    MYSQL_PASSWORD: str | None = None
-    MYSQL_SERVER: str | None = None
-    MYSQL_DB: str | None = None
+    MYSQL_USER: str = "fake_user"
+    MYSQL_PASSWORD: str = secrets.token_urlsafe(8)
+    MYSQL_SERVER: str = "fake_server"
+    MYSQL_DB: str = "fake_database"
     MYSQL_PORT: int = 3306
     
     @computed_field  # type: ignore[prop-decorator]
