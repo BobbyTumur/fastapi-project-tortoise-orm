@@ -19,11 +19,9 @@ jobs:
           python-version: "3.10" # Specify your Python version
 
       - name: Install dependencies
-        run: |
-          cd backend  # Change to the backend directory
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
+        working-directory: backend
 
       - name: Test the push
-        run: |
-          cd backend  # Change to the backend directory again
-          pytest
+        run: pytest
+        working-directory: backend
