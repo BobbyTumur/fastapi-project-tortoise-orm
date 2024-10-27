@@ -1,7 +1,5 @@
 import random
 import string
-from httpx import AsyncClient
-from app.core.config import settings
 
 def random_integer() -> int:
     return random.randint(1, 100)
