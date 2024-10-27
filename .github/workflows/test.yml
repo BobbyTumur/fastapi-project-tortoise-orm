@@ -3,7 +3,7 @@ name: Test on push
 on:
   push:
     paths:
-      - "backend/**"
+      - 'backend/**'
 
 jobs:
   build:
