@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file="../.env", env_ignore_empty=True, extra="ignore"
     )
-    PROJECT_NAME: str
+    PROJECT_NAME: str | None = None
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(64)
     # 60 minutes * 24 hours * 8 days = 8 days
@@ -34,10 +34,10 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]    
 
-    MYSQL_USER: str
-    MYSQL_PASSWORD: str = ""
-    MYSQL_SERVER: str
-    MYSQL_DB: str = ""
+    MYSQL_USER: str | None = None
+    MYSQL_PASSWORD: str | None = None
+    MYSQL_SERVER: str | None = None
+    MYSQL_DB: str | None = None
     MYSQL_PORT: int = 3306
     
     @computed_field  # type: ignore[prop-decorator]
@@ -66,15 +66,15 @@ class Settings(BaseSettings):
             },
         }
 
-    FIRST_SUPERUSER: EmailStr
-    FIRST_SUPERUSER_PASSWORD: str
+    FIRST_SUPERUSER: EmailStr = "johndoe@example.com"
+    FIRST_SUPERUSER_PASSWORD: str = secrets.token_urlsafe(8)
 
-    EMAILS_FROM_EMAIL: EmailStr = "no-reply@bobbytumur.com"
-    EMAIL_TEST_USER: EmailStr = "test@bobbytumur.com"
+    EMAILS_FROM_EMAIL: EmailStr = "no-reply@example.com"
+    EMAIL_TEST_USER: EmailStr = "test@example.com"
 
     EMAIL_PASS_SET_UP_TOKEN_EXPIRE_HOURS: int = 24
     EMAIL_PASS_RESET_TOKEN_EXPIRE_MINUTES: int = 30
-    SENDGRID_API_KEY: str
+    SENDGRID_API_KEY: str | None = None
 
 
     @computed_field  # type: ignore[prop-decorator]
