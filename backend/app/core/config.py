@@ -34,12 +34,12 @@ class Settings(BaseSettings):
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
             self.FRONTEND_HOST
         ]    
-
-    MYSQL_USER: str = "fake_user"
-    MYSQL_PASSWORD: str = secrets.token_urlsafe(8)
-    MYSQL_SERVER: str = "fake_server"
-    MYSQL_DB: str = "fake_database"
-    MYSQL_PORT: int = 3306
+    
+    MYSQL_USER: str
+    MYSQL_PASSWORD: str
+    MYSQL_SERVER: str
+    MYSQL_DB: str
+    MYSQL_PORT: int
     
     @computed_field  # type: ignore[prop-decorator]
     @property
