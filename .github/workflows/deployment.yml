@@ -5,24 +5,30 @@ jobs:
   deploy:
     runs-on:
       - self-hosted
-    environment: production
-    env:
-      ENVIRONMENT: production
-      DOMAIN: ${{ secrets.DOMAIN_PRODUCTION }}
-      STACK_NAME: ${{ secrets.STACK_NAME_PRODUCTION }}
-      PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      FIRST_SUPERUSER: ${{ secrets.FIRST_SUPERUSER }}
-      FIRST_SUPERUSER_PASSWORD: ${{ secrets.FIRST_SUPERUSER_PASSWORD }}
-      MYSQL_USER: ${{ secrets.MYSQL_USER }}
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_DB: ${{ secrets.MYSQL_DB }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-      EMAILS_FROM_EMAIL: ${{ secrets.EMAILS_FROM_EMAIL }}
+    # environment: production
+    # env:
+    #   ENVIRONMENT: production
+    #   DOMAIN: ${{ secrets.DOMAIN_PRODUCTION }}
+    #   STACK_NAME: ${{ secrets.STACK_NAME_PRODUCTION }}
+    #   PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+    #   SECRET_KEY: ${{ secrets.SECRET_KEY }}
+    #   FIRST_SUPERUSER: ${{ secrets.FIRST_SUPERUSER }}
+    #   FIRST_SUPERUSER_PASSWORD: ${{ secrets.FIRST_SUPERUSER_PASSWORD }}
+    #   MYSQL_USER: ${{ secrets.MYSQL_USER }}
+    #   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    #   MYSQL_DB: ${{ secrets.MYSQL_DB }}
+    #   MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+    #   SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+    #   EMAILS_FROM_EMAIL: ${{ secrets.EMAILS_FROM_EMAIL }}
+    # steps:
+    #   - name: Checkout
+    #     uses: actions/checkout@v4
+    #   - run: |
+    #       docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_PRODUCTION }} build
+    #       docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_PRODUCTION }} up -d
     steps:
-      - name: Checkout
+      - name: checking
         uses: actions/checkout@v4
       - run: |
-          docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_PRODUCTION }} build
-          docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_PRODUCTION }} up -d
+          docker compose -v
+          docker-compose -v
