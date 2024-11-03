@@ -35,11 +35,11 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]    
     
-    MYSQL_USER: str
-    MYSQL_PASSWORD: str
-    MYSQL_SERVER: str
-    MYSQL_DB: str
-    MYSQL_PORT: int
+    MYSQL_USER: str = ""
+    MYSQL_PASSWORD: str = ""
+    MYSQL_SERVER: str = ""
+    MYSQL_DB: str = ""
+    MYSQL_PORT: int = 3306
     
     @computed_field  # type: ignore[prop-decorator]
     @property
