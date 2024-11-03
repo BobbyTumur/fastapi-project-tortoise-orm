@@ -41,3 +41,4 @@ pytest__pycache__
 .env
 .traefik_env
 docker-compose.test.yml
+deployment.yml

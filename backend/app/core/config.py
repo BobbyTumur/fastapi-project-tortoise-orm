@@ -1,5 +1,5 @@
 import secrets
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import BeforeValidator, computed_field, AnyUrl, EmailStr
 from pydantic_core import MultiHostUrl
@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     FRONTEND_HOST: str = "http://localhost:5173"
+    ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
@@ -43,14 +44,16 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def MYSQL_DATABASE_URI(self) -> AnyUrl:
-        return MultiHostUrl.build(
-            scheme="mysql",
-            username=self.MYSQL_USER,
-            password=self.MYSQL_PASSWORD,
-            host=self.MYSQL_SERVER,
-            port=self.MYSQL_PORT,
-            path=self.MYSQL_DB,
-        )
+        if self.ENVIRONMENT != "local":
+            return MultiHostUrl.build(
+                scheme="mysql",
+                username=self.MYSQL_USER,
+                password=self.MYSQL_PASSWORD,
+                host=self.MYSQL_SERVER,
+                port=self.MYSQL_PORT,
+                path=self.MYSQL_DB,
+            )
+        return "sqlite://:memory:"
     
     @property
     def TORTOISE_ORM(self) -> dict:

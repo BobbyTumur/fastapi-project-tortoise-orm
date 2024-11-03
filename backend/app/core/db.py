@@ -10,6 +10,13 @@ from app import crud
 from app.core.config import settings
 from app.models import UserDatabase, UserCreate
 
+config = generate_config(
+    "sqlite://:memory:",
+    app_modules={"models": ["app.models"]},
+    testing=True,
+    connection_label="models",
+)
+
 #Superuser creation
 async def ensure_superuser_exists():
     try:
@@ -27,12 +34,6 @@ async def ensure_superuser_exists():
 #Test database set up
 @asynccontextmanager
 async def lifespan_test(app: FastAPI) -> AsyncGenerator[None, None]:
-    config = generate_config(
-        "sqlite://:memory:",
-        app_modules={"models": ["app.models"]},
-        testing=True,
-        connection_label="models",
-    )
     async with RegisterTortoise(
         app=app,
         config=config,
@@ -47,11 +48,27 @@ async def lifespan_test(app: FastAPI) -> AsyncGenerator[None, None]:
     # db connections closed
     await Tortoise._drop_databases()
 
+@asynccontextmanager
+async def lifespan_local(app: FastAPI) -> AsyncGenerator[None, None]:
+    async with RegisterTortoise(
+        app=app,
+        config=config,
+        generate_schemas=True,
+        add_exception_handlers=True,
+        _create_db=True,
+    ):
+        await ensure_superuser_exists()
+        # db connected
+        yield
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     if getattr(app.state, "testing", None):
         async with lifespan_test(app) as _:
+            yield
+    elif settings.ENVIRONMENT == "local":
+        async with lifespan_local(app) as _:
             yield
     else:
         # app startup
