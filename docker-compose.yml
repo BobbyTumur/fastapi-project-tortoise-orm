@@ -65,7 +65,6 @@ services:
       - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - MYSQL_SERVER=db
-      - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_DB=${MYSQL_DB}
       - MYSQL_USER=${MYSQL_USER?Variable not set}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
