@@ -4,7 +4,7 @@ on:
 jobs:
   deploy:
     runs-on:
-      - self_hosted
+      - self-hosted
     env:
       ENVIRONMENT: production
       DOMAIN: ${{ secrets.DOMAIN_PRODUCTION }}
