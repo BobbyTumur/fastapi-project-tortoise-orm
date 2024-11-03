@@ -12,8 +12,6 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./backend/scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-    env_file:
-      - .env
     environment:
       - MYSQLDATA=/var/lib/mysql
       - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
@@ -54,8 +52,6 @@ services:
       db:
         condition: service_healthy
         restart: true
-    env_file:
-      - .env
     environment:
       - DOMAIN=${DOMAIN}
       - FRONTEND_HOST=https://www.${DOMAIN?Variable not set}
