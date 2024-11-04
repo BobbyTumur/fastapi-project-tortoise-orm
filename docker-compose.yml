@@ -102,6 +102,7 @@ services:
       args:
         - VITE_API_URL=https://api.${DOMAIN?Variable not set}
         - NODE_ENV=production
+        - NODE_OPTIONS=--max-old-space-size=4096
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
