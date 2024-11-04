@@ -59,11 +59,13 @@ services:
       - SECRET_KEY=${SECRET_KEY?Variable not set}
       - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
       - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY?Variable not set}
       - MYSQL_SERVER=db
-      - MYSQL_DB=${MYSQL_DB}
+      - MYSQL_DB=${MYSQL_DB?Variable not set}
       - MYSQL_USER=${MYSQL_USER?Variable not set}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
+      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL?Variable not set}
+      - PROJECT_NAME=${PROJECT_NAME?Variable not set}
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check/"]
