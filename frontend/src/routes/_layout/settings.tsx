@@ -9,14 +9,12 @@ import {
 } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
-import Appearance from "../../components/UserSettings/Appearance";
 import ChangePassword from "../../components/UserSettings/ChangePassword";
 import UserInformation from "../../components/UserSettings/UserInformation";
 
 const tabsConfig = [
-  { title: "My profile", component: UserInformation },
-  { title: "Password", component: ChangePassword },
-  { title: "Appearance", component: Appearance },
+  { title: "Edit Name", component: UserInformation },
+  { title: "Update Password", component: ChangePassword },
 ];
 
 export const Route = createFileRoute("/_layout/settings")({
@@ -27,7 +25,7 @@ function UserSettings() {
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={12}>
-        User Settings
+        Edit Profile
       </Heading>
       <Tabs variant="enclosed">
         <TabList>

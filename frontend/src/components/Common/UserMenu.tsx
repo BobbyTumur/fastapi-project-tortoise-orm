@@ -23,7 +23,7 @@ const UserMenu = () => {
     <>
       {/* Desktop */}
       <Box
-        display={{ base: "none", md: "block" }}
+        display={{ base: "flex", md: "block" }}
         position="fixed"
         top={4}
         right={4}
@@ -43,7 +43,7 @@ const UserMenu = () => {
               as={Link}
               to="/settings"
             >
-              My profile
+              Edit profile
             </MenuItem>
             <MenuItem
               icon={<FiLogOut fontSize="18px" />}

@@ -13,11 +13,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FiLogOut, FiMenu } from "react-icons/fi";
+import { FiMenu } from "react-icons/fi";
+import { Link } from "@tanstack/react-router";
 
 import Logo from "/assets/images/bobby-logo.png";
 import type { UserPublic } from "../../client";
-import useAuth from "../../hooks/useAuth";
 import SidebarItems from "./SidebarItems";
 
 const Sidebar = () => {
@@ -27,11 +27,6 @@ const Sidebar = () => {
   const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { logout } = useAuth();
-
-  const handleLogout = async () => {
-    logout();
-  };
 
   return (
     <>
@@ -52,19 +47,10 @@ const Sidebar = () => {
           <DrawerBody py={8}>
             <Flex flexDir="column" justify="space-between">
               <Box>
-                <Image src={Logo} alt="logo" p={6} />
+                <Link to="/">
+                  <Image src={Logo} alt="logo" p={6} />
+                </Link>
                 <SidebarItems onClose={onClose} />
-                <Flex
-                  as="button"
-                  onClick={handleLogout}
-                  p={2}
-                  color="ui.danger"
-                  fontWeight="bold"
-                  alignItems="center"
-                >
-                  <FiLogOut />
-                  <Text ml={2}>Log out</Text>
-                </Flex>
               </Box>
               {currentUser?.email && (
                 <Text color={textColor} noOfLines={2} fontSize="sm" p={2}>
@@ -93,7 +79,9 @@ const Sidebar = () => {
           borderRadius={12}
         >
           <Box>
-            <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+            <Link to="/">
+              <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+            </Link>
             <SidebarItems />
           </Box>
           {currentUser?.email && (

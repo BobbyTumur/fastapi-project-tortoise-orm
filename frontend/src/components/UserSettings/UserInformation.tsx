@@ -4,11 +4,8 @@ import {
   Container,
   Flex,
   FormControl,
-  FormLabel,
-  Heading,
   Input,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -26,7 +23,6 @@ import { handleError } from "../../utils";
 
 const UserInformation = () => {
   const queryClient = useQueryClient();
-  const color = useColorModeValue("inherit", "ui.light");
   const showToast = useCustomToast();
   const [editMode, setEditMode] = useState(false);
   const { user: currentUser } = useAuth();
@@ -73,18 +69,12 @@ const UserInformation = () => {
   return (
     <>
       <Container maxW="full">
-        <Heading size="sm" py={4}>
-          User Information
-        </Heading>
         <Box
           w={{ sm: "full", md: "50%" }}
           as="form"
           onSubmit={handleSubmit(onSubmit)}
         >
           <FormControl>
-            <FormLabel color={color} htmlFor="name">
-              Full name
-            </FormLabel>
             {editMode ? (
               <Input
                 id="name"
