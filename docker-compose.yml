@@ -17,7 +17,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
       - MYSQL_USER=${MYSQL_USER?Variable not set}
       - MYSQL_DB=${MYSQL_DB?Variable not set}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Variable not set}
 
   adminer:
     image: adminer
@@ -53,7 +53,8 @@ services:
         condition: service_healthy
         restart: true
     environment:
-      - DOMAIN=${DOMAIN}
+      - ENVIRONMENT=${ENVIRONMENT?Variable not set}
+      - DOMAIN=${DOMAIN?Variable not set}
       - FRONTEND_HOST=https://www.${DOMAIN?Variable not set}
       - BACKEND_CORS_ORIGINS=https://${DOMAIN?Variable not set},https://dashboard.${DOMAIN?Variable not set}, https://www.${DOMAIN?Variable not set}
       - SECRET_KEY=${SECRET_KEY?Variable not set}
