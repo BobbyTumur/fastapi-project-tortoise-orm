@@ -5,6 +5,7 @@ import Sidebar from "../components/Common/Sidebar";
 import UserMenu from "../components/Common/UserMenu";
 import useAuth, { isLoggedIn } from "../hooks/useAuth";
 import Appearance from "../components/Common/Appearance";
+import Language from "../components/Common/Language";
 
 export const Route = createFileRoute("/_layout")({
   component: Layout,
@@ -34,6 +35,8 @@ function Layout() {
       <UserMenu />
       <Spacer />
       <Appearance />
+      <Spacer />
+      <Language />
     </Flex>
   );
 }

@@ -1,5 +1,6 @@
 import { Box, Container, Text, Link } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/_layout/")({
 
 function Dashboard() {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -17,7 +19,7 @@ function Dashboard() {
           <Text fontSize="2xl">
             Hi, {currentUser?.username || currentUser?.email} 👋🏼
           </Text>
-          <Text>Welcome back, nice to see you again!</Text>
+          <Text>{t("welcome")}</Text>
           <Link
             href="https://github.com/BobbyTumur/fastapi-project-tortoise-orm"
             color="blue.500"

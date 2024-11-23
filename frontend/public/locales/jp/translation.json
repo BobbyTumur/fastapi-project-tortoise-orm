@@ -1,0 +1,15 @@
+{
+    "welcome": "おかえりなさい！",
+    "error": {
+      "somethingWentWrong": "何かの問題が発生しました。"
+    },
+    "responses": {
+        "recoverPassword": "メールが送信されました。\nパスワードをリセットするためのリンクをメールでお送りしました。\nサクセス"
+    },
+    "pages": {
+        "recover-password": {
+            "title": "パスワードの再設定",
+            "body": "登録されたメールアドレスにパスワードリセットのリンクが送信されます。"
+        }
+    }
+}
