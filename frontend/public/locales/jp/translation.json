@@ -1,5 +1,56 @@
 {
-    "welcome": "おかえりなさい！",
+    "common": {
+        "fullName": "氏名",
+        "email": "メールアドレス",
+        "role": "役割",
+        "status": "ステータス",
+        "actions": "アクション",
+        "previous": "前のページ",
+        "next": "次のページ",
+        "you": "あなた",
+        "save1": "追加",
+        "save2": "更新",
+        "save3": "編集",
+        "cancel": "キャンセル",
+        "active": "アクティブ",
+        "inactive": "非アクティブ",
+        "superUser": "管理者",
+        "user": "ユーザー",
+        "page": "ページ",
+        "password": "パスワード",
+        "edit": "編集",
+        "noName": "未登録",
+        "logOut": "ログアウト" 
+
+    },
+    "titles": {
+        "userManagement": "ユーザー管理",
+        "addUser": "ユーザー追加",
+        "editName": "名前の編集",
+        "updatePassword": "パスワードの更新",
+        "editProfile": "プロフィール編集"
+    },
+    "forms": {
+        "required": "メールアドレスが必須です。",
+        "isSuperuser": "管理者ですか？",
+        "isActive": "アクティブですか？",
+        "currentPassword": "現在のパスワード",
+        "setPassword": "パスワードを設定",
+        "confirmPassword": "パスワードを確認"
+    },
+    "index": {
+        "greet": "こんにちは",
+        "welcome": "ようこそ、Bobbyプロジェクトへ",
+        "body": "このプロジェクトをGithubにてご参照ください。"
+    },
+    "toast": {
+        "success": "成功!",
+        "userUpdate": "ユーザーの更新が成功しました。",
+        "passwordUpdate": "パスワードの更新が成功しました。",
+        "userCreateSuccess": "ユーザーの追加が成功しました。",
+        "userCreated": "パスワードを設定するためのリンクをユーザーに送信しました。"
+    },
+
     "error": {
       "somethingWentWrong": "何かの問題が発生しました。"
     },

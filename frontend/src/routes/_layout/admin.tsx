@@ -18,6 +18,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
 import { type UserPublic, UsersService } from "../../client";
 import AddUser from "../../components/Admin/AddUser";
@@ -44,6 +45,7 @@ function getUsersQueryOptions({ page }: { page: number }) {
 }
 
 function UsersTable() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { page } = Route.useSearch();
@@ -75,11 +77,11 @@ function UsersTable() {
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
             <Tr>
-              <Th width="20%">Full name</Th>
-              <Th width="50%">Email</Th>
-              <Th width="10%">Role</Th>
-              <Th width="10%">Status</Th>
-              <Th width="10%">Actions</Th>
+              <Th width="20%">{t("common.fullName")}</Th>
+              <Th width="50%">{t("common.email")}</Th>
+              <Th width="10%">{t("common.role")}</Th>
+              <Th width="10%">{t("common.status")}</Th>
+              <Th width="10%">{t("common.actions")}</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -101,17 +103,21 @@ function UsersTable() {
                     isTruncated
                     maxWidth="150px"
                   >
-                    {user.username || "N/A"}
+                    {user.username || t("common.noName")}
                     {currentUser?.id === user.id && (
                       <Badge ml="1" colorScheme="teal">
-                        You
+                        {t("common.you")}
                       </Badge>
                     )}
                   </Td>
                   <Td isTruncated maxWidth="150px">
                     {user.email}
                   </Td>
-                  <Td>{user.is_superuser ? "Superuser" : "User"}</Td>
+                  <Td>
+                    {user.is_superuser
+                      ? t("common.superUser")
+                      : t("common.user")}
+                  </Td>
                   <Td>
                     <Flex gap={2}>
                       <Box
@@ -121,7 +127,9 @@ function UsersTable() {
                         bg={user.is_active ? "ui.success" : "ui.danger"}
                         alignSelf="center"
                       />
-                      {user.is_active ? "Active" : "Inactive"}
+                      {user.is_active
+                        ? t("common.active")
+                        : t("common.inactive")}
                     </Flex>
                   </Td>
                   <Td>
@@ -145,11 +153,13 @@ function UsersTable() {
         justifyContent="flex-end"
       >
         <Button onClick={() => setPage(page - 1)} isDisabled={!hasPreviousPage}>
-          Previous
+          {t("common.previous")}
         </Button>
-        <span>Page {page}</span>
+        <span>
+          {t("common.page")} {page}
+        </span>
         <Button isDisabled={!hasNextPage} onClick={() => setPage(page + 1)}>
-          Next
+          {t("common.next")}
         </Button>
       </Flex>
     </>
@@ -157,10 +167,11 @@ function UsersTable() {
 }
 
 function Admin() {
+  const { t } = useTranslation();
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
-        Users Management
+        {t("titles.userManagement")}
       </Heading>
 
       <Navbar type={"User"} addModalAs={AddUser} />

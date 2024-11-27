@@ -17,16 +17,16 @@ function Dashboard() {
       <Container maxW="full">
         <Box pt={12} m={4}>
           <Text fontSize="2xl">
-            Hi, {currentUser?.username || currentUser?.email} 👋🏼
+            {t("index.greet")}, {currentUser?.username || currentUser?.email} 👋🏼
           </Text>
-          <Text>{t("welcome")}</Text>
+          <Text>{t("index.welcome")}</Text>
           <Link
             href="https://github.com/BobbyTumur/fastapi-project-tortoise-orm"
             color="blue.500"
             _hover={{ textDecoration: "underline" }}
             isExternal
           >
-            Check out my github for this project!
+            {t("index.body")}
           </Link>
         </Box>
       </Container>

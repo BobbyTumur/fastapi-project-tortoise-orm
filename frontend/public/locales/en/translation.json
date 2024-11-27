@@ -1,3 +1,68 @@
-{
-    "welcome": "Welcome back, nice to see you again!"
+{   
+    "common": {
+        "fullName": "full name",
+        "email": "email",
+        "role": "role",
+        "status": "status",
+        "actions": "actions",
+        "previous": "previous",
+        "next": "next",
+        "you": "you",
+        "save1": "save",
+        "save2": "save",
+        "save3": "save",
+        "cancel": "cancel",
+        "active": "Active",
+        "inactive": "Inactive",
+        "superUser": "Admin",
+        "user": "User",
+        "page": "Page",
+        "password": "Password",
+        "edit": "Edit",
+        "noName": "No Name",
+        "logOut": "Log out"
+
+    },
+    "titles": {
+        "userManagement": "User Management",
+        "addUser": "Add User",
+        "editName": "Edit Name",
+        "updatePassword": "Update Password",
+        "editProfile": "Edit Profile"
+    },
+    "forms": {
+        "required": "Email is required",
+        "isSuperuser": "Is admin?",
+        "isActive": "Is active?",
+        "currentPassword": "Current Password",
+        "setPassword": "Set Password",
+        "confirmPassword": "Confirm Password"
+
+    },
+    "index": {
+        "greet": "Hi",
+        "welcome": "Welcome to Bobby's project",
+        "body": "Check out my Github for this project。"
+    },
+    "toast": {
+        "success": "Success!",
+        "userUpdate": "User updated successfully.",
+        "passwordUpdate": "Password updated successfully.",
+        "userCreateSuccess": "User created successfully.",
+        "userCreated": "We sent an email with a link to the user to set up password"
+    },
+
+
+    "error": {
+      "somethingWentWrong": "何かの問題が発生しました。"
+    },
+    "responses": {
+        "recoverPassword": "メールが送信されました。\nパスワードをリセットするためのリンクをメールでお送りしました。\nサクセス"
+    },
+    "pages": {
+        "recover-password": {
+            "title": "パスワードの再設定",
+            "body": "登録されたメールアドレスにパスワードリセットのリンクが送信されます。"
+        }
+    }
 }

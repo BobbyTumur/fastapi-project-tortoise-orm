@@ -8,24 +8,25 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 import ChangePassword from "../../components/UserSettings/ChangePassword";
 import UserInformation from "../../components/UserSettings/UserInformation";
-
-const tabsConfig = [
-  { title: "Edit Name", component: UserInformation },
-  { title: "Update Password", component: ChangePassword },
-];
 
 export const Route = createFileRoute("/_layout/settings")({
   component: UserSettings,
 });
 
 function UserSettings() {
+  const { t } = useTranslation();
+  const tabsConfig = [
+    { title: t("titles.editName"), component: UserInformation },
+    { title: t("titles.updatePassword"), component: ChangePassword },
+  ];
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={12}>
-        Edit Profile
+        {t("titles.editProfile")}
       </Heading>
       <Tabs variant="enclosed">
         <TabList>

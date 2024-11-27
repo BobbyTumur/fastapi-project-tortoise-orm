@@ -10,6 +10,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import {
   type ApiError,
@@ -22,6 +23,7 @@ import useCustomToast from "../../hooks/useCustomToast";
 import { handleError } from "../../utils";
 
 const UserInformation = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const [editMode, setEditMode] = useState(false);
@@ -47,7 +49,7 @@ const UserInformation = () => {
     mutationFn: (data: UserUpdateMe) =>
       UsersService.updateUserMe({ requestBody: data }),
     onSuccess: () => {
-      showToast("Success!", "User updated successfully.", "success");
+      showToast(t("toast.success"), t("toast.userUpdate"), "success");
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
@@ -91,7 +93,7 @@ const UserInformation = () => {
                 isTruncated
                 maxWidth="250px"
               >
-                {currentUser?.username || "N/A"}
+                {currentUser?.username || t("common.noName")}
               </Text>
             )}
           </FormControl>
@@ -103,11 +105,11 @@ const UserInformation = () => {
               isLoading={editMode ? isSubmitting : false}
               isDisabled={editMode ? !isDirty : false}
             >
-              {editMode ? "Save" : "Edit"}
+              {editMode ? t("common.save3") : t("common.edit")}
             </Button>
             {editMode && (
               <Button onClick={onCancel} isDisabled={isSubmitting}>
-                Cancel
+                {t("common.cancel")}
               </Button>
             )}
           </Flex>

@@ -292,27 +292,6 @@ export class UsersService {
   }
 
   /**
-   * Register User
-   * Create new user without the need to be logged in.
-   * @returns UserPublic Successful Response
-   * @throws ApiError
-   */
-  public static registerUser(
-    data: TDataRegisterUser,
-  ): CancelablePromise<UserPublic> {
-    const { requestBody } = data
-    return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/v1/users/signup",
-      body: requestBody,
-      mediaType: "application/json",
-      errors: {
-        422: `Validation Error`,
-      },
-    })
-  }
-
-  /**
    * Read User By Id
    * Get a specific user by id.
    * @returns UserPublic Successful Response

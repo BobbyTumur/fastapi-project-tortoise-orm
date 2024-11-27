@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { type ApiError, type UpdatePassword, UsersService } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
@@ -20,6 +21,7 @@ interface UpdatePasswordForm extends UpdatePassword {
 }
 
 const ChangePassword = () => {
+  const { t } = useTranslation();
   const color = useColorModeValue("inherit", "ui.light");
   const showToast = useCustomToast();
   const {
@@ -37,7 +39,7 @@ const ChangePassword = () => {
     mutationFn: (data: UpdatePassword) =>
       UsersService.updatePasswordMe({ requestBody: data }),
     onSuccess: () => {
-      showToast("Success!", "Password updated successfully.", "success");
+      showToast(t("toast.success"), t("toast.passwordUpdate"), "success");
       reset();
     },
     onError: (err: ApiError) => {
@@ -59,12 +61,12 @@ const ChangePassword = () => {
         >
           <FormControl isRequired isInvalid={!!errors.current_password}>
             <FormLabel color={color} htmlFor="current_password">
-              Current Password
+              {t("forms.currentPassword")}
             </FormLabel>
             <Input
               id="current_password"
               {...register("current_password")}
-              placeholder="Password"
+              placeholder={t("common.password")}
               type="password"
               w="auto"
             />
@@ -75,11 +77,11 @@ const ChangePassword = () => {
             )}
           </FormControl>
           <FormControl mt={4} isRequired isInvalid={!!errors.new_password}>
-            <FormLabel htmlFor="password">Set Password</FormLabel>
+            <FormLabel htmlFor="password">{t("forms.setPassword")}</FormLabel>
             <Input
               id="password"
               {...register("new_password", passwordRules())}
-              placeholder="Password"
+              placeholder={t("common.password")}
               type="password"
               w="auto"
             />
@@ -88,11 +90,13 @@ const ChangePassword = () => {
             )}
           </FormControl>
           <FormControl mt={4} isRequired isInvalid={!!errors.confirm_password}>
-            <FormLabel htmlFor="confirm_password">Confirm Password</FormLabel>
+            <FormLabel htmlFor="confirm_password">
+              {t("forms.confirmPassword")}
+            </FormLabel>
             <Input
               id="confirm_password"
               {...register("confirm_password", confirmPasswordRules(getValues))}
-              placeholder="Password"
+              placeholder={t("common.password")}
               type="password"
               w="auto"
             />
@@ -108,7 +112,7 @@ const ChangePassword = () => {
             type="submit"
             isLoading={isSubmitting}
           >
-            Save
+            {t("common.save2")}
           </Button>
         </Box>
       </Container>

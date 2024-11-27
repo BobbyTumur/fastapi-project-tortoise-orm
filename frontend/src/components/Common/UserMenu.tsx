@@ -7,12 +7,14 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { FaUserAstronaut } from "react-icons/fa";
 import { FiLogOut, FiUser } from "react-icons/fi";
 
 import useAuth from "../../hooks/useAuth";
 
 const UserMenu = () => {
+  const { t } = useTranslation();
   const { logout } = useAuth();
 
   const handleLogout = async () => {
@@ -43,7 +45,7 @@ const UserMenu = () => {
               as={Link}
               to="/settings"
             >
-              Edit profile
+              {t("titles.editProfile")}
             </MenuItem>
             <MenuItem
               icon={<FiLogOut fontSize="18px" />}
@@ -51,7 +53,7 @@ const UserMenu = () => {
               color="ui.danger"
               fontWeight="bold"
             >
-              Log out
+              {t("common.logOut")}
             </MenuItem>
           </MenuList>
         </Menu>

@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { type UserRegister, UsersService } from "../../client";
 import type { ApiError } from "../../client/core/ApiError";
@@ -28,6 +29,7 @@ interface AddUserProps {
 }
 
 const AddUser = ({ isOpen, onClose }: AddUserProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const {
@@ -50,7 +52,11 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
     mutationFn: (data: UserRegister) =>
       UsersService.createUser({ requestBody: data }),
     onSuccess: () => {
-      showToast("Success!", "User created successfully.", "success");
+      showToast(
+        t("toast.userCreateSuccess"),
+        t("toast.userCreated"),
+        "success"
+      );
       reset();
       onClose();
     },
@@ -76,18 +82,18 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
       >
         <ModalOverlay />
         <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader>Add User</ModalHeader>
+          <ModalHeader>{t("titles.addUser")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl isRequired isInvalid={!!errors.email}>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">{t("common.email")}</FormLabel>
               <Input
                 id="email"
                 {...register("email", {
-                  required: "Email is required",
+                  required: t("forms.required"),
                   pattern: emailPattern,
                 })}
-                placeholder="Email"
+                placeholder={t("common.email")}
                 type="email"
               />
               {errors.email && (
@@ -95,11 +101,11 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
               )}
             </FormControl>
             <FormControl mt={4} isInvalid={!!errors.username}>
-              <FormLabel htmlFor="name">Full name</FormLabel>
+              <FormLabel htmlFor="name">{t("common.fullName")}</FormLabel>
               <Input
                 id="name"
                 {...register("username")}
-                placeholder="Full name"
+                placeholder={t("common.fullName")}
                 type="text"
               />
               {errors.username && (
@@ -109,21 +115,21 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
             <Flex mt={4}>
               <FormControl>
                 <Checkbox {...register("is_superuser")} colorScheme="teal">
-                  Is superuser?
+                  {t("forms.isSuperuser")}
                 </Checkbox>
               </FormControl>
               <FormControl>
                 <Checkbox {...register("is_active")} colorScheme="teal">
-                  Is active?
+                  {t("forms.isActive")}
                 </Checkbox>
               </FormControl>
             </Flex>
           </ModalBody>
           <ModalFooter gap={3}>
             <Button variant="primary" type="submit" isLoading={isSubmitting}>
-              Save
+              {t("common.save1")}
             </Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onClose}>{t("common.cancel")}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
