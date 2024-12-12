@@ -1,17 +1,17 @@
 {   
     "common": {
-        "fullName": "full name",
-        "email": "email",
+        "username": "Full Name",
+        "email": "Email",
         "role": "role",
         "status": "status",
         "actions": "actions",
         "previous": "previous",
         "next": "next",
         "you": "you",
-        "save1": "save",
+        "save1": "Save",
         "save2": "save",
         "save3": "save",
-        "cancel": "cancel",
+        "cancel": "Cancel",
         "active": "Active",
         "inactive": "Inactive",
         "superUser": "Admin",
@@ -28,10 +28,22 @@
         "addUser": "Add User",
         "editName": "Edit Name",
         "updatePassword": "Update Password",
-        "editProfile": "Edit Profile"
+        "editProfile": "Edit Profile",
+        "services": "Services",
+        "addService": "Add Service"
+    },
+    "services": {
+        "Name": "Name",
+        "subName": "Sub Name",
+        "startTime": "Start time",
+        "endTime": "End Time",
+        "elapsedTime": "Elapsed Time",
+        "status": "Status",
+        "actions": "Actions"
     },
     "forms": {
-        "required": "Email is required",
+        "emailRequired": "Email is required",
+        "usernameRequired": "Username is required",
         "isSuperuser": "Is admin?",
         "isActive": "Is active?",
         "currentPassword": "Current Password",

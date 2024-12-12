@@ -29,12 +29,12 @@ const usersSearchSchema = z.object({
   page: z.number().catch(1),
 });
 
-export const Route = createFileRoute("/_layout/admin")({
-  component: Admin,
+export const Route = createFileRoute("/_layout/services")({
+  component: Services,
   validateSearch: (search) => usersSearchSchema.parse(search),
 });
 
-const PER_PAGE = 5;
+const PER_PAGE = 10;
 
 function getUsersQueryOptions({ page }: { page: number }) {
   return {
@@ -44,7 +44,7 @@ function getUsersQueryOptions({ page }: { page: number }) {
   };
 }
 
-function UsersTable() {
+function ServicesTable() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
@@ -77,11 +77,13 @@ function UsersTable() {
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
             <Tr>
-              <Th width="20%">{t("common.fullName")}</Th>
-              <Th width="50%">{t("common.email")}</Th>
-              <Th width="10%">{t("common.role")}</Th>
-              <Th width="10%">{t("common.status")}</Th>
-              <Th width="10%">{t("common.actions")}</Th>
+              <Th width="15%">{t("services.Name")}</Th>
+              <Th width="15%">{t("services.subName")}</Th>
+              <Th width="15%">{t("services.startTime")}</Th>
+              <Th width="15%">{t("services.endTime")}</Th>
+              <Th width="15%">{t("services.elapsedTime")}</Th>
+              <Th width="15%">{t("services.status")}</Th>
+              <Th width="15%">{t("services.actions")}</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -166,16 +168,16 @@ function UsersTable() {
   );
 }
 
-function Admin() {
+function Services() {
   const { t } = useTranslation();
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
-        {t("titles.userManagement")}
+        {t("titles.services")}
       </Heading>
 
-      <Navbar text={t("titles.addUser")} addModalAs={AddUser} />
-      <UsersTable />
+      <Navbar text={t("titles.addService")} addModalAs={AddUser} />
+      <ServicesTable />
     </Container>
   );
 }

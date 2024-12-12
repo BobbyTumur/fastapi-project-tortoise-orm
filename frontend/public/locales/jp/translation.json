@@ -1,6 +1,6 @@
 {
     "common": {
-        "fullName": "氏名",
+        "username": "氏名",
         "email": "メールアドレス",
         "role": "役割",
         "status": "ステータス",
@@ -21,17 +21,28 @@
         "edit": "編集",
         "noName": "未登録",
         "logOut": "ログアウト" 
-
     },
     "titles": {
         "userManagement": "ユーザー管理",
         "addUser": "ユーザー追加",
         "editName": "名前の編集",
         "updatePassword": "パスワードの更新",
-        "editProfile": "プロフィール編集"
+        "editProfile": "プロフィール編集",
+        "services": "サービス一覧",
+        "addService": "サービス追加"
+    },
+    "services": {
+        "Name": "名",
+        "subName": "サブ名",
+        "startTime": "開始時間",
+        "endTime": "終了時間",
+        "elapsedTime": "経過時間",
+        "status": "ステータス",
+        "actions": "アクション"
     },
     "forms": {
-        "required": "メールアドレスが必須です。",
+        "emailRequired": "メールアドレスは必須です。",
+        "usernameRequired": "氏名は必須です。",
         "isSuperuser": "管理者ですか？",
         "isActive": "アクティブですか？",
         "currentPassword": "現在のパスワード",
@@ -45,17 +56,17 @@
     },
     "toast": {
         "success": "成功!",
-        "userUpdate": "ユーザーの更新が成功しました。",
-        "passwordUpdate": "パスワードの更新が成功しました。",
-        "userCreateSuccess": "ユーザーの追加が成功しました。",
-        "userCreated": "パスワードを設定するためのリンクをユーザーに送信しました。"
+        "userUpdate": "ユーザーを更新しました。",
+        "passwordUpdate": "パスワードを更新しました。",
+        "userCreateSuccess": "ユーザーを追加しました。",
+        "userCreated": "パスワード設定リンクをユーザーに送信しました。"
     },
 
     "error": {
       "somethingWentWrong": "何かの問題が発生しました。"
     },
     "responses": {
-        "recoverPassword": "メールが送信されました。\nパスワードをリセットするためのリンクをメールでお送りしました。\nサクセス"
+        "recoverPassword": "メールが送信されました。\nパスワードリセットのリンクをお送りしました。\nサクセス"
     },
     "pages": {
         "recover-password": {

@@ -34,25 +34,24 @@ export type UserPublic = {
   email: string
   is_active?: boolean
   is_superuser?: boolean
-  username?: string | null
+  username: string
+  can_edit?: boolean | null
   id: string
 }
 
 export type UserRegister = {
   email: string
-  username?: string | null
+  username: string
   is_active?: boolean
   is_superuser?: boolean
+  can_edit?: boolean | null
 }
 
 export type UserUpdate = {
   is_active?: boolean
   is_superuser?: boolean
-  username?: string | null
-}
-
-export type UserUpdateMe = {
-  username?: string | null
+  username: string
+  can_edit?: boolean | null
 }
 
 export type UsersPublic = {

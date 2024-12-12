@@ -9,7 +9,8 @@ from tortoise.exceptions import DoesNotExist
 
 from app.core import security
 from app.core.config import settings
-from app.models import TokenPayLoad, UserDatabase
+from app.models.db_models import UserDatabase
+from app.models.user_models import TokenPayLoad
 
 resuasble_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
 TokenDep = Annotated[str, Depends(resuasble_oauth2)]

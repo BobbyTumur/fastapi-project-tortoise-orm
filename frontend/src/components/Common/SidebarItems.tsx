@@ -2,6 +2,7 @@ import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { FiUsers } from "react-icons/fi";
+import { IoDocumentsOutline } from "react-icons/io5";
 
 import type { UserPublic } from "../../client";
 
@@ -12,7 +13,7 @@ interface MenuItem {
 }
 
 const items: MenuItem[] = [
-  // { icon: FiHome, title: "Dashboard", path: "/" },
+  { icon: IoDocumentsOutline, title: "Services", path: "/services" },
   // { icon: FiSettings, title: "User Settings", path: "/settings" },
 ];
 

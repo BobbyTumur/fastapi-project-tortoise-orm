@@ -2,13 +2,24 @@ from httpx import AsyncClient
 
 from app import crud
 from app.core.config import settings
-from app.models import UserCreate
-from app.tests.utils.utils import random_lower_string
+from app.models.db_models import UserDatabase
+from app.models.user_models import UserCreate
+from app.tests.utils.utils import random_lower_string, random_email
+
+
+async def create_random_user() -> UserDatabase:
+    email = random_email()
+    username = random_lower_string()
+    password = random_lower_string()
+    user_in = UserCreate(email=email, username=username, password=password)
+    user = await crud.create_user(user_create=user_in)
+    return user
 
 
 async def get_normal_user_token_headers(client: AsyncClient, email: str,) -> dict[str, str]:
+    username = random_lower_string()
     password = random_lower_string()
-    user_in_create = UserCreate(email=email, password=password)
+    user_in_create = UserCreate(email=email, username=username ,password=password)
     user = await crud.create_user(user_create=user_in_create)
 
     login_data = {"username": user.email, "password": password}

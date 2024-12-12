@@ -3,9 +3,11 @@ from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
 from app import crud
-from app.models import UserCreate
+from app.models.db_models import UserDatabase
+from app.models.user_models import UserCreate
 from app.core.config import settings
 from app.core.security import verify_password
+from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_email, random_lower_string, random_integer
 
 @pytest.mark.anyio
@@ -34,10 +36,7 @@ async def test_get_users_normal_user_me(
 async def test_get_existing_user(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    user = await crud.create_user(user_create=user_in)
+    user = await create_random_user()
     user_id = user.id
 
     r = await client.get(
@@ -46,9 +45,10 @@ async def test_get_existing_user(
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()
-    existing_user = await crud.get_user_by_email(email=username)
+    existing_user = await UserDatabase.get(id=user.id)
     assert existing_user
     assert existing_user.email == api_user["email"]
+    assert existing_user.username == api_user["username"]
 
 @pytest.mark.anyio
 async def test_get_non_existing_user(
@@ -79,9 +79,10 @@ async def test_get_existing_user_permissions_error(
 async def test_register_user(
     client: AsyncClient, superuser_token_headers: dict
 ) -> None:
-    username = random_email()
+    email = random_email()
+    username = random_lower_string()
 
-    data = {"email": username}
+    data = {"email": email, "username": username}
 
     mock_email_response = AsyncMock()
     mock_email_response.status_code = 200
@@ -93,9 +94,10 @@ async def test_register_user(
             json=data
         )
         assert 200 <= r.status_code < 300
-        created_user = await crud.get_user_by_email(email=username)
+        created_user = await UserDatabase.get(email=email)
         assert created_user is not None
-        assert created_user.email == username
+        assert created_user.email == email
+        assert created_user.username == username
 
 @pytest.mark.anyio
 async def test_register_user_permission_error(
@@ -121,11 +123,8 @@ async def test_register_user_permission_error(
 async def test_register_user_existing_username(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    await crud.create_user(user_create=user_in)
-    data = {"email": username}
+    user = await create_random_user()
+    data = {"email": user.email, "username": user.username}
 
     mock_email_response = AsyncMock()
     mock_email_response.status_code = 200
@@ -145,11 +144,8 @@ async def test_register_user_existing_username(
 async def test_register_user_normal_user(
     client: AsyncClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    await crud.create_user(user_create=user_in)
-    data = {"email": username}
+    user = await create_random_user()
+    data = {"email": user.email}
 
     mock_email_response = AsyncMock()
     mock_email_response.status_code = 200
@@ -167,15 +163,8 @@ async def test_register_user_normal_user(
 async def test_retrieve_users(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    await crud.create_user(user_create=user_in)
-
-    username2 = random_email()
-    password2 = random_lower_string()
-    user_in2 = UserCreate(email=username2, password=password2)
-    await crud.create_user(user_create=user_in2)
+    await create_random_user()
+    await create_random_user()
 
     r = await client.get(f"{settings.API_V1_STR}/users/", headers=superuser_token_headers)
     all_users = r.json()
@@ -184,21 +173,7 @@ async def test_retrieve_users(
     assert "count" in all_users
     for item in all_users["data"]:
         assert "email" in item
-
-@pytest.mark.anyio
-async def test_update_user_me(
-    client: AsyncClient, normal_user_token_headers: dict[str, str]
-) -> None:
-    full_name = "Updated Name"
-    data = {"username": full_name}
-    r = await client.patch(
-        f"{settings.API_V1_STR}/users/me",
-        headers=normal_user_token_headers,
-        json=data,
-    )
-    assert r.status_code == 200
-    updated_user = r.json()
-    assert updated_user["username"] == full_name
+        assert "username" in item
 
 @pytest.mark.anyio
 async def test_update_password_me(
@@ -218,7 +193,7 @@ async def test_update_password_me(
     updated_user = r.json()
     assert updated_user["message"] == "Password updated successfully"
 
-    user_db = await crud.get_user_by_email(email=settings.FIRST_SUPERUSER)
+    user_db = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
     assert user_db
     assert user_db.email == settings.FIRST_SUPERUSER
     assert verify_password(new_password, user_db.hashed_password)
@@ -279,12 +254,9 @@ async def test_update_password_me_incorrect_password(
 async def test_update_user(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    user = await crud.create_user(user_create=user_in)
+    user = await create_random_user()
 
-    data = {"username": "Updated_full_name", "is_superuser": "true", "is_active": "false"}
+    data = {"username": "Updated_full_name", "is_superuser": "true", "is_active": "false", "can_edit": "true"}
     r = await client.patch(
         f"{settings.API_V1_STR}/users/{user.id}",
         headers=superuser_token_headers,
@@ -295,12 +267,14 @@ async def test_update_user(
 
     assert updated_user["username"] == "Updated_full_name"
     assert updated_user["is_superuser"]
+    assert updated_user["can_edit"]
     assert updated_user["is_active"] is False
 
-    created_user = await crud.get_user_by_id(user_id=user.id)
+    created_user = await UserDatabase.get(id=user.id)
     assert created_user
     assert created_user.username == "Updated_full_name"
     assert created_user.is_superuser
+    assert created_user.can_edit
     assert created_user.is_active is False
 
 
@@ -316,13 +290,13 @@ async def test_update_non_existing_user(
         json=data,
     )
     assert r.status_code == 404
-    assert r.json()["detail"] == "The user with this id does not exist in the system"
+    assert r.json()["detail"] == "User not found"
 
 @pytest.mark.anyio
 async def test_update_super_user_own(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    user = await crud.get_user_by_email(email=settings.FIRST_SUPERUSER)
+    user = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
     data = {"username": "Updated_full_name", "is_superuser": "true", "is_active": "false"}
     r = await client.patch(
         f"{settings.API_V1_STR}/users/{user.id}",
@@ -336,10 +310,7 @@ async def test_update_super_user_own(
 async def test_delete_user(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    user = await crud.create_user(user_create=user_in)
+    user = await create_random_user()
     user_id = user.id
 
     r = await client.delete(
@@ -349,14 +320,14 @@ async def test_delete_user(
     assert r.status_code == 200
     deleted_user = r.json()
     assert deleted_user["message"] == "User deleted successfully"
-    result = await crud.get_user_by_id(user_id=user_id)
+    result = await UserDatabase.get_or_none(id=user_id)
     assert result is None
 
 @pytest.mark.anyio
 async def test_delete_user_me_as_superuser(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    superuser = await crud.get_user_by_email(email=settings.FIRST_SUPERUSER)
+    superuser = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
     assert superuser
     r = await client.delete(
         f"{settings.API_V1_STR}/users/{superuser.id}",
@@ -382,10 +353,7 @@ async def test_delete_non_existing_user(
 async def test_delete_user_without_privileges(
     client: AsyncClient, normal_user_token_headers: dict[str, str]
 ) -> None:
-    username = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=username, password=password)
-    user = await crud.create_user(user_create=user_in)
+    user = await create_random_user()
     
     r = await client.delete(
         f"{settings.API_V1_STR}/users/{user.id}",

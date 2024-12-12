@@ -41,3 +41,5 @@ pytest__pycache__
 .env
 .traefik_env
 docker-compose.test.yml
+docker-compose-adminer.yml
+memo.txt

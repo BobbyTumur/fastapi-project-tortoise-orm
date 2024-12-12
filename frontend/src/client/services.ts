@@ -12,7 +12,6 @@ import type {
   UserRegister,
   UsersPublic,
   UserUpdate,
-  UserUpdateMe,
 } from "./models"
 
 export type TDataLoginAccessToken = {
@@ -100,7 +99,7 @@ export class LoginService {
     const { requestBody } = data
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/reset-password/",
+      url: "/api/v1/reset-password",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -121,7 +120,7 @@ export class LoginService {
     const { requestBody } = data
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/setup-password/",
+      url: "/api/v1/setup-password",
       body: requestBody,
       mediaType: "application/json",
       errors: {
@@ -156,10 +155,6 @@ export class LoginService {
 export type TDataReadUsers = {
   limit?: number
   skip?: number
-}
-
-export type TDataUpdateUserMe = {
-  requestBody: UserUpdateMe
 }
 export type TDataUpdatePasswordMe = {
   requestBody: UpdatePassword
@@ -373,7 +368,7 @@ export class UtilsService {
     const { emailTo } = data
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/v1/utils/test-email/",
+      url: "/api/v1/utils/test-email",
       query: {
         email_to: emailTo,
       },
@@ -391,7 +386,7 @@ export class UtilsService {
   public static healthCheck(): CancelablePromise<boolean> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/v1/utils/health-check/",
+      url: "/api/v1/utils/health-check",
     })
   }
 }

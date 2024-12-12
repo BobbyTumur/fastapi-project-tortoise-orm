@@ -1,7 +1,5 @@
 import {
   Button,
-  Checkbox,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -13,7 +11,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -32,6 +32,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
+  const [role, setRole] = useState<string>("tier1");
   const {
     register,
     handleSubmit,
@@ -44,7 +45,8 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
       email: "",
       username: "",
       is_superuser: false,
-      is_active: false,
+      is_active: true,
+      can_edit: false,
     },
   });
 
@@ -69,7 +71,16 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
   });
 
   const onSubmit: SubmitHandler<UserRegister> = (data) => {
-    mutation.mutate(data);
+    const finalData = {
+      ...data,
+      is_superuser: role === "admin",
+      can_edit: role === "tier2",
+    };
+    mutation.mutate(finalData);
+  };
+
+  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setRole(event.target.value);
   };
 
   return (
@@ -90,7 +101,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
               <Input
                 id="email"
                 {...register("email", {
-                  required: t("forms.required"),
+                  required: t("forms.emailRequired"),
                   pattern: emailPattern,
                 })}
                 placeholder={t("common.email")}
@@ -100,30 +111,28 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
                 <FormErrorMessage>{errors.email.message}</FormErrorMessage>
               )}
             </FormControl>
-            <FormControl mt={4} isInvalid={!!errors.username}>
-              <FormLabel htmlFor="name">{t("common.fullName")}</FormLabel>
+            <FormControl mt={4} isRequired isInvalid={!!errors.username}>
+              <FormLabel htmlFor="name">{t("common.username")}</FormLabel>
               <Input
                 id="name"
-                {...register("username")}
-                placeholder={t("common.fullName")}
+                {...register("username", {
+                  required: t("forms.usernameRequired"),
+                })}
+                placeholder={t("common.username")}
                 type="text"
               />
               {errors.username && (
                 <FormErrorMessage>{errors.username.message}</FormErrorMessage>
               )}
             </FormControl>
-            <Flex mt={4}>
-              <FormControl>
-                <Checkbox {...register("is_superuser")} colorScheme="teal">
-                  {t("forms.isSuperuser")}
-                </Checkbox>
-              </FormControl>
-              <FormControl>
-                <Checkbox {...register("is_active")} colorScheme="teal">
-                  {t("forms.isActive")}
-                </Checkbox>
-              </FormControl>
-            </Flex>
+            <FormControl mt={4}>
+              <FormLabel htmlFor="role">{t("common.role")}</FormLabel>
+              <Select id="role" value={role || ""} onChange={handleRoleChange}>
+                <option value="admin">Admin</option>
+                <option value="tier2">Tier1</option>
+                <option value="tier1">Tier2</option>
+              </Select>
+            </FormControl>
           </ModalBody>
           <ModalFooter gap={3}>
             <Button variant="primary" type="submit" isLoading={isSubmitting}>

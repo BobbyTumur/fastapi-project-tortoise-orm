@@ -44,7 +44,6 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def MYSQL_DATABASE_URI(self) -> AnyUrl:
-        if self.ENVIRONMENT != "local":
             return MultiHostUrl.build(
                 scheme="mysql",
                 username=self.MYSQL_USER,
@@ -53,7 +52,6 @@ class Settings(BaseSettings):
                 port=self.MYSQL_PORT,
                 path=self.MYSQL_DB,
             )
-        return "sqlite://:memory:"
     
     @property
     def TORTOISE_ORM(self) -> dict:
@@ -63,12 +61,12 @@ class Settings(BaseSettings):
             },
             "apps": {
                 "models": {
-                    "models": ["app.models", "aerich.models"],
+                    "models": ["app.models.db_models", "aerich.models"],
                     "default_connection": "default",
                 },
             },
         }
-
+    FIRST_USER_NAME: str = "Maintainer"
     FIRST_SUPERUSER: EmailStr = "johndoe@example.com"
     FIRST_SUPERUSER_PASSWORD: str = secrets.token_urlsafe(8)
 

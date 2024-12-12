@@ -5,14 +5,17 @@ from pathlib import Path
 from typing import Any, Literal
 
 
+
 import jwt
 from jinja2 import Template
 from jwt.exceptions import InvalidTokenError
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from fastapi import HTTPException
 
 from app.core import security
 from app.core.config import settings
+from app.models.db_models import UserDatabase
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -133,3 +136,29 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+
+
+async def check_user_privileges(user: UserDatabase, service_id: int) -> bool:
+    """
+    Checks a user's privileges for a specific service.
+
+    Args:
+        user (UserDatabase): The current user object.
+        service_id (int): The ID of the service to check privileges for.
+
+    Raises:
+        HTTPException: If the user lacks sufficient privileges.
+    """
+    if user.is_superuser:
+        # Superusers can access and edit all services
+        return
+    
+    if user.can_edit:
+        # Tier 2: Check if the user is associated with the service
+        is_associated = await user.services.filter(id=service_id).exists()
+        if not is_associated:
+            return False
+        return True
+    
+    # Tier 1: Users who cannot edit are not authorized
+    return False
