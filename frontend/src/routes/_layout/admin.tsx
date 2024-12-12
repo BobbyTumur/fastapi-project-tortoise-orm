@@ -77,7 +77,7 @@ function UsersTable() {
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
             <Tr>
-              <Th width="20%">{t("common.fullName")}</Th>
+              <Th width="20%">{t("common.username")}</Th>
               <Th width="50%">{t("common.email")}</Th>
               <Th width="10%">{t("common.role")}</Th>
               <Th width="10%">{t("common.status")}</Th>
@@ -115,8 +115,10 @@ function UsersTable() {
                   </Td>
                   <Td>
                     {user.is_superuser
-                      ? t("common.superUser")
-                      : t("common.user")}
+                      ? "Admin"
+                      : user.can_edit
+                        ? "Tier2"
+                        : "Tier1"}
                   </Td>
                   <Td>
                     <Flex gap={2}>
