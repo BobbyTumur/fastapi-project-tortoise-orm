@@ -50,44 +50,11 @@ async def lifespan_test(app: FastAPI) -> AsyncGenerator[None, None]:
         yield
     await Tortoise._drop_databases()
 
-# @asynccontextmanager
-# async def lifespan_local(app: FastAPI) -> AsyncGenerator[None, None]:
-#     async with RegisterTortoise(
-#         app=app,
-#         config = {
-#                     "connections": {
-#                         "internal": "sqlite://:memory:",  
-#                         "external": "mysql://root:443300443300@0.0.0.0:3306/kanekog",
-#                     },
-#                     "apps": {
-#                         "models": {
-#                             "models": ["app.models.models"],
-#                             "default_connection": "internal",
-#                         },
-#                         "external_models": {
-#                             "models": ["app.models.external_model"],
-#                             "default_connection": "external",
-#                         },
-#                     },
-#                 },
-#         add_exception_handlers=True,
-#         generate_schemas=True
-#     ):
-#         await ensure_superuser_exists()
-#         # db connected
-#         yield
-#         # app teardown
-
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     if getattr(app.state, "testing", None):
         async with lifespan_test(app) as _:
             yield
-    # elif settings.ENVIRONMENT == "local":
-    #     async with lifespan_local(app) as _:
-    #         yield
     else:
         # app startup
         await Tortoise.init(config=settings.TORTOISE_ORM)

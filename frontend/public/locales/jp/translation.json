@@ -27,7 +27,7 @@
         "addUser": "ユーザー追加",
         "editName": "名前の編集",
         "updatePassword": "パスワードの更新",
-        "editProfile": "プロフィール編集",
+        "myProfile": "プロフィール",
         "services": "サービス一覧",
         "addService": "サービス追加"
     },

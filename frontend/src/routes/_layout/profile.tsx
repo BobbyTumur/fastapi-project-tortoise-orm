@@ -10,23 +10,23 @@ import {
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
-import ChangePassword from "../../components/UserSettings/ChangePassword";
-import UserInformation from "../../components/UserSettings/UserInformation";
+import ChangePassword from "../../components/UserProfile/ChangePassword";
+import UserInformation from "../../components/UserProfile/UserInformation";
 
-export const Route = createFileRoute("/_layout/settings")({
-  component: UserSettings,
+export const Route = createFileRoute("/_layout/profile")({
+  component: UserProfile,
 });
 
-function UserSettings() {
+function UserProfile() {
   const { t } = useTranslation();
   const tabsConfig = [
-    { title: t("titles.editName"), component: UserInformation },
+    { title: t("titles.myProfile"), component: UserInformation },
     { title: t("titles.updatePassword"), component: ChangePassword },
   ];
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={12}>
-        {t("titles.editProfile")}
+        {t("titles.myProfile")}
       </Heading>
       <Tabs variant="enclosed">
         <TabList>

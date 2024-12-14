@@ -17,8 +17,8 @@ import { Route as RecoverPasswordImport } from './routes/recover-password'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutServicesImport } from './routes/_layout/services'
+import { Route as LayoutProfileImport } from './routes/_layout/profile'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 
 // Create/Update Routes
@@ -53,13 +53,13 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutSettingsRoute = LayoutSettingsImport.update({
-  path: '/settings',
+const LayoutServicesRoute = LayoutServicesImport.update({
+  path: '/services',
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutServicesRoute = LayoutServicesImport.update({
-  path: '/services',
+const LayoutProfileRoute = LayoutProfileImport.update({
+  path: '/profile',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -114,18 +114,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/profile': {
+      id: '/_layout/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof LayoutProfileImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/services': {
       id: '/_layout/services'
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof LayoutServicesImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/settings': {
-      id: '/_layout/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof LayoutSettingsImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/': {
@@ -142,15 +142,15 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutProfileRoute: typeof LayoutProfileRoute
   LayoutServicesRoute: typeof LayoutServicesRoute
-  LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutProfileRoute: LayoutProfileRoute,
   LayoutServicesRoute: LayoutServicesRoute,
-  LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 
@@ -164,8 +164,8 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/setup-password': typeof SetupPasswordRoute
   '/admin': typeof LayoutAdminRoute
+  '/profile': typeof LayoutProfileRoute
   '/services': typeof LayoutServicesRoute
-  '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
 
@@ -175,8 +175,8 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/setup-password': typeof SetupPasswordRoute
   '/admin': typeof LayoutAdminRoute
+  '/profile': typeof LayoutProfileRoute
   '/services': typeof LayoutServicesRoute
-  '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
 
@@ -188,8 +188,8 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/setup-password': typeof SetupPasswordRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/profile': typeof LayoutProfileRoute
   '/_layout/services': typeof LayoutServicesRoute
-  '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 
@@ -202,8 +202,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/setup-password'
     | '/admin'
+    | '/profile'
     | '/services'
-    | '/settings'
     | '/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -212,8 +212,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/setup-password'
     | '/admin'
+    | '/profile'
     | '/services'
-    | '/settings'
     | '/'
   id:
     | '__root__'
@@ -223,8 +223,8 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/setup-password'
     | '/_layout/admin'
+    | '/_layout/profile'
     | '/_layout/services'
-    | '/_layout/settings'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -268,8 +268,8 @@ export const routeTree = rootRoute
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/admin",
+        "/_layout/profile",
         "/_layout/services",
-        "/_layout/settings",
         "/_layout/"
       ]
     },
@@ -289,12 +289,12 @@ export const routeTree = rootRoute
       "filePath": "_layout/admin.tsx",
       "parent": "/_layout"
     },
-    "/_layout/services": {
-      "filePath": "_layout/services.tsx",
+    "/_layout/profile": {
+      "filePath": "_layout/profile.tsx",
       "parent": "/_layout"
     },
-    "/_layout/settings": {
-      "filePath": "_layout/settings.tsx",
+    "/_layout/services": {
+      "filePath": "_layout/services.tsx",
       "parent": "/_layout"
     },
     "/_layout/": {

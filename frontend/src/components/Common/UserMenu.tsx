@@ -40,12 +40,8 @@ const UserMenu = () => {
             data-testid="user-menu"
           />
           <MenuList>
-            <MenuItem
-              icon={<FiUser fontSize="18px" />}
-              as={Link}
-              to="/settings"
-            >
-              {t("titles.editProfile")}
+            <MenuItem icon={<FiUser fontSize="18px" />} as={Link} to="/profile">
+              {t("titles.myProfile")}
             </MenuItem>
             <MenuItem
               icon={<FiLogOut fontSize="18px" />}
