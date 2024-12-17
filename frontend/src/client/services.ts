@@ -12,6 +12,9 @@ import type {
   UserRegister,
   UsersPublic,
   UserUpdate,
+  ServicePublic,
+  ServicesPublic,
+  UserServiceUpdate
 } from "./models"
 
 export type TDataLoginAccessToken = {
@@ -165,6 +168,15 @@ export type TDataRegisterUser = {
 export type TDataReadUserById = {
   userId: string
 }
+export type TDataReadUserServices = {
+  userId: string
+}
+
+export type TDataUpdateUserService = {
+  requestBody: UserServiceUpdate
+  userId: string
+}
+
 export type TDataUpdateUser = {
   requestBody: UserUpdate
   userId: string
@@ -231,39 +243,6 @@ export class UsersService {
     })
   }
 
-  /**
-   * Delete User Me
-   * Delete own user.
-   * @returns Message Successful Response
-   * @throws ApiError
-   */
-  public static deleteUserMe(): CancelablePromise<Message> {
-    return __request(OpenAPI, {
-      method: "DELETE",
-      url: "/api/v1/users/me",
-    })
-  }
-
-  /**
-   * Update User Me
-   * Update own user.
-   * @returns UserPublic Successful Response
-   * @throws ApiError
-   */
-  public static updateUserMe(
-    data: TDataUpdateUserMe,
-  ): CancelablePromise<UserPublic> {
-    const { requestBody } = data
-    return __request(OpenAPI, {
-      method: "PATCH",
-      url: "/api/v1/users/me",
-      body: requestBody,
-      mediaType: "application/json",
-      errors: {
-        422: `Validation Error`,
-      },
-    })
-  }
 
   /**
    * Update Password Me
@@ -309,6 +288,53 @@ export class UsersService {
   }
 
   /**
+   * Read User Services By User Id
+   * @returns Array of UserPublic Successful Response
+   * @throws ApiError
+   */
+  public static readUserServices(
+    data: TDataReadUserServices,
+  ): CancelablePromise<Array<ServicePublic>> {
+    const { userId } = data
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/v1/users/{user_id}/services",
+      path: {
+        user_id: userId
+      },
+      errors: {
+        422: `Validation Error`,
+      },
+    })
+  }
+
+  /**
+   * Update User Services
+   * Update a user services.
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+    public static updateUserService(
+      data: TDataUpdateUserService,
+    ): CancelablePromise<Message> {
+      const { requestBody, userId } = data
+      return __request(OpenAPI, {
+        method: "PATCH",
+        url: "/api/v1/users/{user_id}/services",
+        path: {
+          user_id: userId,
+        },
+        body: requestBody,
+        mediaType: "application/json",
+        errors: {
+          422: `Validation Error`,
+        },
+      })
+    }
+
+
+
+  /**
    * Update User
    * Update a user.
    * @returns UserPublic Successful Response
@@ -351,6 +377,8 @@ export class UsersService {
       },
     })
   }
+
+
 }
 
 export type TDataTestEmail = {
@@ -388,5 +416,27 @@ export class UtilsService {
       method: "GET",
       url: "/api/v1/utils/health-check",
     })
+  }
+}
+
+
+export type TDataReadServices = {
+  limit?: number
+  skip?: number
+}
+export class ServicesService {
+/**
+ * Get all services
+ * @returns Message Successful Response
+ * @throws ApiError
+ */
+  public static readAllServices(): CancelablePromise<ServicesPublic> {
+    return __request(OpenAPI, {
+          method: "GET",
+          url: "/api/v1/services/",
+          errors: {
+            422: `Validation Error`,
+          },
+        })
   }
 }

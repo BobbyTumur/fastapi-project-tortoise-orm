@@ -2,12 +2,12 @@ from httpx import AsyncClient
 
 from app import crud
 from app.core.config import settings
-from app.models.db_models import UserDatabase
+from app.models.db_models import User
 from app.models.user_models import UserCreate
 from app.tests.utils.utils import random_lower_string, random_email
 
 
-async def create_random_user() -> UserDatabase:
+async def create_random_user() -> User:
     email = random_email()
     username = random_lower_string()
     password = random_lower_string()

@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 
 import { UsersService } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
+import { useTranslation } from "react-i18next";
 
 interface DeleteProps {
   id: string;
@@ -23,6 +24,7 @@ interface DeleteProps {
 const Delete = ({ id, isOpen, onClose }: DeleteProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
+  const { t } = useTranslation();
   const cancelRef = React.useRef<HTMLButtonElement | null>(null);
   const {
     handleSubmit,
@@ -36,15 +38,11 @@ const Delete = ({ id, isOpen, onClose }: DeleteProps) => {
   const mutation = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
-      showToast("Success", `The user was deleted successfully.`, "success");
+      showToast(t("toast.success"), t("toast.userDeleted"), "success");
       onClose();
     },
     onError: () => {
-      showToast(
-        "An error occurred.",
-        `An error occurred while deleting the user.`,
-        "error"
-      );
+      showToast(t("toast.error"), t("toast.errorDetail"), "error");
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -68,26 +66,26 @@ const Delete = ({ id, isOpen, onClose }: DeleteProps) => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <AlertDialogHeader>Delete user</AlertDialogHeader>
+            <AlertDialogHeader>{t("titles.deleteUser")}</AlertDialogHeader>
 
             <AlertDialogBody>
               <span>
-                All items associated with this user will also be{" "}
-                <strong>permantly deleted. </strong>
+                {t("warnings.deleteAlert")}{" "}
+                <strong>{t("warnings.permaDelete")}</strong>
               </span>
-              Are you sure? You will not be able to undo this action.
+              {t("warnings.areYouSure")}
             </AlertDialogBody>
 
             <AlertDialogFooter gap={3}>
               <Button variant="danger" type="submit" isLoading={isSubmitting}>
-                Delete
+                {t("common.delete")}
               </Button>
               <Button
                 ref={cancelRef}
                 onClick={onClose}
                 isDisabled={isSubmitting}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -3,11 +3,11 @@ from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
 from app import crud
-from app.models.db_models import UserDatabase
+from app.models.db_models import User
 from app.models.user_models import UserCreate
 from app.utils import generate_email_token
 from app.core.config import settings
-from app.core.security import verify_password
+from app.core.security import verify_secret
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -89,9 +89,9 @@ async def test_reset_password(client: AsyncClient) -> None:
     assert r.status_code == 200
     assert r.json() == {"message": "Password updated successfully"}
 
-    user = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
+    user = await User.get(email=settings.FIRST_SUPERUSER)
     assert user
-    assert verify_password(data["new_password"], user.hashed_password)
+    assert verify_secret(data["new_password"], user.hashed_password)
 
 @pytest.mark.anyio
 async def test_reset_password_invalid_token(client: AsyncClient) -> None:
@@ -125,9 +125,9 @@ async def test_set_up_password(client: AsyncClient) -> None:
         assert r.status_code == 200
         assert r.json() == {"message": "Password set up is successful"}
 
-        user = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
+        user = await User.get(email=settings.FIRST_SUPERUSER)
         assert user
-        assert verify_password(data["new_password"], user.hashed_password)
+        assert verify_secret(data["new_password"], user.hashed_password)
 
 @pytest.mark.anyio
 async def test_setup_password_invalid_token(client: AsyncClient) -> None:

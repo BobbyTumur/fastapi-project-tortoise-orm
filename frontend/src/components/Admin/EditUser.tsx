@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import {
   type ApiError,
@@ -40,6 +41,7 @@ interface UserUpdateWithRole extends UserUpdate {
 const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
+  const { t } = useTranslation();
   const [role, setRole] = useState<string>(
     user.is_superuser ? "admin" : user.can_edit ? "tier2" : "tier1"
   );
@@ -61,7 +63,7 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
     mutationFn: (data: UserUpdateWithRole) =>
       UsersService.updateUser({ userId: user.id, requestBody: data }),
     onSuccess: () => {
-      showToast("Success!", "User updated successfully.", "success");
+      showToast(t("toast.success"), t("toast.userUpdate"), "success");
       onClose();
     },
     onError: (err: ApiError) => {
@@ -103,27 +105,25 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
       >
         <ModalOverlay />
         <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
-          <ModalHeader>Edit User</ModalHeader>
+          <ModalHeader>{t("titles.editUser")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl mt={4}>
-              <FormLabel htmlFor="role">Role</FormLabel>
+              <FormLabel htmlFor="role">{t("common.role")}</FormLabel>
               <Select id="role" value={role} onChange={handleRoleChange}>
                 <option value="admin">Admin</option>
                 <option value="tier2">Tier2</option>
                 <option value="tier1">Tier1</option>
               </Select>
             </FormControl>
-
             <Flex mt={4}>
               <FormControl ml={4}>
                 <Checkbox {...register("is_active")} colorScheme="teal">
-                  Is active?
+                  {t("forms.isActive")}
                 </Checkbox>
               </FormControl>
             </Flex>
           </ModalBody>
-
           <ModalFooter gap={3}>
             <Button
               variant="primary"
@@ -131,9 +131,9 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
               isLoading={isSubmitting}
               isDisabled={!isDirty}
             >
-              Save
+              {t("common.save2")}
             </Button>
-            <Button onClick={onCancel}>Cancel</Button>
+            <Button onClick={onCancel}>{t("common.cancel")}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

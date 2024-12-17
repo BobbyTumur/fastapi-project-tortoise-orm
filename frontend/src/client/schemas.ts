@@ -184,6 +184,36 @@ export const $UserPublic = {
   },
 } as const
 
+export const $ServicePublic = {
+  properties: {
+    name: {
+      type: "string",
+      isRequired: true,
+      maxLength: 255,
+    },
+    sub_name: {
+      type: "string",
+      isRequired: true,
+      maxLength: 255,
+    },
+    id: {
+      type: "number",
+      isRequired: true,
+    },
+  },
+} as const
+
+
+export const $UserServiceUpdate = {
+  properties: {
+    added_services: {
+      type: "array",
+      items: {
+        type: "number",
+      },
+    },
+  },
+} as const;
 
 export const $UserRegister = {
   properties: {

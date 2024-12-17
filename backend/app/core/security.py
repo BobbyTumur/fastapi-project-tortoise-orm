@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta, timezone
+import jwt, pyotp
 from typing import Any
-
-import jwt
+from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 
 from app.core.config import settings
@@ -19,9 +18,24 @@ def create_access_token(subject: str | Any, expires_delta: timedelta) -> str:
     return encoded_jwt
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_secret(plain_secret: str, hashed_secret: str) -> bool:
+    return pwd_context.verify(plain_secret, hashed_secret)
 
 
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+def get_secret_hash(secret: str) -> str:
+    return pwd_context.hash(secret)
+
+def create_totp(username: str) -> tuple[str, str]:
+    """
+    Generate a TOTP secret and its provisioning URI for QR code generation.
+
+    Args:
+        username (str): Username for the TOTP URI.
+
+    Returns:
+        tuple[str, str]: A tuple containing the TOTP secret and the provisioning URI.
+    """
+    totp_secret = pyotp.random_base32()
+    totp = pyotp.TOTP(totp_secret)
+    qr_uri = totp.provisioning_uri(name=username, issuer_name=settings.PROJECT_NAME)
+    return totp_secret, qr_uri

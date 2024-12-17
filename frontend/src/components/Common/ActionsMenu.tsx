@@ -7,11 +7,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FiEdit, FiTrash } from "react-icons/fi";
+import { FiEdit, FiTrash, FiFolder } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 import type { UserPublic } from "../../client";
 import EditUser from "../Admin/EditUser";
 import Delete from "./DeleteAlert";
+import EditUserService from "../Admin/EditUserService";
 
 interface ActionsMenuProps {
   type: string;
@@ -21,7 +23,9 @@ interface ActionsMenuProps {
 
 const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const editUserModal = useDisclosure();
+  const editUserServiceModal = useDisclosure();
   const deleteModal = useDisclosure();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -37,20 +41,31 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             onClick={editUserModal.onOpen}
             icon={<FiEdit fontSize="16px" />}
           >
-            Edit {type}
+            {type} {t("common.edit")}
+          </MenuItem>
+          <MenuItem
+            onClick={editUserServiceModal.onOpen}
+            icon={<FiFolder fontSize="16px" />}
+          >
+            {type} {t("common.service")}
           </MenuItem>
           <MenuItem
             onClick={deleteModal.onOpen}
             icon={<FiTrash fontSize="16px" />}
             color="ui.danger"
           >
-            Delete {type}
+            {type} {t("common.delete")}
           </MenuItem>
         </MenuList>
         <EditUser
           user={value as UserPublic}
           isOpen={editUserModal.isOpen}
           onClose={editUserModal.onClose}
+        />
+        <EditUserService
+          userId={value.id}
+          isOpen={editUserServiceModal.isOpen}
+          onClose={editUserServiceModal.onClose}
         />
         <Delete
           id={value.id}

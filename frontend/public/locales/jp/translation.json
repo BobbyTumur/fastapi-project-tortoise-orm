@@ -20,7 +20,12 @@
         "password": "パスワード",
         "edit": "編集",
         "noName": "未登録",
-        "logOut": "ログアウト" 
+        "logOut": "ログアウト",
+        "delete": "削除",
+        "goBack": "戻る",
+        "logIn": "ログイン",
+        "service": "サービス"
+        
     },
     "titles": {
         "userManagement": "ユーザー管理",
@@ -29,7 +34,10 @@
         "updatePassword": "パスワードの更新",
         "myProfile": "プロフィール",
         "services": "サービス一覧",
-        "addService": "サービス追加"
+        "addService": "サービス追加",
+        "editUser": "ユーザー更新",
+        "deleteUser": "ユーザー削除",
+        "editUserService": "ユーザーのサービスを編集"
     },
     "services": {
         "Name": "名",
@@ -41,13 +49,15 @@
         "actions": "アクション"
     },
     "forms": {
-        "emailRequired": "メールアドレスは必須です。",
-        "usernameRequired": "氏名は必須です。",
+        "emailRequired": "メールアドレスが必須です。",
+        "passwordRequired": "パスワードが必須です。",
+        "usernameRequired": "氏名が必須です。",
         "isSuperuser": "管理者ですか？",
         "isActive": "アクティブですか？",
         "currentPassword": "現在のパスワード",
         "setPassword": "パスワードを設定",
-        "confirmPassword": "パスワードを確認"
+        "confirmPassword": "パスワードを確認",
+        "forgotPassword": "パスワードをお忘れですか？"
     },
     "index": {
         "greet": "こんにちは",
@@ -56,15 +66,33 @@
     },
     "toast": {
         "success": "成功!",
-        "userUpdate": "ユーザーを更新しました。",
+        "userUpdate": "ユーザーが更新されました。",
         "passwordUpdate": "パスワードを更新しました。",
         "userCreateSuccess": "ユーザーを追加しました。",
-        "userCreated": "パスワード設定リンクをユーザーに送信しました。"
+        "userCreated": "パスワード設定リンクをユーザーに送信しました。",
+        "userDeleted": "ユーザーが削除されました。",
+        "error": "エラーが発生しました。",
+        "errorDetail": "ユーザー削除ができませんでした。"
     },
 
     "error": {
-      "somethingWentWrong": "何かの問題が発生しました。"
+        "oops": "おっと!",
+        "somethingWentWrong": "何かの問題が発生しました。",
+        "pageNotFound": "お探しのページが見つかりませんでした。"
     },
+    "utils": {
+        "invalidMail": "無効なメールアドレスです",
+        "invalidName": "無効な名前です",
+        "passwordLength": "パスワードは8文字以上でなければなりません",
+        "passwordNotMatch": "パスワードが一致しません",
+        "passwordConfirmRequired": "パスワードの確認が必要です"
+    },
+    "warnings": {
+        "deleteAlert": "このユーザーに関連付けられているものすべてが",
+        "permaDelete": "削除されます。",
+        "areYouSure": "よろしいですか？この操作を取り消すことはできません。"
+    },
+
     "responses": {
         "recoverPassword": "メールが送信されました。\nパスワードリセットのリンクをお送りしました。\nサクセス"
     },

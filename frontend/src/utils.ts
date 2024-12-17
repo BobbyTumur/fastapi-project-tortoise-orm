@@ -1,29 +1,40 @@
 import type { ApiError } from "./client"
+import i18n from "./hooks/i18n";
 
 export const emailPattern = {
   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-  message: "Invalid email address",
+  get message() {
+    return i18n.t("utils.invalidMail");
+  },
 }
 
 export const namePattern = {
   value: /^[A-Za-z\s\u00C0-\u017F]{1,30}$/,
-  message: "Invalid name",
+  get message () {
+    return i18n.t("utils.invalidName");
+  },
 }
 
 export const passwordRules = (isRequired = true) => {
   const rules: any = {
     minLength: {
       value: 8,
-      message: "Password must be at least 8 characters",
+      get message() {
+        return i18n.t("utils.passwordLength");
+      },
     },
-  }
+  };
 
   if (isRequired) {
-    rules.required = "Password is required"
+    Object.defineProperty(rules, "required", {
+      get() {
+        return i18n.t("forms.passwordRequired");
+      },
+    });
   }
 
-  return rules
-}
+  return rules;
+};
 
 export const confirmPasswordRules = (
   getValues: () => any,
@@ -31,21 +42,26 @@ export const confirmPasswordRules = (
 ) => {
   const rules: any = {
     validate: (value: string) => {
-      const password = getValues().password || getValues().new_password
-      return value === password ? true : "The passwords do not match"
+      const password = getValues().password || getValues().new_password;
+      return value === password ? true : i18n.t("utils.passwordNotMatch");
     },
-  }
+  };
 
   if (isRequired) {
-    rules.required = "Password confirmation is required"
+    Object.defineProperty(rules, "required", {
+      get() {
+        return i18n.t("utils.passwordConfirmRequired");
+      },
+    });
   }
 
-  return rules
-}
+  return rules;
+};
+
 
 export const handleError = (err: ApiError, showToast: any) => {
   const errDetail = (err.body as any)?.detail
-  let errorMessage = errDetail || "Something went wrong."
+  let errorMessage = errDetail || i18n.t("error.somethingWentWrong")
   if (Array.isArray(errDetail) && errDetail.length > 0) {
     errorMessage = errDetail[0].msg
   }

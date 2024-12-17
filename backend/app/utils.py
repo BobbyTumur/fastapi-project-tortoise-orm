@@ -15,7 +15,7 @@ from fastapi import HTTPException
 
 from app.core import security
 from app.core.config import settings
-from app.models.db_models import UserDatabase
+from app.models.db_models import User
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -138,12 +138,12 @@ def verify_password_reset_token(token: str) -> str | None:
         return None
 
 
-async def check_user_privileges(user: UserDatabase, service_id: int) -> bool:
+async def check_user_privileges(user: User, service_id: int) -> bool:
     """
     Checks a user's privileges for a specific service.
 
     Args:
-        user (UserDatabase): The current user object.
+        user (User): The current user object.
         service_id (int): The ID of the service to check privileges for.
 
     Raises:

@@ -20,7 +20,11 @@
         "password": "Password",
         "edit": "Edit",
         "noName": "No Name",
-        "logOut": "Log out"
+        "logOut": "Log out",
+        "delete": "Delete",
+        "goBack": "Go Back",
+        "logIn": "Log In",
+        "service": "Service"
 
     },
     "titles": {
@@ -30,7 +34,10 @@
         "updatePassword": "Update Password",
         "myProfile": "My Profile",
         "services": "Services",
-        "addService": "Add Service"
+        "addService": "Add Service",
+        "editUser": "Edit User",
+        "deleteUser": "Delete User",
+        "editUserService": "Edit User's Services"
     },
     "services": {
         "Name": "Name",
@@ -44,11 +51,13 @@
     "forms": {
         "emailRequired": "Email is required",
         "usernameRequired": "Username is required",
+        "passwordRequired": "Password is required",
         "isSuperuser": "Is admin?",
         "isActive": "Is active?",
         "currentPassword": "Current Password",
         "setPassword": "Set Password",
-        "confirmPassword": "Confirm Password"
+        "confirmPassword": "Confirm Password",
+        "forgotPassword": "Forgot password?"
 
     },
     "index": {
@@ -61,12 +70,29 @@
         "userUpdate": "User updated successfully.",
         "passwordUpdate": "Password updated successfully.",
         "userCreateSuccess": "User created successfully.",
-        "userCreated": "We sent an email with a link to the user to set up password"
+        "userCreated": "We sent an email with a link to the user to set up password",
+        "userDeleted": "The user was deleted successfully.",
+        "error": "An error occurred.",
+        "errorDetail": "An error occurred while deleting the user."
     },
 
 
     "error": {
-      "somethingWentWrong": "何かの問題が発生しました。"
+      "oops": "Oops!",
+      "somethingWentWrong": "Something went wrong.",
+      "pageNotFound": "Page not found."
+    },
+    "utils": {
+        "invalidMail": "Invalid email address",
+        "invalidName": "Invalid name",
+        "passwordLength": "Password must be at least 8 characters",
+        "passwordNotMatch": "The passwords do not match",
+        "passwordConfirmRequired": "Password confirmation is required"
+    },
+    "warnings": {
+        "deleteAlert": "このユーザーに関連付けられているすべてのアイテムも",
+        "permaDelete": "削除されます。",
+        "areYouSure": "よろしいですか？この操作を取り消すことはできません。"
     },
     "responses": {
         "recoverPassword": "メールが送信されました。\nパスワードをリセットするためのリンクをメールでお送りしました。\nサクセス"

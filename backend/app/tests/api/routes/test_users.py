@@ -3,10 +3,10 @@ from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
 from app import crud
-from app.models.db_models import UserDatabase
+from app.models.db_models import User
 from app.models.user_models import UserCreate
 from app.core.config import settings
-from app.core.security import verify_password
+from app.core.security import verify_secret
 from app.tests.utils.user import create_random_user
 from app.tests.utils.utils import random_email, random_lower_string, random_integer
 
@@ -45,7 +45,7 @@ async def test_get_existing_user(
     )
     assert 200 <= r.status_code < 300
     api_user = r.json()
-    existing_user = await UserDatabase.get(id=user.id)
+    existing_user = await User.get(id=user.id)
     assert existing_user
     assert existing_user.email == api_user["email"]
     assert existing_user.username == api_user["username"]
@@ -94,7 +94,7 @@ async def test_register_user(
             json=data
         )
         assert 200 <= r.status_code < 300
-        created_user = await UserDatabase.get(email=email)
+        created_user = await User.get(email=email)
         assert created_user is not None
         assert created_user.email == email
         assert created_user.username == username
@@ -193,10 +193,10 @@ async def test_update_password_me(
     updated_user = r.json()
     assert updated_user["message"] == "Password updated successfully"
 
-    user_db = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
+    user_db = await User.get(email=settings.FIRST_SUPERUSER)
     assert user_db
     assert user_db.email == settings.FIRST_SUPERUSER
-    assert verify_password(new_password, user_db.hashed_password)
+    assert verify_secret(new_password, user_db.hashed_password)
 
     # Revert to the old password to keep consistency in test
     old_data = {
@@ -211,7 +211,7 @@ async def test_update_password_me(
     await user_db.refresh_from_db()
 
     assert r.status_code == 200
-    assert verify_password(settings.FIRST_SUPERUSER_PASSWORD, user_db.hashed_password)
+    assert verify_secret(settings.FIRST_SUPERUSER_PASSWORD, user_db.hashed_password)
 
 @pytest.mark.anyio
 async def test_update_password_me_incorrect_password(
@@ -270,7 +270,7 @@ async def test_update_user(
     assert updated_user["can_edit"]
     assert updated_user["is_active"] is False
 
-    created_user = await UserDatabase.get(id=user.id)
+    created_user = await User.get(id=user.id)
     assert created_user
     assert created_user.username == "Updated_full_name"
     assert created_user.is_superuser
@@ -296,7 +296,7 @@ async def test_update_non_existing_user(
 async def test_update_super_user_own(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    user = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
+    user = await User.get(email=settings.FIRST_SUPERUSER)
     data = {"username": "Updated_full_name", "is_superuser": "true", "is_active": "false"}
     r = await client.patch(
         f"{settings.API_V1_STR}/users/{user.id}",
@@ -320,14 +320,14 @@ async def test_delete_user(
     assert r.status_code == 200
     deleted_user = r.json()
     assert deleted_user["message"] == "User deleted successfully"
-    result = await UserDatabase.get_or_none(id=user_id)
+    result = await User.get_or_none(id=user_id)
     assert result is None
 
 @pytest.mark.anyio
 async def test_delete_user_me_as_superuser(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    superuser = await UserDatabase.get(email=settings.FIRST_SUPERUSER)
+    superuser = await User.get(email=settings.FIRST_SUPERUSER)
     assert superuser
     r = await client.delete(
         f"{settings.API_V1_STR}/users/{superuser.id}",

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, ConfigDict, EmailStr, model_validator
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 
 class UserBase(BaseModel):
     username: str = Field(max_length=255)
@@ -6,6 +6,7 @@ class UserBase(BaseModel):
     is_superuser: bool = False
     can_edit: bool = False
     is_active: bool = True
+    is_totp_enabled: bool = False
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
@@ -37,35 +38,7 @@ class UserUpdate(BaseModel):
 
 
 class UserUpdateServices(BaseModel):
-    add_services: list[int] = Field(default_factory=list, description="List of service IDs to add")
-    remove_services: list[int] = Field(default_factory=list, description="List of service IDs to remove")
-    
-    @model_validator(mode='before')
-    def validate_services(cls, values):
-        add_services = values.get("add_services", [])
-        remove_services = values.get("remove_services", [])
-        
-        # Ensure no overlap between add and remove lists
-        overlapping_ids = set(add_services) & set(remove_services)
-        if overlapping_ids:
-            raise ValueError(f"Conflicting service IDs in add_services and remove_services: {overlapping_ids}")
-        
-        return values
+    added_services: list[int] = Field(default_factory=list)
 
 # Generic message
-class Message(BaseModel):
-    message: str
-
-class NewPassword(BaseModel):
-    token: str
-    new_password: str = Field(min_length=8, max_length=40)
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-class TokenPayLoad(BaseModel):
-    sub: str | None = None
-    is_auth: bool = False
-
 

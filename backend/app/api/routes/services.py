@@ -1,12 +1,13 @@
 from typing import Any
 
-from tortoise.exceptions import IntegrityError, DoesNotExist
+from tortoise.exceptions import IntegrityError
 from fastapi import APIRouter, Depends, HTTPException
 
 from app import crud, utils
 from app.api.dep import CurrentUser, get_current_active_superuser
-from app.models.db_models import UserDatabase, ServiceDatabase, ServiceLogs, ServiceConfigs
-from app.models.user_models import UserPublic, Message
+from app.models.db_models import Service, Config
+from app.models.user_models import UserPublic
+from app.models.general_models import Message
 from app.models.service_models import ServiceCreate, ServicePublic, ServicesPublic, ConfigIn, ConfigOut
 
 router = APIRouter(prefix="/services", tags=["services"])
@@ -17,8 +18,8 @@ async def get_services(current_user: CurrentUser, skip: int = 0, limit: int = 10
     List all services
     """
     if current_user.is_superuser:
-        services = await ServiceDatabase.all().offset(skip).limit(limit)
-        count = await ServiceDatabase.all().count()
+        services = await Service.all().offset(skip).limit(limit)
+        count = await Service.all().count()
     else:
         services = await current_user.services.all().offset(skip).limit(limit)
         count = await current_user.services.all().count()
@@ -29,9 +30,7 @@ async def get_service(current_user: CurrentUser, service_id: int) -> ServicePubl
     """
     List a user that can edit the service
     """
-    service = await ServiceDatabase.get_or_none(id=service_id)
-    if service is None:
-        raise HTTPException(status_code=404, detail="Service not found")
+    service = await crud.get_or_404(Service, id=service_id)
     is_associated = await current_user.services.filter(id=service_id).exists()
     if not current_user.is_superuser and not is_associated:
         raise HTTPException(status_code=403, detail="Not enough privileges")
@@ -43,9 +42,7 @@ async def get_service_users(current_user: CurrentUser, service_id: int) -> list[
     """
     List service users
     """
-    service = await ServiceDatabase.get_or_none(id=service_id).prefetch_related("users")
-    if service is None:
-        raise HTTPException(status_code=404, detail="Service not found")
+    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["users"])
     is_associated = await current_user.services.filter(id=service_id).exists()
     if not current_user.is_superuser and not is_associated:
         raise HTTPException(status_code=403, detail="Not enough privileges")
@@ -60,7 +57,7 @@ async def create_service(service_in: ServiceCreate) -> Message:
     """
     service_data = service_in.model_dump()
     try:
-        await ServiceDatabase.create(**service_data)
+        await Service.create(**service_data)
         return Message(message="Successfully created a service")
     except IntegrityError:
         raise HTTPException(status_code=409, detail="The service already exists")
@@ -70,7 +67,7 @@ async def delete_service(service_id: int) -> Message:
     """
     Delete a service
     """
-    service = await ServiceDatabase.get_or_none(id=service_id).prefetch_related("users")
+    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["users"])
     if service:
         await service.delete()
     else:
@@ -81,13 +78,11 @@ async def get_service_config(service_id: int, current_user: CurrentUser) -> Conf
     """
     Read a service's config
     """
-    service = await ServiceDatabase.get_or_none(id=service_id).prefetch_related("config")
-    if service is None:
-        raise HTTPException(status_code=404, detail="Service not found")
+    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["config"])
     is_associated = await current_user.services.filter(id=service_id).exists()
     if not current_user.is_superuser and not is_associated:
         raise HTTPException(status_code=403, detail="Not enough privileges")
-    config = await ServiceConfigs.get_or_none(service=service)
+    config = await Config.get_or_none(service=service)
     if config is None:
         raise HTTPException(status_code=404, detail="No config yet for this service") 
     return config
@@ -97,9 +92,7 @@ async def update_service_config(service_id: int, config_in: ConfigIn, current_us
     """
     Register a service's config
     """
-    service = await ServiceDatabase.get_or_none(id=service_id).prefetch_related("config")
-    if service is None:
-        raise HTTPException(status_code=404, detail="Service not found")
+    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["config"])
     if not await utils.check_user_privileges(current_user, service_id):
         raise HTTPException(status_code=403, detail="Not enough privileges")
     await crud.create_or_update_config(service, config_in)

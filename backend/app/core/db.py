@@ -8,14 +8,14 @@ from tortoise.contrib.fastapi import RegisterTortoise
 
 from app import crud
 from app.core.config import settings
-from app.models.db_models import UserDatabase
+from app.models.db_models import User
 from app.models.user_models import UserCreate
 
 
 #Superuser creation
 async def ensure_superuser_exists():
     try:
-        await UserDatabase.get(email=settings.FIRST_SUPERUSER)
+        await User.get(email=settings.FIRST_SUPERUSER)
     except DoesNotExist:
         user_in = UserCreate(
             email=settings.FIRST_SUPERUSER,

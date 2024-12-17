@@ -1,7 +1,9 @@
-import { Button, Container, Text } from "@chakra-ui/react"
-import { Link } from "@tanstack/react-router"
+import { Button, Container, Text } from "@chakra-ui/react";
+import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 
 const NotFound = () => {
+  const { t } = useTranslation();
   return (
     <>
       <Container
@@ -21,8 +23,8 @@ const NotFound = () => {
         >
           404
         </Text>
-        <Text fontSize="md">Oops!</Text>
-        <Text fontSize="md">Page not found.</Text>
+        <Text fontSize="md">{t("error.oops")}</Text>
+        <Text fontSize="md">{t("error.pageNotFound")}</Text>
         <Button
           as={Link}
           to="/"
@@ -31,11 +33,11 @@ const NotFound = () => {
           variant="outline"
           mt={4}
         >
-          Go back
+          {t("common.goBack")}
         </Button>
       </Container>
     </>
-  )
-}
+  );
+};
 
-export default NotFound
+export default NotFound;

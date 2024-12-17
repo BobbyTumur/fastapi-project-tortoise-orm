@@ -38,19 +38,23 @@ const UserInformation = () => {
             <Table variant="simple">
               <Tbody>
                 <Tr>
-                  <Td fontWeight="bold">{t("Username")}</Td>
+                  <Td fontWeight="bold">{t("common.username")}</Td>
                   <Td>{currentUser.username}</Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold">{t("Email")}</Td>
+                  <Td fontWeight="bold">{t("common.email")}</Td>
                   <Td>{currentUser.email}</Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold">{t("Status")}</Td>
-                  <Td>{currentUser.is_active ? t("Active") : t("Inactive")}</Td>
+                  <Td fontWeight="bold">{t("common.status")}</Td>
+                  <Td>
+                    {currentUser.is_active
+                      ? t("common.active")
+                      : t("common.inactive")}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold">{t("Role")}</Td>
+                  <Td fontWeight="bold">{t("common.role")}</Td>
                   <Td>{t(role)}</Td>
                 </Tr>
               </Tbody>

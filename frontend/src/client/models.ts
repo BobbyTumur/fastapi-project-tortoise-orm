@@ -54,8 +54,23 @@ export type UserUpdate = {
   can_edit?: boolean | null
 }
 
+export type UserServiceUpdate = {
+  added_services: number[]; 
+};
+
 export type UsersPublic = {
   data: Array<UserPublic>
+  count: number
+}
+
+export type ServicePublic = {
+  name: string
+  sub_name: string
+  id: number
+}
+
+export type ServicesPublic = {
+  data: Array<ServicePublic>
   count: number
 }
 
@@ -64,3 +79,5 @@ export type ValidationError = {
   msg: string
   type: string
 }
+
+

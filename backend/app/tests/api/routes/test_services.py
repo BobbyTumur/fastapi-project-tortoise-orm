@@ -2,11 +2,8 @@ import pytest
 from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
-from app import crud
-from app.models.db_models import UserDatabase
 from app.models.user_models import UserCreate
 from app.core.config import settings
-from app.core.security import verify_password
 from app.tests.utils.services import create_random_service 
 from app.tests.utils.utils import random_email, random_lower_string, random_integer
 

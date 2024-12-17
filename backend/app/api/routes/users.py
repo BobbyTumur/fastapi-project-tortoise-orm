@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app import utils, crud
 from app.api.dep import CurrentUser, get_current_active_superuser
-from app.core.security import get_password_hash, verify_password
-from app.models.db_models import UserDatabase, ServiceDatabase
-from app.models.service_models import ServicePublic
-from app.models.user_models import UserPublic, UsersPublic, UserRegister, UserCreate, Message, UpdatePassword, UserUpdate, UserUpdateServices
+from app.core.security import get_secret_hash, verify_secret
+from app.models.db_models import User
+from app.models.general_models import Message
+from app.models.user_models import UserPublic, UsersPublic, UserRegister, UserCreate, UpdatePassword, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -17,8 +17,8 @@ async def read_users(skip: int = 0, limit: int = 100):
     """
     Retreive users.
     """
-    users = await UserDatabase.all().offset(skip).limit(limit)
-    count = await UserDatabase.all().count()
+    users = await User.all().offset(skip).limit(limit)
+    count = await User.all().count()
     return UsersPublic(data=users, count=count)
 
 @router.get("/me", response_model=UserPublic)
@@ -33,7 +33,7 @@ async def read_user_by_id(user_id: int) -> Any:
     """
     Get a specific user by id.
     """
-    user = await UserDatabase.get_or_none(id=user_id)
+    user = await crud.get_or_404(User, id=user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -44,8 +44,8 @@ async def register_user(user_in: UserRegister) -> Message:
     Create new user without the need to be logged in.
     """
     async with in_transaction() as transaction:
-        user = await UserDatabase.get_or_none(email=user_in.email)
-        if user is not None:
+        user = await User.get_or_none(email=user_in.email)
+        if user:
             raise HTTPException(
             status_code=400,
             detail="The user with this email already exists in the system",
@@ -84,13 +84,13 @@ async def update_password_me(body: UpdatePassword, current_user: CurrentUser) ->
     """
     Update own password.
     """
-    if not verify_password(body.current_password, current_user.hashed_password):
+    if not verify_secret(body.current_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect password")
     if body.current_password == body.new_password:
         raise HTTPException(
             status_code=400, detail="New password cannot be the same as the current one"
         )
-    hashed_password = get_password_hash(body.new_password)
+    hashed_password = get_secret_hash(body.new_password)
     current_user.hashed_password = hashed_password
     await current_user.save()
     return Message(message="Password updated successfully")
@@ -100,9 +100,7 @@ async def update_user(current_user: CurrentUser, user_id: int, user_in: UserUpda
     """
     Update a user.
     """
-    user = await UserDatabase.get_or_none(id=user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = await crud.get_or_404(User, id=user_id)
     if user == current_user:
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to update themselves"
@@ -115,9 +113,7 @@ async def delete_user(current_user: CurrentUser, user_id: int) -> Message:
     """
     Delete a user.
     """
-    user = await UserDatabase.get_or_none(id=user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = await crud.get_or_404(User, id=user_id)
     if user == current_user:
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to delete themselves"
@@ -125,53 +121,3 @@ async def delete_user(current_user: CurrentUser, user_id: int) -> Message:
     await user.delete()
     return Message(message="User deleted successfully")
 
-@router.get("/{user_id}/services", 
-              dependencies=[Depends(get_current_active_superuser)],
-              response_model=list[ServicePublic])
-async def get_user_services(
-    user_id: int,
-) -> list[ServicePublic]:
-    """
-    Get user's services
-    """
-    user = await UserDatabase.get_or_none(id=user_id).prefetch_related("services")
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    services = await user.services.all()
-    return services
-
-
-@router.patch("/{user_id}/services", 
-              dependencies=[Depends(get_current_active_superuser)],
-              response_model=Message)
-async def add_services_to_user(
-    user_id: int,
-    services_in: UserUpdateServices
-) -> Message:
-    """
-    Add services to a user by IDs.
-    """
-    user = await UserDatabase.get_or_none(id=user_id).prefetch_related("services")
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    # Process 'add_services'
-    for service_id in services_in.add_services:
-        service = await ServiceDatabase.get_or_none(id=service_id)
-        if not service:
-            raise HTTPException(status_code=404, detail=f"Service with ID {service_id} not found")
-        
-        is_associated = await user.services.filter(id=service.id).exists()
-        if not is_associated:
-            await user.services.add(service)
-
-    # Process 'remove_services'
-    for service_id in services_in.remove_services:
-        service = await ServiceDatabase.get_or_none(id=service_id)
-        if not service:
-            raise HTTPException(status_code=404, detail=f"Service with ID {service_id} not found")
-        
-        is_associated = await user.services.filter(id=service.id).exists()
-        if is_associated:
-            await user.services.remove(service)
-
-    return Message(message="User services updated successfully")

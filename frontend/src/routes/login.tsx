@@ -18,6 +18,7 @@ import {
   redirect,
 } from "@tanstack/react-router";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import Logo from "/assets/images/bobby-project.png";
 import type { Body_login_login_access_token as AccessToken } from "../client";
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function Login() {
+  const { t } = useTranslation();
   const [show, setShow] = useBoolean();
   const { loginMutation, error, resetError } = useAuth();
   const {
@@ -87,10 +89,10 @@ function Login() {
           <Input
             id="username"
             {...register("username", {
-              required: "Username is required",
+              required: t("forms.emailRequired"),
               pattern: emailPattern,
             })}
-            placeholder="Email"
+            placeholder={t("common.email")}
             type="email"
             required
           />
@@ -102,10 +104,10 @@ function Login() {
           <InputGroup>
             <Input
               {...register("password", {
-                required: "Password is required",
+                required: t("forms.passwordRequired"),
               })}
               type={show ? "text" : "password"}
-              placeholder="Password"
+              placeholder={t("common.password")}
               required
             />
             <InputRightElement
@@ -126,10 +128,10 @@ function Login() {
           {error && <FormErrorMessage>{error}</FormErrorMessage>}
         </FormControl>
         <Link as={RouterLink} to="/recover-password" color="blue.500">
-          Forgot password?
+          {t("forms.forgotPassword")}
         </Link>
         <Button variant="primary" type="submit" isLoading={isSubmitting}>
-          Log In
+          {t("common.logIn")}
         </Button>
       </Container>
     </>

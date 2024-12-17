@@ -136,7 +136,7 @@ function UsersTable() {
                   </Td>
                   <Td>
                     <ActionsMenu
-                      type="User"
+                      type={t("common.user")}
                       value={user}
                       disabled={currentUser?.id === user.id ? true : false}
                     />
