@@ -39,3 +39,7 @@ def create_totp(username: str) -> tuple[str, str]:
     totp = pyotp.TOTP(totp_secret)
     qr_uri = totp.provisioning_uri(name=username, issuer_name=settings.PROJECT_NAME)
     return totp_secret, qr_uri
+
+def verify_totp(*, totp: str, user_secret: str) -> bool:
+    token = pyotp.TOTP(user_secret)
+    return token.verify(totp)

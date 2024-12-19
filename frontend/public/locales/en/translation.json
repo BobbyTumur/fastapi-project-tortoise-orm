@@ -2,8 +2,8 @@
     "common": {
         "username": "Full Name",
         "email": "Email",
-        "role": "role",
-        "status": "status",
+        "role": "Role",
+        "status": "Status",
         "actions": "actions",
         "previous": "previous",
         "next": "next",
@@ -24,7 +24,10 @@
         "delete": "Delete",
         "goBack": "Go Back",
         "logIn": "Log In",
-        "service": "Service"
+        "service": "Service",
+        "enabled": "Enabled",
+        "notEnabled": "Not enabled",
+        "totp": "2FA"
 
     },
     "titles": {
@@ -33,6 +36,8 @@
         "editName": "Edit Name",
         "updatePassword": "Update Password",
         "myProfile": "My Profile",
+        "summary": "Summary",
+        "setup2FA": "Set up 2FA",
         "services": "Services",
         "addService": "Add Service",
         "editUser": "Edit User",
@@ -73,7 +78,8 @@
         "userCreated": "We sent an email with a link to the user to set up password",
         "userDeleted": "The user was deleted successfully.",
         "error": "An error occurred.",
-        "errorDetail": "An error occurred while deleting the user."
+        "TOTPDisabled": "The 2FA was disabled successfully",
+        "errorDetail": " deletion has failed."
     },
 
 

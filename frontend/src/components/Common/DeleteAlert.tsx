@@ -16,12 +16,13 @@ import useCustomToast from "../../hooks/useCustomToast";
 import { useTranslation } from "react-i18next";
 
 interface DeleteProps {
+  type: string;
   id: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const Delete = ({ id, isOpen, onClose }: DeleteProps) => {
+const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const { t } = useTranslation();
@@ -31,22 +32,32 @@ const Delete = ({ id, isOpen, onClose }: DeleteProps) => {
     formState: { isSubmitting },
   } = useForm();
 
-  const deleteUser = async (id: string) => {
-    await UsersService.deleteUser({ userId: id });
+  const deleteEntity = async (id: string) => {
+    if (type === "TOTP") {
+      await UsersService.disableTOTP();
+    } else if (type === t("common.user")) {
+      await UsersService.deleteUser({ userId: id });
+    } else {
+      throw new Error(`Unexpected type: ${type}`);
+    }
   };
 
   const mutation = useMutation({
-    mutationFn: deleteUser,
+    mutationFn: deleteEntity,
     onSuccess: () => {
-      showToast(t("toast.success"), t("toast.userDeleted"), "success");
+      showToast(
+        t("toast.success"),
+        type === "User" ? t("toast.userDeleted") : t("toast.TOTPDisabled"),
+        "success"
+      );
       onClose();
     },
     onError: () => {
-      showToast(t("toast.error"), t("toast.errorDetail"), "error");
+      showToast(t("toast.error"), `${type} t("toast.errorDetail")`, "error");
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["users"],
+        queryKey: [type === "User" ? "users" : ""],
       });
     },
   });
@@ -66,7 +77,11 @@ const Delete = ({ id, isOpen, onClose }: DeleteProps) => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <AlertDialogHeader>{t("titles.deleteUser")}</AlertDialogHeader>
+            <AlertDialogHeader>
+              {type === "User"
+                ? t("titles.userDeleted")
+                : t("titles.TOTPDisabled")}
+            </AlertDialogHeader>
 
             <AlertDialogBody>
               <span>

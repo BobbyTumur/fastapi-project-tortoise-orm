@@ -24,7 +24,10 @@
         "delete": "削除",
         "goBack": "戻る",
         "logIn": "ログイン",
-        "service": "サービス"
+        "service": "サービス",
+        "enabled": "有効",
+        "notEnabled": "無効",
+        "totp": "二要素認証"
         
     },
     "titles": {
@@ -33,6 +36,8 @@
         "editName": "名前の編集",
         "updatePassword": "パスワードの更新",
         "myProfile": "プロフィール",
+        "summary": "概要",
+        "setup2FA": "二要素認証設定",
         "services": "サービス一覧",
         "addService": "サービス追加",
         "editUser": "ユーザー更新",
@@ -71,8 +76,9 @@
         "userCreateSuccess": "ユーザーを追加しました。",
         "userCreated": "パスワード設定リンクをユーザーに送信しました。",
         "userDeleted": "ユーザーが削除されました。",
+        "TOTPDisabled": "二要素認証が無効化されました。",
         "error": "エラーが発生しました。",
-        "errorDetail": "ユーザー削除ができませんでした。"
+        "errorDetail": "削除ができませんでした。"
     },
 
     "error": {

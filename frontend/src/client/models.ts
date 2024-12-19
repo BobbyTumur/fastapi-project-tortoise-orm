@@ -36,6 +36,7 @@ export type UserPublic = {
   is_superuser?: boolean
   username: string
   can_edit?: boolean | null
+  is_totp_enabled?: boolean
   id: string
 }
 
@@ -80,4 +81,10 @@ export type ValidationError = {
   type: string
 }
 
+export type TOTPToken = {
+  token: string
+}
 
+export type QRUri = {
+  uri: string
+}

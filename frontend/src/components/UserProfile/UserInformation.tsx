@@ -8,28 +8,23 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import useAuth from "../../hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { type UserPublic } from "../../client";
 
 const UserInformation = () => {
   const { t } = useTranslation();
-  const { user: currentUser } = useAuth();
+  const queryClient = useQueryClient();
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
 
-  if (!currentUser) {
-    return (
-      <Container>
-        <Box textAlign="center" mt={2}>
-          {t("No user information available.")}
-        </Box>
-      </Container>
-    );
-  }
-
-  const role = currentUser.is_superuser
+  const role = currentUser?.is_superuser
     ? "Admin"
-    : currentUser.can_edit
+    : currentUser?.can_edit
       ? "Tier2"
       : "Tier1";
-
+  const totp = currentUser?.is_totp_enabled
+    ? t("common.enabled")
+    : t("common.notEnabled");
   return (
     <>
       <Container maxW="full">
@@ -39,16 +34,16 @@ const UserInformation = () => {
               <Tbody>
                 <Tr>
                   <Td fontWeight="bold">{t("common.username")}</Td>
-                  <Td>{currentUser.username}</Td>
+                  <Td>{currentUser?.username}</Td>
                 </Tr>
                 <Tr>
                   <Td fontWeight="bold">{t("common.email")}</Td>
-                  <Td>{currentUser.email}</Td>
+                  <Td>{currentUser?.email}</Td>
                 </Tr>
                 <Tr>
                   <Td fontWeight="bold">{t("common.status")}</Td>
                   <Td>
-                    {currentUser.is_active
+                    {currentUser?.is_active
                       ? t("common.active")
                       : t("common.inactive")}
                   </Td>
@@ -56,6 +51,10 @@ const UserInformation = () => {
                 <Tr>
                   <Td fontWeight="bold">{t("common.role")}</Td>
                   <Td>{t(role)}</Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold">{t("common.totp")}</Td>
+                  <Td>{t(totp)}</Td>
                 </Tr>
               </Tbody>
             </Table>

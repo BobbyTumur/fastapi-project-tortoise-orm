@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import ChangePassword from "../../components/UserProfile/ChangePassword";
 import UserInformation from "../../components/UserProfile/UserInformation";
+import TOTP from "../../components/UserProfile/TOTP";
 
 export const Route = createFileRoute("/_layout/profile")({
   component: UserProfile,
@@ -20,8 +21,9 @@ export const Route = createFileRoute("/_layout/profile")({
 function UserProfile() {
   const { t } = useTranslation();
   const tabsConfig = [
-    { title: t("titles.myProfile"), component: UserInformation },
+    { title: t("titles.summary"), component: UserInformation },
     { title: t("titles.updatePassword"), component: ChangePassword },
+    { title: t("titles.setup2FA"), component: TOTP },
   ];
   return (
     <Container maxW="full">

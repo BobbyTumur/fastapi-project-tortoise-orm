@@ -68,6 +68,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
           onClose={editUserServiceModal.onClose}
         />
         <Delete
+          type={type}
           id={value.id}
           isOpen={deleteModal.isOpen}
           onClose={deleteModal.onClose}

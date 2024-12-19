@@ -18,8 +18,8 @@ TokenDep = Annotated[str, Depends(resuasble_oauth2)]
 async def get_current_user(token: TokenDep) -> User:
     try:
         payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
-        )
+            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM], options={"verify_exp": True}
+            )
         token_data = TokenPayLoad(**payload)
         if token_data.is_auth:
             user = await User.get(id=token_data.sub)

@@ -14,7 +14,9 @@ import type {
   UserUpdate,
   ServicePublic,
   ServicesPublic,
-  UserServiceUpdate
+  UserServiceUpdate,
+  TOTPToken,
+  QRUri
 } from "./models"
 
 export type TDataLoginAccessToken = {
@@ -162,6 +164,7 @@ export type TDataReadUsers = {
 export type TDataUpdatePasswordMe = {
   requestBody: UpdatePassword
 }
+
 export type TDataRegisterUser = {
   requestBody: UserRegister
 }
@@ -183,6 +186,9 @@ export type TDataUpdateUser = {
 }
 export type TDataDeleteUser = {
   userId: string
+}
+export type TDataVerifyTOTP = {
+  requestBody: TOTPToken
 }
 
 export class UsersService {
@@ -358,6 +364,7 @@ export class UsersService {
     })
   }
 
+
   /**
    * Delete User
    * Delete a user.
@@ -377,6 +384,54 @@ export class UsersService {
       },
     })
   }
+    /**
+   * Enable own TOTP
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+    public static enableTOTP(): CancelablePromise<QRUri> {
+      return __request(OpenAPI, {
+        method: "POST",
+        url: "/api/v1/totp/enable",
+      })
+    }
+  
+    /**
+   * Disable own TOTP
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+    public static disableTOTP(
+    ): CancelablePromise<Message> {
+      return __request(OpenAPI, {
+        method: "DELETE",
+        url: "/api/v1/totp/disable",
+        mediaType: "application/json",
+        errors: {
+          422: `Validation Error`,
+        },
+      })
+    }
+
+  /**
+   * Enable own TOTP
+   * @returns Message Successful Response
+   * @throws ApiError
+   */
+    public static verifyTOTP(
+      data: TDataVerifyTOTP,
+    ): CancelablePromise<Message> {
+      const { requestBody } = data
+      return __request(OpenAPI, {
+        method: "POST",
+        url: "/api/v1/totp/verify",
+        body: requestBody,
+        mediaType: "application/json",
+        errors: {
+          422: `Validation Error`,
+        },
+      })
+    }
 
 
 }
