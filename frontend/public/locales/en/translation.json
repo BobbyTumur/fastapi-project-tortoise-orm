@@ -27,7 +27,8 @@
         "service": "Service",
         "enabled": "Enabled",
         "notEnabled": "Not enabled",
-        "totp": "2FA"
+        "totp": "2FA",
+        "editService": "Edit Service"
 
     },
     "titles": {
@@ -42,7 +43,8 @@
         "addService": "Add Service",
         "editUser": "Edit User",
         "deleteUser": "Delete User",
-        "editUserService": "Edit User's Services"
+        "editUserService": "Edit User's Services",
+        "disableTotp": "Disable 2FA"
     },
     "services": {
         "Name": "Name",
@@ -62,7 +64,8 @@
         "currentPassword": "Current Password",
         "setPassword": "Set Password",
         "confirmPassword": "Confirm Password",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "enterTotp": "Enter Your OTP Code"
 
     },
     "index": {

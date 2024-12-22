@@ -57,7 +57,7 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [type === "User" ? "users" : ""],
+        queryKey: [type === t("common.user") ? "users" : "currentUser"],
       });
     },
   });
@@ -78,9 +78,9 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
         <AlertDialogOverlay>
           <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
             <AlertDialogHeader>
-              {type === "User"
-                ? t("titles.userDeleted")
-                : t("titles.TOTPDisabled")}
+              {type === t("common.user")
+                ? t("titles.deleteUser")
+                : t("titles.disableTotp")}
             </AlertDialogHeader>
 
             <AlertDialogBody>

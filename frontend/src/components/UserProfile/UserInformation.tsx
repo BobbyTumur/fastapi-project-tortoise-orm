@@ -8,14 +8,21 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import { type UserPublic } from "../../client";
+import { type UserPublic, UsersService } from "../../client";
 
 const UserInformation = () => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
+  const { data: currentUser, isLoading } = useQuery<UserPublic>({
+    queryKey: ["currentUser"],
+    queryFn: UsersService.readUserMe,
+    refetchOnWindowFocus: false, // Optionally disable refetch on window focus
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const role = currentUser?.is_superuser
     ? "Admin"

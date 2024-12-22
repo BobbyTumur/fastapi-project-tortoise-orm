@@ -47,7 +47,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             onClick={editUserServiceModal.onOpen}
             icon={<FiFolder fontSize="16px" />}
           >
-            {type} {t("common.service")}
+            {type} {t("common.editService")}
           </MenuItem>
           <MenuItem
             onClick={deleteModal.onOpen}

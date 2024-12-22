@@ -22,6 +22,9 @@ import type {
 export type TDataLoginAccessToken = {
   formData: Body_login_login_access_token
 }
+export type TDataValidateTotp = {
+  totp: TOTPToken
+}
 export type TDataRecoverPassword = {
   email: string
 }
@@ -39,6 +42,7 @@ export class LoginService {
   /**
    * Login Access Token
    * OAuth2 compatible token login, get an access token for future requests
+   * if token_type is totp, redirects to totp validation page
    * @returns Token Successful Response
    * @throws ApiError
    */
@@ -56,6 +60,27 @@ export class LoginService {
       },
     })
   }
+  /**
+   * Login Access Token afer totp validation
+   * OAuth2 compatible token login, get an access token for future requests
+   * @returns Token Successful Response
+   * @throws ApiError
+   */
+  public static validateTotp(
+    data: TDataValidateTotp,
+  ): CancelablePromise<Token> {
+    const { totp } = data
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/v1/login/validate-totp",
+      body: totp,
+      mediaType: "application/json",
+      errors: {
+        422: `Validation Error`,
+      },
+    })
+  }
+
 
   /**
    * Test Token

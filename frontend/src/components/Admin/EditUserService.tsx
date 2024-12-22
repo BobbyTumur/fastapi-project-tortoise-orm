@@ -38,13 +38,11 @@ const EditUserService = ({
   const { data: userServices, isLoading: isUserServicesLoading } = useQuery({
     queryKey: ["userServices", userId],
     queryFn: () => UsersService.readUserServices({ userId }),
-    staleTime: 60000, // Cache data for 1 minute
   });
 
   const { data: services, isLoading: isServicesLoading } = useQuery({
     queryKey: ["services"],
     queryFn: () => ServicesService.readAllServices(),
-    staleTime: 60000, // Cache data for 1 minute
   });
 
   const isLoading = isUserServicesLoading || isServicesLoading;

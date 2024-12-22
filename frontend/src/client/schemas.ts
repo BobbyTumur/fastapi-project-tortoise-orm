@@ -227,6 +227,14 @@ export const $UserRegister = {
       type: "boolean",
       default: true,
     },
+    is_totp_enabled: {
+      type: "boolean",
+      default: false,
+    },
+    can_edit: {
+      type: "boolean",
+      default: false,
+    },
     is_superuser: {
       type: "boolean",
       default: false,

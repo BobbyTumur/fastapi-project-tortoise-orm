@@ -1,21 +1,23 @@
 from datetime import timedelta
-from typing import Annotated
+from typing import Any, Optional, Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Cookie, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app import crud, utils
 from app.core import security
 from app.core.config import settings
+from app.api.dep import CurrentTotpUser
 from app.models.db_models import User
-from app.models.general_models import Token,  Message, NewPassword
+from app.models.general_models import Token, Message, NewPassword, TOTPToken
 
 router = APIRouter(tags=["login"])
 
 @router.post("/login/access-token")
 async def login_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
-) -> Token:
+) -> Any:
     """
     OAuth2 compatible token login, get an access token for future requests
     """
@@ -25,10 +27,92 @@ async def login_access_token(
     elif not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    return Token(
-        access_token=security.create_access_token(user.id, expires_delta=access_token_expires)
-    )
+
+    # If TOTP is enabled, return True
+    if user.is_totp_enabled:
+        return Token(
+            access_token=security.create_access_token(
+                user.id, 
+                expires_delta=access_token_expires/3,
+                is_auth=False
+                ),
+            token_type="totp"
+            )
+    
+    # Generate tokens
+    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, is_auth=True)
+    refresh_token =  security.create_refresh_token(user.id)
+
+    # Send the refresh token in an HttpOnly cookie
+    response = JSONResponse(content=Token(access_token=access_token).model_dump())
+    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=True)
+
+    return response
+
+@router.post("/login/validate-totp")
+async def verify_totp(
+    current_user: CurrentTotpUser,
+    totp_token: TOTPToken,
+) -> JSONResponse:
+    """
+    Validate TOTP code and issue an access token
+    """
+    # Validate the TOTP code
+    is_valid_totp = security.verify_totp(totp=totp_token.token, user_secret=current_user.totp_secret)
+    
+    if not is_valid_totp:
+        raise HTTPException(status_code=400, detail="Invalid TOTP code")
+    
+    # If TOTP is valid, issue the access token
+    # Generate tokens
+    access_token = security.create_access_token(current_user.id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES), is_auth=True)
+    refresh_token =  security.create_refresh_token(current_user.id)
+
+    # Send the refresh token in an HttpOnly cookie
+    response = JSONResponse(content=Token(access_token=access_token).model_dump())
+    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=True)
+
+    return response
+
+@router.post("/login/refresh-token")
+async def refresh_access_token(
+    refresh_token: Optional[str] = Cookie(None)
+) -> JSONResponse:
+    """
+    Refresh the access token using the refresh token stored in the cookie.
+    """
+    if not refresh_token:
+        raise HTTPException(status_code=400, detail="Refresh token missing")
+
+    # Validate the refresh token
+    try:
+        payload = security.decode_refresh_token(refresh_token)
+    except security.InvalidTokenError:
+        raise HTTPException(status_code=400, detail="Invalid or expired refresh token")
+
+    # Extract user ID from the payload
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=400, detail="Invalid refresh token payload")
+
+    # Fetch the user from the database
+    user = await crud.get_or_404(User, id=user_id)
+    if not user or not user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive or invalid user")
+
+    # Generate new tokens
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, is_auth=True)
+    new_refresh_token = security.create_refresh_token(user.id)
+
+    # Set the new refresh token in an HttpOnly cookie
+    response = JSONResponse(content=Token(access_token=access_token).model_dump())
+    response.set_cookie(key="refresh_token", value=new_refresh_token, httponly=True, secure=True)
+
+    return response
+    
 
 @router.post("/password-recovery/{email}")
 async def recover_password(email: str) -> Message:

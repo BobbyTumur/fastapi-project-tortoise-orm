@@ -11,12 +11,23 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 
 
-def create_access_token(subject: str | Any, expires_delta: timedelta) -> str:
+def create_access_token(subject: str | Any, expires_delta: timedelta, is_auth: bool) -> str:
     expire = datetime.now(timezone.utc) + expires_delta
-    to_encode = {"exp": expire, "sub": str(subject), "is_auth" : True}
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    to_encode = {"exp": expire, "sub": str(subject), "is_auth" : is_auth}
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
 
+def create_refresh_token(subject: str | Any) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_HOURS)
+    to_encode = {"exp": expire, "sub": str(subject)}
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
+
+def decode_jwt_token(token: str) -> dict:
+    try:
+        return jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM], options={"verify_exp": True})
+    except jwt.ExpiredSignatureError:
+        raise Exception("Token has expired")
+    except jwt.JWTError:
+        raise Exception("Invalid token")
 
 def verify_secret(plain_secret: str, hashed_secret: str) -> bool:
     return pwd_context.verify(plain_secret, hashed_secret)

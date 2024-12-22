@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import {
   Box,
+  Flex,
   Button,
   Input,
   Modal,
@@ -17,39 +18,39 @@ import {
 } from "@chakra-ui/react";
 import { handleError } from "../../utils";
 import useCustomToast from "../../hooks/useCustomToast";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  type ApiError,
-  type TOTPToken,
-  type UserPublic,
-  UsersService,
-} from "../../client";
+import { useQuery } from "@tanstack/react-query";
+import Delete from "../Common/DeleteAlert";
+import { type ApiError, type TOTPToken, UsersService } from "../../client";
+
+function getUserQuery() {
+  return {
+    queryFn: () => UsersService.readUserMe(),
+    queryKey: ["currentUser"],
+  };
+}
 
 const TOTP: React.FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
+  const { data: currentUser } = useQuery({
+    ...getUserQuery(),
+  });
   const [qrUri, setQrUri] = useState<string | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const deleteModal = useDisclosure();
   const showToast = useCustomToast();
-  const [isTotpEnabled, setIsTotpEnabled] = useState(false); // Track TOTP status
+  const isTotpEnabled = currentUser?.is_totp_enabled ?? false;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
+    formState: { isDirty },
   } = useForm<TOTPToken>({
     mode: "onBlur",
     criteriaMode: "all",
   });
-
-  // Set TOTP status based on current user data
-  React.useEffect(() => {
-    if (currentUser) {
-      setIsTotpEnabled(currentUser.is_totp_enabled ?? false);
-    }
-  }, [currentUser]);
 
   // Mutation to enable TOTP
   const enableTotpMutation = useMutation({
@@ -57,19 +58,6 @@ const TOTP: React.FC = () => {
     onSuccess: (data) => {
       setQrUri(data.uri); // Set QR code URI
       onOpen(); // Open the modal to display QR code
-      showToast(t("toast.success"), t("toast.totpEnabled"), "success");
-    },
-    onError: (err: ApiError) => {
-      handleError(err, showToast);
-    },
-  });
-
-  // Mutation to disable TOTP
-  const disableTotpMutation = useMutation({
-    mutationFn: UsersService.disableTOTP,
-    onSuccess: () => {
-      showToast(t("toast.success"), t("toast.totpDisabled"), "success");
-      setIsTotpEnabled(false); // Mark TOTP as disabled
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
@@ -82,13 +70,18 @@ const TOTP: React.FC = () => {
       UsersService.verifyTOTP({ requestBody: data }),
     onSuccess: () => {
       showToast(t("toast.success"), t("toast.totpVerified"), "success");
-      setIsTotpEnabled(true); // Mark TOTP as enabled
       setQrUri(null); // Clear QR URI after verification
       reset(); // Reset the form
       onClose();
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["currentUser"],
+      });
     },
   });
 
@@ -97,12 +90,6 @@ const TOTP: React.FC = () => {
     enableTotpMutation.mutate();
   };
 
-  // Handle disabling TOTP
-  const handleDisableTotp = () => {
-    disableTotpMutation.mutate();
-  };
-
-  // Handle verifying TOTP token
   const handleVerifyTotp: SubmitHandler<TOTPToken> = (data) => {
     verifyTotpMutation.mutate(data);
   };
@@ -111,12 +98,7 @@ const TOTP: React.FC = () => {
     <Box>
       {/* Conditionally render Enable/Disable button */}
       {isTotpEnabled ? (
-        <Button
-          variant="primary"
-          mt={4}
-          onClick={handleDisableTotp}
-          isLoading={disableTotpMutation.isPending}
-        >
+        <Button variant="danger" mt={4} onClick={deleteModal.onOpen}>
           {t("disableTotp")}
         </Button>
       ) : (
@@ -130,6 +112,12 @@ const TOTP: React.FC = () => {
         </Button>
       )}
 
+      <Delete
+        type="TOTP"
+        id="TOTP"
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.onClose}
+      />
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -142,35 +130,45 @@ const TOTP: React.FC = () => {
           <ModalCloseButton />
           <ModalBody>
             {qrUri && (
-              <Box textAlign="center">
+              <Flex direction="column" align="center" gap={4}>
                 {qrUri ? (
-                  <QRCodeSVG value={qrUri} size={256} />
+                  <Box mb={4}>
+                    <QRCodeSVG value={qrUri} size={128} />
+                  </Box>
                 ) : (
                   <p>{t("qrCodeNotAvailable")}</p>
                 )}
-                <form onSubmit={handleSubmit(handleVerifyTotp)}>
-                  <Input
-                    mt={4}
-                    placeholder={t("enterTotpToken")}
-                    {...register("token", { required: t("tokenRequired") })}
-                    size="md"
-                    w="auto"
-                  />
-                  {errors.token && (
-                    <Box color="red.500" mt={2}>
-                      {errors.token.message}
-                    </Box>
-                  )}
-                  <Button
-                    variant="primary"
-                    mt={4}
-                    type="submit"
-                    isLoading={verifyTotpMutation.isPending}
-                  >
-                    {t("verifyTotp")}
-                  </Button>
+                <form
+                  onSubmit={handleSubmit(handleVerifyTotp)}
+                  style={{ width: "100%" }}
+                >
+                  <Flex direction="column" align="center" gap={4}>
+                    <Input
+                      placeholder={t("enterTotpToken")}
+                      {...register("token", { required: t("tokenRequired") })}
+                      size="md"
+                      w="auto"
+                      sx={{
+                        "::placeholder": {
+                          fontStyle: "italic",
+                          fontSize: "sm",
+                        },
+                      }}
+                    />
+                    {errors.token && (
+                      <Box color="red.500">{errors.token.message}</Box>
+                    )}
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      isLoading={verifyTotpMutation.isPending}
+                      isDisabled={!isDirty}
+                    >
+                      {t("verifyTotp")}
+                    </Button>
+                  </Flex>
                 </form>
-              </Box>
+              </Flex>
             )}
           </ModalBody>
         </ModalContent>

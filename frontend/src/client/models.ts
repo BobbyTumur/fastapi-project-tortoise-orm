@@ -45,6 +45,7 @@ export type UserRegister = {
   username: string
   is_active?: boolean
   is_superuser?: boolean
+  is_totp_enabled?: boolean
   can_edit?: boolean | null
 }
 

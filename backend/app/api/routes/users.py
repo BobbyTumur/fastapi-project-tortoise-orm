@@ -22,7 +22,7 @@ async def read_users(skip: int = 0, limit: int = 100):
     return UsersPublic(data=users, count=count)
 
 @router.get("/me", response_model=UserPublic)
-def read_user_me(current_user: CurrentUser) -> Any:
+async def read_user_me(current_user: CurrentUser) -> Any:
     """
     Get current user.
     """

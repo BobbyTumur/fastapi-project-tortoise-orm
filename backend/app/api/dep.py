@@ -15,29 +15,39 @@ from app.models.general_models import TokenPayLoad
 resuasble_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
 TokenDep = Annotated[str, Depends(resuasble_oauth2)]
 
-async def get_current_user(token: TokenDep) -> User:
+async def get_current_user(token: TokenDep, expect_totp: bool = False) -> User:
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM], options={"verify_exp": True}
             )
         token_data = TokenPayLoad(**payload)
-        if token_data.is_auth:
-            user = await User.get(id=token_data.sub)
-            if not user.is_active:
-                raise HTTPException(status_code=400, detail="Inactive user")
-            return user
-        else:
-            raise HTTPException(status_code=400, detail="Invalid token type")
+
+        if expect_totp and token_data.is_auth:
+            raise HTTPException(status_code=401, detail="Invalid token type for TOTP")
+        
+        if not expect_totp and not token_data.is_auth:
+            raise HTTPException(status_code=401, detail="Invalid token type")
+        
+        user = await User.get(id=token_data.sub)
+        if not user.is_active:
+            raise HTTPException(status_code=400, detail="Inactive user")
+        
+        return user
+    
     except (InvalidTokenError, ValidationError):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
+            status_code=401,
             detail="Could not validate credentials",
         )
     except DoesNotExist:
         raise HTTPException(status_code=404, detail="User not found")
     
-    
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+async def get_totp_user(token: TokenDep) -> User:
+    return await get_current_user(token, expect_totp=True)
+
+CurrentTotpUser = Annotated[User, Depends(get_totp_user)]
 
 def get_current_active_superuser(current_user: CurrentUser) -> User:
     if not current_user.is_superuser:

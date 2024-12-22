@@ -38,7 +38,7 @@ async def totp_login_verify(current_user: CurrentUser, totp_data: TOTPToken) -> 
     # Verify the provided TOTP token
     verify = verify_totp(totp=totp_data.token, user_secret=user.totp_secret)
     if not verify:
-        raise HTTPException(status_code=401, detail="Invalid TOTP token.")
+        raise HTTPException(status_code=400, detail="Invalid TOTP token.")
     user.is_totp_enabled = True
     await user.save()
     

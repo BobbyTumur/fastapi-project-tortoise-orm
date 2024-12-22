@@ -7,18 +7,19 @@ class UserBase(BaseModel):
     can_edit: bool = False
     is_active: bool = True
     is_totp_enabled: bool = False
-
-# Properties to receive via API on creation
+    
 class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=40)
 
 class UserRegister(UserBase):
     pass
 
+
 class UserPublic(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
     
 class UsersPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)

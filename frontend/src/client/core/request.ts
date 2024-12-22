@@ -323,6 +323,7 @@ export const catchErrorCodes = (
  * @returns CancelablePromise<T>
  * @throws ApiError
  */
+
 export const request = <T>(
   config: OpenAPIConfig,
   options: ApiRequestOptions,

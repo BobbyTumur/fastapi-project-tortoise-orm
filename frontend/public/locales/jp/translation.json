@@ -27,7 +27,8 @@
         "service": "サービス",
         "enabled": "有効",
         "notEnabled": "無効",
-        "totp": "二要素認証"
+        "totp": "二要素認証",
+        "editService": "サービス編集"
         
     },
     "titles": {
@@ -42,7 +43,8 @@
         "addService": "サービス追加",
         "editUser": "ユーザー更新",
         "deleteUser": "ユーザー削除",
-        "editUserService": "ユーザーのサービスを編集"
+        "editUserService": "ユーザーのサービスを編集",
+        "disableTotp": "2FAの無効化"
     },
     "services": {
         "Name": "名",
@@ -62,7 +64,8 @@
         "currentPassword": "現在のパスワード",
         "setPassword": "パスワードを設定",
         "confirmPassword": "パスワードを確認",
-        "forgotPassword": "パスワードをお忘れですか？"
+        "forgotPassword": "パスワードをお忘れですか？",
+        "enterTotp": "OTPコードを入力してください"
     },
     "index": {
         "greet": "こんにちは",

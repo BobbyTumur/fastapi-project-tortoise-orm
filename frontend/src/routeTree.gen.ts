@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ValidateTotpImport } from './routes/validate-totp'
 import { Route as SetupPasswordImport } from './routes/setup-password'
 import { Route as ResetPasswordImport } from './routes/reset-password'
 import { Route as RecoverPasswordImport } from './routes/recover-password'
@@ -22,6 +23,11 @@ import { Route as LayoutProfileImport } from './routes/_layout/profile'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 
 // Create/Update Routes
+
+const ValidateTotpRoute = ValidateTotpImport.update({
+  path: '/validate-totp',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SetupPasswordRoute = SetupPasswordImport.update({
   path: '/setup-password',
@@ -107,6 +113,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupPasswordImport
       parentRoute: typeof rootRoute
     }
+    '/validate-totp': {
+      id: '/validate-totp'
+      path: '/validate-totp'
+      fullPath: '/validate-totp'
+      preLoaderRoute: typeof ValidateTotpImport
+      parentRoute: typeof rootRoute
+    }
     '/_layout/admin': {
       id: '/_layout/admin'
       path: '/admin'
@@ -163,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/setup-password': typeof SetupPasswordRoute
+  '/validate-totp': typeof ValidateTotpRoute
   '/admin': typeof LayoutAdminRoute
   '/profile': typeof LayoutProfileRoute
   '/services': typeof LayoutServicesRoute
@@ -174,6 +188,7 @@ export interface FileRoutesByTo {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/setup-password': typeof SetupPasswordRoute
+  '/validate-totp': typeof ValidateTotpRoute
   '/admin': typeof LayoutAdminRoute
   '/profile': typeof LayoutProfileRoute
   '/services': typeof LayoutServicesRoute
@@ -187,6 +202,7 @@ export interface FileRoutesById {
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/setup-password': typeof SetupPasswordRoute
+  '/validate-totp': typeof ValidateTotpRoute
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/profile': typeof LayoutProfileRoute
   '/_layout/services': typeof LayoutServicesRoute
@@ -201,6 +217,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/setup-password'
+    | '/validate-totp'
     | '/admin'
     | '/profile'
     | '/services'
@@ -211,6 +228,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/setup-password'
+    | '/validate-totp'
     | '/admin'
     | '/profile'
     | '/services'
@@ -222,6 +240,7 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/setup-password'
+    | '/validate-totp'
     | '/_layout/admin'
     | '/_layout/profile'
     | '/_layout/services'
@@ -235,6 +254,7 @@ export interface RootRouteChildren {
   RecoverPasswordRoute: typeof RecoverPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SetupPasswordRoute: typeof SetupPasswordRoute
+  ValidateTotpRoute: typeof ValidateTotpRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -243,6 +263,7 @@ const rootRouteChildren: RootRouteChildren = {
   RecoverPasswordRoute: RecoverPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SetupPasswordRoute: SetupPasswordRoute,
+  ValidateTotpRoute: ValidateTotpRoute,
 }
 
 export const routeTree = rootRoute
@@ -261,7 +282,8 @@ export const routeTree = rootRoute
         "/login",
         "/recover-password",
         "/reset-password",
-        "/setup-password"
+        "/setup-password",
+        "/validate-totp"
       ]
     },
     "/_layout": {
@@ -284,6 +306,9 @@ export const routeTree = rootRoute
     },
     "/setup-password": {
       "filePath": "setup-password.tsx"
+    },
+    "/validate-totp": {
+      "filePath": "validate-totp.tsx"
     },
     "/_layout/admin": {
       "filePath": "_layout/admin.tsx",

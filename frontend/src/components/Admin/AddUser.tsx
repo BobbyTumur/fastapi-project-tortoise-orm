@@ -32,12 +32,13 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
+  const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
   const [role, setRole] = useState<string>("tier1");
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UserRegister>({
     mode: "onBlur",
     criteriaMode: "all",
@@ -47,6 +48,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
       is_superuser: false,
       is_active: true,
       can_edit: false,
+      is_totp_enabled: false,
     },
   });
 
@@ -67,10 +69,12 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      setIsSubmittingLocal(false);
     },
   });
 
   const onSubmit: SubmitHandler<UserRegister> = (data) => {
+    setIsSubmittingLocal(true);
     const finalData = {
       ...data,
       is_superuser: role === "admin",
@@ -135,7 +139,11 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
             </FormControl>
           </ModalBody>
           <ModalFooter gap={3}>
-            <Button variant="primary" type="submit" isLoading={isSubmitting}>
+            <Button
+              variant="primary"
+              type="submit"
+              isLoading={isSubmittingLocal}
+            >
               {t("common.save1")}
             </Button>
             <Button onClick={onClose}>{t("common.cancel")}</Button>
