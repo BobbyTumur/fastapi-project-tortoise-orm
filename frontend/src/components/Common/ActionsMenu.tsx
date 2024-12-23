@@ -7,13 +7,19 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FiEdit, FiTrash, FiFolder } from "react-icons/fi";
+import {
+  FiEdit,
+  FiTrash,
+  FiFolder,
+  FiFileText,
+  FiClipboard,
+} from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 
 import type { UserPublic, ServicePublic } from "../../client";
 import EditUser from "../Admin/EditUser";
 import EditUserService from "../Admin/EditUserService";
-import EditServiceTemplate from "../Services/EditServiceTemplate"
 import Delete from "./DeleteAlert";
 
 interface ActionsMenuProps {
@@ -27,6 +33,19 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const editUserServiceModal = useDisclosure();
   const deleteModal = useDisclosure();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleNavigateToLog = () => {
+    if (type === t("common.service")) {
+      navigate({ to: `/services/${value.id}/log` });
+    }
+  };
+
+  const handleNavigateToTemplate = () => {
+    if (type === t("common.service")) {
+      navigate({ to: `/services/${value.id}/template` });
+    }
+  };
 
   return (
     <>
@@ -38,18 +57,47 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
           variant="unstyled"
         />
         <MenuList>
-          <MenuItem
-            onClick={editModal.onOpen}
-            icon={<FiEdit fontSize="16px" />}
-          >
-            {type} {t("common.edit")}
-          </MenuItem>
-          <MenuItem
-            onClick={editUserServiceModal.onOpen}
-            icon={<FiFolder fontSize="16px" />}
-          >
-            {type} {t("common.editService")}
-          </MenuItem>
+          {type === t("common.user") ? (
+            <>
+              <MenuItem
+                onClick={editModal.onOpen}
+                icon={<FiEdit fontSize="16px" />}
+              >
+                {type} {t("common.edit")}
+              </MenuItem>
+              <MenuItem
+                onClick={editUserServiceModal.onOpen}
+                icon={<FiFolder fontSize="16px" />}
+              >
+                {type} {t("common.editService")}
+              </MenuItem>
+              <EditUser
+                user={value as UserPublic}
+                isOpen={editModal.isOpen}
+                onClose={editModal.onClose}
+              />
+              <EditUserService
+                userId={value.id}
+                isOpen={editUserServiceModal.isOpen}
+                onClose={editUserServiceModal.onClose}
+              />
+            </>
+          ) : (
+            <>
+              <MenuItem
+                onClick={handleNavigateToLog}
+                icon={<FiFileText fontSize="16px" />}
+              >
+                {t("common.viewLog")}
+              </MenuItem>
+              <MenuItem
+                onClick={handleNavigateToTemplate}
+                icon={<FiClipboard fontSize="16px" />}
+              >
+                {t("common.viewTemplate")}
+              </MenuItem>
+            </>
+          )}
           <MenuItem
             onClick={deleteModal.onOpen}
             icon={<FiTrash fontSize="16px" />}
@@ -58,26 +106,6 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             {type} {t("common.delete")}
           </MenuItem>
         </MenuList>
-        {type === t("common.user") ? (
-          <EditUser
-            user={value as UserPublic}
-            isOpen={editModal.isOpen}
-            onClose={editModal.onClose}
-          />
-        ) : (
-          <EditServiceTemplate
-            // serviceId={value.id}
-            // isOpen={editModal.isOpen}
-            // onClose={editModal.onClose}
-          />
-        )
-        }
-
-        <EditUserService
-          userId={value.id}
-          isOpen={editUserServiceModal.isOpen}
-          onClose={editUserServiceModal.onClose}
-        />
         <Delete
           type={type}
           id={value.id}

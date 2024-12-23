@@ -18,9 +18,11 @@ import { Route as RecoverPasswordImport } from './routes/recover-password'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutServicesImport } from './routes/_layout/services'
 import { Route as LayoutProfileImport } from './routes/_layout/profile'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
+import { Route as LayoutServicesIndexImport } from './routes/_layout/services/index'
+import { Route as LayoutServicesserviceidTemplateImport } from './routes/_layout/services/[service_id]/template'
+import { Route as LayoutServicesserviceidLogImport } from './routes/_layout/services/[service_id]/log'
 
 // Create/Update Routes
 
@@ -59,11 +61,6 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutServicesRoute = LayoutServicesImport.update({
-  path: '/services',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
 const LayoutProfileRoute = LayoutProfileImport.update({
   path: '/profile',
   getParentRoute: () => LayoutRoute,
@@ -73,6 +70,24 @@ const LayoutAdminRoute = LayoutAdminImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+
+const LayoutServicesIndexRoute = LayoutServicesIndexImport.update({
+  path: '/services/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutServicesserviceidTemplateRoute =
+  LayoutServicesserviceidTemplateImport.update({
+    path: '/services/[service_id]/template',
+    getParentRoute: () => LayoutRoute,
+  } as any)
+
+const LayoutServicesserviceidLogRoute = LayoutServicesserviceidLogImport.update(
+  {
+    path: '/services/[service_id]/log',
+    getParentRoute: () => LayoutRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -134,18 +149,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutProfileImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/services': {
-      id: '/_layout/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof LayoutServicesImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/': {
       id: '/_layout/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/services/': {
+      id: '/_layout/services/'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof LayoutServicesIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/services/[service_id]/log': {
+      id: '/_layout/services/[service_id]/log'
+      path: '/services/[service_id]/log'
+      fullPath: '/services/[service_id]/log'
+      preLoaderRoute: typeof LayoutServicesserviceidLogImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/services/[service_id]/template': {
+      id: '/_layout/services/[service_id]/template'
+      path: '/services/[service_id]/template'
+      fullPath: '/services/[service_id]/template'
+      preLoaderRoute: typeof LayoutServicesserviceidTemplateImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -156,15 +185,19 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
   LayoutProfileRoute: typeof LayoutProfileRoute
-  LayoutServicesRoute: typeof LayoutServicesRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutServicesIndexRoute: typeof LayoutServicesIndexRoute
+  LayoutServicesserviceidLogRoute: typeof LayoutServicesserviceidLogRoute
+  LayoutServicesserviceidTemplateRoute: typeof LayoutServicesserviceidTemplateRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
   LayoutProfileRoute: LayoutProfileRoute,
-  LayoutServicesRoute: LayoutServicesRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutServicesIndexRoute: LayoutServicesIndexRoute,
+  LayoutServicesserviceidLogRoute: LayoutServicesserviceidLogRoute,
+  LayoutServicesserviceidTemplateRoute: LayoutServicesserviceidTemplateRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -179,8 +212,10 @@ export interface FileRoutesByFullPath {
   '/validate-totp': typeof ValidateTotpRoute
   '/admin': typeof LayoutAdminRoute
   '/profile': typeof LayoutProfileRoute
-  '/services': typeof LayoutServicesRoute
   '/': typeof LayoutIndexRoute
+  '/services': typeof LayoutServicesIndexRoute
+  '/services/[service_id]/log': typeof LayoutServicesserviceidLogRoute
+  '/services/[service_id]/template': typeof LayoutServicesserviceidTemplateRoute
 }
 
 export interface FileRoutesByTo {
@@ -191,8 +226,10 @@ export interface FileRoutesByTo {
   '/validate-totp': typeof ValidateTotpRoute
   '/admin': typeof LayoutAdminRoute
   '/profile': typeof LayoutProfileRoute
-  '/services': typeof LayoutServicesRoute
   '/': typeof LayoutIndexRoute
+  '/services': typeof LayoutServicesIndexRoute
+  '/services/[service_id]/log': typeof LayoutServicesserviceidLogRoute
+  '/services/[service_id]/template': typeof LayoutServicesserviceidTemplateRoute
 }
 
 export interface FileRoutesById {
@@ -205,8 +242,10 @@ export interface FileRoutesById {
   '/validate-totp': typeof ValidateTotpRoute
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/profile': typeof LayoutProfileRoute
-  '/_layout/services': typeof LayoutServicesRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/services/': typeof LayoutServicesIndexRoute
+  '/_layout/services/[service_id]/log': typeof LayoutServicesserviceidLogRoute
+  '/_layout/services/[service_id]/template': typeof LayoutServicesserviceidTemplateRoute
 }
 
 export interface FileRouteTypes {
@@ -220,8 +259,10 @@ export interface FileRouteTypes {
     | '/validate-totp'
     | '/admin'
     | '/profile'
-    | '/services'
     | '/'
+    | '/services'
+    | '/services/[service_id]/log'
+    | '/services/[service_id]/template'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -231,8 +272,10 @@ export interface FileRouteTypes {
     | '/validate-totp'
     | '/admin'
     | '/profile'
-    | '/services'
     | '/'
+    | '/services'
+    | '/services/[service_id]/log'
+    | '/services/[service_id]/template'
   id:
     | '__root__'
     | '/_layout'
@@ -243,8 +286,10 @@ export interface FileRouteTypes {
     | '/validate-totp'
     | '/_layout/admin'
     | '/_layout/profile'
-    | '/_layout/services'
     | '/_layout/'
+    | '/_layout/services/'
+    | '/_layout/services/[service_id]/log'
+    | '/_layout/services/[service_id]/template'
   fileRoutesById: FileRoutesById
 }
 
@@ -291,8 +336,10 @@ export const routeTree = rootRoute
       "children": [
         "/_layout/admin",
         "/_layout/profile",
-        "/_layout/services",
-        "/_layout/"
+        "/_layout/",
+        "/_layout/services/",
+        "/_layout/services/[service_id]/log",
+        "/_layout/services/[service_id]/template"
       ]
     },
     "/login": {
@@ -318,12 +365,20 @@ export const routeTree = rootRoute
       "filePath": "_layout/profile.tsx",
       "parent": "/_layout"
     },
-    "/_layout/services": {
-      "filePath": "_layout/services.tsx",
-      "parent": "/_layout"
-    },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/services/": {
+      "filePath": "_layout/services/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/services/[service_id]/log": {
+      "filePath": "_layout/services/[service_id]/log.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/services/[service_id]/template": {
+      "filePath": "_layout/services/[service_id]/template.tsx",
       "parent": "/_layout"
     }
   }

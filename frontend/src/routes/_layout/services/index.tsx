@@ -19,16 +19,16 @@ import { useEffect } from "react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 
-import { type UserPublic, ServicesService } from "../../client";
-import AddService from "../../components/Admin/AddService";
-import ActionsMenu from "../../components/Common/ActionsMenu";
-import Navbar from "../../components/Common/Navbar";
+import { type UserPublic, ServicesService } from "../../../client";
+import AddService from "../../../components/Admin/AddService";
+import ActionsMenu from "../../../components/Common/ActionsMenu";
+import Navbar from "../../../components/Common/Navbar";
 
 const servicesSearchSchema = z.object({
   page: z.number().catch(1),
 });
 
-export const Route = createFileRoute("/_layout/services")({
+export const Route = createFileRoute("/_layout/services/")({
   component: Services,
   validateSearch: (search) => servicesSearchSchema.parse(search),
 });
@@ -38,7 +38,10 @@ const PER_PAGE = 5;
 function getServicesQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      ServicesService.readAllServices({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      ServicesService.readAllServices({
+        skip: (page - 1) * PER_PAGE,
+        limit: PER_PAGE,
+      }),
     queryKey: ["services", { page }],
   };
 }
@@ -118,10 +121,7 @@ function ServicesTable() {
                     </Flex>
                   </Td>
                   <Td>
-                    <ActionsMenu
-                      type={t("common.service")}
-                      value={service}
-                    />
+                    <ActionsMenu type={t("common.service")} value={service} />
                   </Td>
                 </Tr>
               ))}
@@ -161,7 +161,9 @@ function Services() {
       </Heading>
       {currentUser?.is_superuser ? (
         <Navbar text={t("titles.addService")} addModalAs={AddService} />
-      ) : <Box h={20} />}
+      ) : (
+        <Box h={20} />
+      )}
       <ServicesTable />
     </Container>
   );
