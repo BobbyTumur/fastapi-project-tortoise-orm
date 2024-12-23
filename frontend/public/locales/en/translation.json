@@ -9,8 +9,8 @@
         "next": "next",
         "you": "you",
         "save1": "Save",
-        "save2": "save",
-        "save3": "save",
+        "save2": "Save",
+        "save3": "Save",
         "cancel": "Cancel",
         "active": "Active",
         "inactive": "Inactive",
@@ -28,7 +28,11 @@
         "enabled": "Enabled",
         "notEnabled": "Not enabled",
         "totp": "2FA",
-        "editService": "Edit Service"
+        "editService": "Edit Service",
+        "healthy": "Healthy",
+        "unhealthy": "Unhealthy",
+        "name": "Name",
+        "subName": "Sub Name"
 
     },
     "titles": {
@@ -44,10 +48,33 @@
         "editUser": "Edit User",
         "deleteUser": "Delete User",
         "editUserService": "Edit User's Services",
-        "disableTotp": "Disable 2FA"
+        "disableTotp": "Disable 2FA",
+        "enableTotp": "Enable 2FA",
+        "scanQrCode": "Scan QR Code"
+    },
+    "texts": {
+        "totpIsEnabled": "2FA is already set up",
+        "totpIsDisabled": "2FA is not set up yet"
+    },
+    "buttons": {
+        "enableTotp": "Enable 2FA",
+        "disableTotp": "Disable 2FA",
+        "verifyTotp": "Verify code",
+        "save1": "Save",
+        "save2": "Save",
+        "save3": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "disable": "Disable",
+        "register": "Save"
+    },
+    "required": {
+        "totpRequired": "OTP code is required",
+        "serviceName": "Service name required",
+        "serviceSubName": "Service sub name required"
     },
     "services": {
-        "Name": "Name",
+        "name": "Name",
         "subName": "Sub Name",
         "startTime": "Start time",
         "endTime": "End Time",
@@ -71,7 +98,7 @@
     "index": {
         "greet": "Hi",
         "welcome": "Welcome to Bobby's project",
-        "body": "Check out my Github for this project。"
+        "body": "Check out my Github for this project."
     },
     "toast": {
         "success": "Success!",
@@ -81,8 +108,10 @@
         "userCreated": "We sent an email with a link to the user to set up password",
         "userDeleted": "The user was deleted successfully.",
         "error": "An error occurred.",
-        "TOTPDisabled": "The 2FA was disabled successfully",
-        "errorDetail": " deletion has failed."
+        "totpDisabled": "The 2FA was disabled successfully",
+        "totpEnabled": "The 2FA was enabled successfully",
+        "errorDetail": " deletion has failed.",
+        "serviceCreated": "Service created successfully"
     },
 
 
@@ -99,9 +128,11 @@
         "passwordConfirmRequired": "Password confirmation is required"
     },
     "warnings": {
-        "deleteAlert": "このユーザーに関連付けられているすべてのアイテムも",
-        "permaDelete": "削除されます。",
-        "areYouSure": "よろしいですか？この操作を取り消すことはできません。"
+        "deleteUserAlert": "All items associated with this user",
+        "permaUserDelete": "will also be deleted.",
+        "disableOtpAlert": "The OTP associated with previous set up",
+        "permaOtpDisable": "will no longer be valid",
+        "areYouSure": " Are you sure? This operation cannot be undone."
     },
     "responses": {
         "recoverPassword": "メールが送信されました。\nパスワードをリセットするためのリンクをメールでお送りしました。\nサクセス"

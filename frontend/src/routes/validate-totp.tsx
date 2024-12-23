@@ -5,6 +5,7 @@ import {
   PinInput,
   PinInputField,
   Flex,
+  Heading
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
@@ -55,10 +56,13 @@ function ValidateTotp() {
       maxW="sm"
       h="100vh"
       justifyContent="center"
+      alignItems="strech"
       gap={4}
       centerContent
     >
-      <h2>{t("forms.enterTotp")}</h2>
+      <Heading size="xl" color="ui.main" textAlign="center" mb={2} maxW="sm">
+        {t("forms.enterTotp")}
+      </Heading>
       <FormControl isInvalid={!!errors.token || !!error}>
         <Flex justify="center" gap={1}>
           <PinInput

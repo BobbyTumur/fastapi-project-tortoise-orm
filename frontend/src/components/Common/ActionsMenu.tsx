@@ -10,19 +10,20 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FiEdit, FiTrash, FiFolder } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 
-import type { UserPublic } from "../../client";
+import type { UserPublic, ServicePublic } from "../../client";
 import EditUser from "../Admin/EditUser";
-import Delete from "./DeleteAlert";
 import EditUserService from "../Admin/EditUserService";
+import EditServiceTemplate from "../Services/EditServiceTemplate"
+import Delete from "./DeleteAlert";
 
 interface ActionsMenuProps {
   type: string;
-  value: UserPublic;
+  value: UserPublic | ServicePublic;
   disabled?: boolean;
 }
 
 const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
-  const editUserModal = useDisclosure();
+  const editModal = useDisclosure();
   const editUserServiceModal = useDisclosure();
   const deleteModal = useDisclosure();
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
         />
         <MenuList>
           <MenuItem
-            onClick={editUserModal.onOpen}
+            onClick={editModal.onOpen}
             icon={<FiEdit fontSize="16px" />}
           >
             {type} {t("common.edit")}
@@ -57,11 +58,21 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             {type} {t("common.delete")}
           </MenuItem>
         </MenuList>
-        <EditUser
-          user={value as UserPublic}
-          isOpen={editUserModal.isOpen}
-          onClose={editUserModal.onClose}
-        />
+        {type === t("common.user") ? (
+          <EditUser
+            user={value as UserPublic}
+            isOpen={editModal.isOpen}
+            onClose={editModal.onClose}
+          />
+        ) : (
+          <EditServiceTemplate
+            // serviceId={value.id}
+            // isOpen={editModal.isOpen}
+            // onClose={editModal.onClose}
+          />
+        )
+        }
+
         <EditUserService
           userId={value.id}
           isOpen={editUserServiceModal.isOpen}

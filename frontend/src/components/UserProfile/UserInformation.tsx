@@ -35,7 +35,7 @@ const UserInformation = () => {
   return (
     <>
       <Container maxW="full">
-        <Box w={{ sm: "full", md: "30%" }}>
+        <Box w={{ sm: "full", md: "50%" }}>
           <TableContainer>
             <Table variant="simple">
               <Tbody>

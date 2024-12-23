@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import {
   Box,
+  Text,
   Flex,
   Button,
   Input,
@@ -69,7 +70,7 @@ const TOTP: React.FC = () => {
     mutationFn: (data: TOTPToken) =>
       UsersService.verifyTOTP({ requestBody: data }),
     onSuccess: () => {
-      showToast(t("toast.success"), t("toast.totpVerified"), "success");
+      showToast(t("toast.success"), t("toast.totpEnabled"), "success");
       setQrUri(null); // Clear QR URI after verification
       reset(); // Reset the form
       onClose();
@@ -96,20 +97,29 @@ const TOTP: React.FC = () => {
 
   return (
     <Box>
-      {/* Conditionally render Enable/Disable button */}
       {isTotpEnabled ? (
-        <Button variant="danger" mt={4} onClick={deleteModal.onOpen}>
-          {t("disableTotp")}
+        <Flex direction="column" align="start" gap={4}>
+        <Text>
+          {t("texts.totpIsEnabled")}
+        </Text>
+        <Button variant="danger" onClick={deleteModal.onOpen}>
+          {t("buttons.disableTotp")}
         </Button>
+      </Flex>
+      
       ) : (
+        <Flex direction="column" align="start" gap={4}>
+        <Text>
+          {t("texts.totpIsDisabled")}
+        </Text>
         <Button
           variant="primary"
-          mt={4}
           onClick={handleEnableTotp}
           isLoading={enableTotpMutation.isPending}
         >
-          {t("enableTotp")}
+          {t("buttons.enableTotp")}
         </Button>
+      </Flex>
       )}
 
       <Delete
@@ -126,7 +136,7 @@ const TOTP: React.FC = () => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{t("scanQrCode")}</ModalHeader>
+          <ModalHeader textAlign="center">{t("titles.scanQrCode")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {qrUri && (
@@ -136,7 +146,7 @@ const TOTP: React.FC = () => {
                     <QRCodeSVG value={qrUri} size={128} />
                   </Box>
                 ) : (
-                  <p>{t("qrCodeNotAvailable")}</p>
+                  <p>"QR code is not available"</p>
                 )}
                 <form
                   onSubmit={handleSubmit(handleVerifyTotp)}
@@ -144,8 +154,8 @@ const TOTP: React.FC = () => {
                 >
                   <Flex direction="column" align="center" gap={4}>
                     <Input
-                      placeholder={t("enterTotpToken")}
-                      {...register("token", { required: t("tokenRequired") })}
+                      placeholder={t("forms.enterTotp")}
+                      {...register("token", { required: t("required.totpRequired") })}
                       size="md"
                       w="auto"
                       sx={{
@@ -164,7 +174,7 @@ const TOTP: React.FC = () => {
                       isLoading={verifyTotpMutation.isPending}
                       isDisabled={!isDirty}
                     >
-                      {t("verifyTotp")}
+                      {t("buttons.verifyTotp")}
                     </Button>
                   </Flex>
                 </form>
@@ -177,4 +187,5 @@ const TOTP: React.FC = () => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default TOTP;

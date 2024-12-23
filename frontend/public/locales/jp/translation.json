@@ -28,7 +28,11 @@
         "enabled": "有効",
         "notEnabled": "無効",
         "totp": "二要素認証",
-        "editService": "サービス編集"
+        "editService": "サービス編集",
+        "healthy": "正常",
+        "unhealthy": "異常",
+        "name": "名",
+        "subName": "サブ名"
         
     },
     "titles": {
@@ -38,16 +42,39 @@
         "updatePassword": "パスワードの更新",
         "myProfile": "プロフィール",
         "summary": "概要",
-        "setup2FA": "二要素認証設定",
+        "setup2FA": "2FAの設定",
         "services": "サービス一覧",
         "addService": "サービス追加",
         "editUser": "ユーザー更新",
         "deleteUser": "ユーザー削除",
         "editUserService": "ユーザーのサービスを編集",
-        "disableTotp": "2FAの無効化"
+        "disableTotp": "2FAの無効化",
+        "enableTotp": "2FAの有効化",
+        "scanQrCode": "QRコードの読み取り"
+    },
+    "texts": {
+        "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
+        "totpIsDisabled": "ワンタイムパスワードが設定されていません。"
+    },
+    "buttons": {
+        "enableTotp": "2FAを有効にする",
+        "disableTotp": "2FAを無効にする",
+        "verifyTotp": "検証",
+        "save1": "追加",
+        "save2": "更新",
+        "save3": "編集",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "disable": "無効にする",
+        "register": "登録"
+    },
+    "required": {
+        "totpRequired": "OTPコードが必須です。",
+        "serviceName": "サービス名が必須です。",
+        "serviceSubName": "サービスサブ名が必須です。"
     },
     "services": {
-        "Name": "名",
+        "name": "名",
         "subName": "サブ名",
         "startTime": "開始時間",
         "endTime": "終了時間",
@@ -65,7 +92,7 @@
         "setPassword": "パスワードを設定",
         "confirmPassword": "パスワードを確認",
         "forgotPassword": "パスワードをお忘れですか？",
-        "enterTotp": "OTPコードを入力してください"
+        "enterTotp": "OTPコード"
     },
     "index": {
         "greet": "こんにちは",
@@ -79,9 +106,11 @@
         "userCreateSuccess": "ユーザーを追加しました。",
         "userCreated": "パスワード設定リンクをユーザーに送信しました。",
         "userDeleted": "ユーザーが削除されました。",
-        "TOTPDisabled": "二要素認証が無効化されました。",
+        "totpDisabled": "2FAが無効化されました。",
+        "totpEnabled": "2FAが有効化されました。",
         "error": "エラーが発生しました。",
-        "errorDetail": "削除ができませんでした。"
+        "errorDetail": "削除ができませんでした。",
+        "serviceCreated": "サービスを追加しました。"
     },
 
     "error": {
@@ -97,8 +126,10 @@
         "passwordConfirmRequired": "パスワードの確認が必要です"
     },
     "warnings": {
-        "deleteAlert": "このユーザーに関連付けられているものすべてが",
-        "permaDelete": "削除されます。",
+        "deleteUserAlert": "このユーザーに関連付けられているものすべてが",
+        "permaUserDelete": "削除されます。",
+        "disableOtpAlert": "既存の設定されたOTPコードが",
+        "permaOtpDisable": "使えなくなります。",
         "areYouSure": "よろしいですか？この操作を取り消すことはできません。"
     },
 

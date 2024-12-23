@@ -47,7 +47,7 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
     onSuccess: () => {
       showToast(
         t("toast.success"),
-        type === "User" ? t("toast.userDeleted") : t("toast.TOTPDisabled"),
+        type === t("common.user") ? t("toast.userDeleted") : t("toast.totpDisabled"),
         "success"
       );
       onClose();
@@ -84,23 +84,32 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              <span>
-                {t("warnings.deleteAlert")}{" "}
-                <strong>{t("warnings.permaDelete")}</strong>
-              </span>
+              {
+                type === t("common.user") ? (
+                  <span>
+                    {t("warnings.deleteUserAlert")}{" "}
+                    <strong>{t("warnings.permaUserDelete")}</strong>
+                  </span>
+                ) : (
+                  <span>
+                    {t("warnings.disableOtpAlert")}{" "}
+                    <strong>{t("warnings.permaOtpDisable")}</strong>
+                  </span>
+                )
+              }
               {t("warnings.areYouSure")}
             </AlertDialogBody>
 
             <AlertDialogFooter gap={3}>
               <Button variant="danger" type="submit" isLoading={isSubmitting}>
-                {t("common.delete")}
+                {t("buttons.disable")}
               </Button>
               <Button
                 ref={cancelRef}
                 onClick={onClose}
                 isDisabled={isSubmitting}
               >
-                {t("common.cancel")}
+                {t("buttons.cancel")}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

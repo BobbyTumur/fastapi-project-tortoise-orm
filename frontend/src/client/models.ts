@@ -68,12 +68,17 @@ export type UsersPublic = {
 export type ServicePublic = {
   name: string
   sub_name: string
-  id: number
+  id: string
 }
 
 export type ServicesPublic = {
   data: Array<ServicePublic>
   count: number
+}
+
+export type ServiceCreate = {
+  name: string
+  sub_name: string
 }
 
 export type ValidationError = {

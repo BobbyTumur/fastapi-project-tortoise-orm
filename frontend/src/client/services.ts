@@ -14,6 +14,7 @@ import type {
   UserUpdate,
   ServicePublic,
   ServicesPublic,
+  ServiceCreate,
   UserServiceUpdate,
   TOTPToken,
   QRUri
@@ -504,19 +505,49 @@ export type TDataReadServices = {
   limit?: number
   skip?: number
 }
+export type TDataServiceCreate = {
+  requestBody: ServiceCreate
+}
+
 export class ServicesService {
 /**
  * Get all services
  * @returns Message Successful Response
  * @throws ApiError
  */
-  public static readAllServices(): CancelablePromise<ServicesPublic> {
+  public static readAllServices(
+    data: TDataReadServices = {},
+  ): CancelablePromise<ServicesPublic> {
+    const { limit = 100, skip = 0 } = data
     return __request(OpenAPI, {
-          method: "GET",
-          url: "/api/v1/services/",
-          errors: {
-            422: `Validation Error`,
-          },
-        })
+      method: "GET",
+      url: "/api/v1/services/",
+      query: {
+        skip,
+        limit,
+      },
+      errors: {
+        422: `Validation Error`,
+      },
+    })
   }
+  /**
+   * Create a service.
+   * @returns ServicePublic Successful Response
+   * @throws ApiError
+   */
+    public static createService(
+      data: TDataServiceCreate,
+    ): CancelablePromise<ServicePublic> {
+      const { requestBody } = data
+      return __request(OpenAPI, {
+        method: "POST",
+        url: "/api/v1/services/",
+        body: requestBody,
+        mediaType: "application/json",
+        errors: {
+          422: `Validation Error`,
+        },
+      })
+    }
 }

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Button,
   Container,
@@ -20,54 +19,53 @@ import { useEffect } from "react";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 
-import { type UserPublic, UsersService } from "../../client";
-import AddUser from "../../components/Admin/AddUser";
+import { type UserPublic, ServicesService } from "../../client";
+import AddService from "../../components/Admin/AddService";
 import ActionsMenu from "../../components/Common/ActionsMenu";
 import Navbar from "../../components/Common/Navbar";
 
-const usersSearchSchema = z.object({
+const servicesSearchSchema = z.object({
   page: z.number().catch(1),
 });
 
 export const Route = createFileRoute("/_layout/services")({
   component: Services,
-  validateSearch: (search) => usersSearchSchema.parse(search),
+  validateSearch: (search) => servicesSearchSchema.parse(search),
 });
 
-const PER_PAGE = 10;
+const PER_PAGE = 5;
 
-function getUsersQueryOptions({ page }: { page: number }) {
+function getServicesQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      UsersService.readUsers({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
-    queryKey: ["users", { page }],
+      ServicesService.readAllServices({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+    queryKey: ["services", { page }],
   };
 }
 
 function ServicesTable() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { page } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const setPage = (page: number) =>
     navigate({ search: (prev) => ({ ...prev, page }) });
 
   const {
-    data: users,
+    data: services,
     isPending,
     isPlaceholderData,
   } = useQuery({
-    ...getUsersQueryOptions({ page }),
+    ...getServicesQueryOptions({ page }),
     placeholderData: (prevData) => prevData,
   });
 
-  const hasNextPage = !isPlaceholderData && users?.data.length === PER_PAGE;
+  const hasNextPage = !isPlaceholderData && services?.data.length === PER_PAGE;
   const hasPreviousPage = page > 1;
 
   useEffect(() => {
     if (hasNextPage) {
-      queryClient.prefetchQuery(getUsersQueryOptions({ page: page + 1 }));
+      queryClient.prefetchQuery(getServicesQueryOptions({ page: page + 1 }));
     }
   }, [page, queryClient, hasNextPage]);
 
@@ -77,13 +75,10 @@ function ServicesTable() {
         <Table size={{ base: "sm", md: "md" }}>
           <Thead>
             <Tr>
-              <Th width="15%">{t("services.Name")}</Th>
-              <Th width="15%">{t("services.subName")}</Th>
-              <Th width="15%">{t("services.startTime")}</Th>
-              <Th width="15%">{t("services.endTime")}</Th>
-              <Th width="15%">{t("services.elapsedTime")}</Th>
-              <Th width="15%">{t("services.status")}</Th>
-              <Th width="15%">{t("services.actions")}</Th>
+              <Th width="25%">{t("services.name")}</Th>
+              <Th width="25%">{t("services.subName")}</Th>
+              <Th width="10%">{t("services.status")}</Th>
+              <Th width="10%">{t("services.actions")}</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -98,27 +93,17 @@ function ServicesTable() {
             </Tbody>
           ) : (
             <Tbody>
-              {users?.data.map((user) => (
-                <Tr key={user.id}>
+              {services?.data.map((service) => (
+                <Tr key={service.id}>
                   <Td
-                    color={!user.username ? "ui.dim" : "inherit"}
+                    color={!service.name ? "ui.dim" : "inherit"}
                     isTruncated
                     maxWidth="150px"
                   >
-                    {user.username || t("common.noName")}
-                    {currentUser?.id === user.id && (
-                      <Badge ml="1" colorScheme="teal">
-                        {t("common.you")}
-                      </Badge>
-                    )}
+                    {service.name}
                   </Td>
                   <Td isTruncated maxWidth="150px">
-                    {user.email}
-                  </Td>
-                  <Td>
-                    {user.is_superuser
-                      ? t("common.superUser")
-                      : t("common.user")}
+                    {service.sub_name}
                   </Td>
                   <Td>
                     <Flex gap={2}>
@@ -126,19 +111,16 @@ function ServicesTable() {
                         w="2"
                         h="2"
                         borderRadius="50%"
-                        bg={user.is_active ? "ui.success" : "ui.danger"}
+                        bg={"ui.success"}
                         alignSelf="center"
                       />
-                      {user.is_active
-                        ? t("common.active")
-                        : t("common.inactive")}
+                      {t("common.healthy")}
                     </Flex>
                   </Td>
                   <Td>
                     <ActionsMenu
-                      type="User"
-                      value={user}
-                      disabled={currentUser?.id === user.id ? true : false}
+                      type={t("common.service")}
+                      value={service}
                     />
                   </Td>
                 </Tr>
@@ -170,13 +152,16 @@ function ServicesTable() {
 
 function Services() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
         {t("titles.services")}
       </Heading>
-
-      <Navbar text={t("titles.addService")} addModalAs={AddUser} />
+      {currentUser?.is_superuser ? (
+        <Navbar text={t("titles.addService")} addModalAs={AddService} />
+      ) : <Box h={20} />}
       <ServicesTable />
     </Container>
   );

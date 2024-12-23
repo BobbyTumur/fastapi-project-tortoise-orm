@@ -197,12 +197,26 @@ export const $ServicePublic = {
       maxLength: 255,
     },
     id: {
-      type: "number",
+      type: "string",
       isRequired: true,
     },
   },
 } as const
 
+export const $ServiceCreate = {
+  properties: {
+    name: {
+      type: "string",
+      isRequired: true,
+      maxLength: 255,
+    },
+    sub_name: {
+      type: "string",
+      isRequired: true,
+      maxLength: 255,
+    },
+  },
+} as const
 
 export const $UserServiceUpdate = {
   properties: {
@@ -305,6 +319,7 @@ export const $UsersPublic = {
     },
   },
 } as const
+
 
 export const $ValidationError = {
   properties: {
