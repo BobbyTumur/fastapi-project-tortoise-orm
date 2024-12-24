@@ -52,7 +52,7 @@ function SetupPassword() {
   const setupPassword = async (data: NewPassword) => {
     const token = new URLSearchParams(window.location.search).get("token");
     if (!token) return;
-    await LoginService.setupPassword({
+    await LoginService.setUpPassword({
       requestBody: { new_password: data.new_password, token: token },
     });
   };

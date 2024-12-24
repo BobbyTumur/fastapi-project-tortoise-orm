@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { UsersService } from "../../client";
+import { UsersService, TotpService } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 import { useTranslation } from "react-i18next";
 
@@ -34,7 +34,7 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
 
   const deleteEntity = async (id: string) => {
     if (type === "TOTP") {
-      await UsersService.disableTOTP();
+      await TotpService.disableTotp();
     } else if (type === t("common.user")) {
       await UsersService.deleteUser({ userId: id });
     } else {

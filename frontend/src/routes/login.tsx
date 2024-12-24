@@ -21,7 +21,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import Logo from "/assets/images/bobby-project.png";
-import type { Body_login_login_access_token as AccessToken } from "../client";
+import type { Body_login___login_access_token as AccessToken } from "../client";
 import useAuth, { isLoggedIn } from "../hooks/useAuth";
 import { emailPattern } from "../utils";
 

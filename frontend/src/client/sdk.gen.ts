@@ -4,61 +4,58 @@ import type { CancelablePromise } from "./core/CancelablePromise";
 import { OpenAPI } from "./core/OpenAPI";
 import { request as __request } from "./core/request";
 import type {
-	LoginAccessTokenApiV1LoginAccessTokenPostData,
-	LoginAccessTokenApiV1LoginAccessTokenPostResponse,
-	VerifyTotpApiV1LoginValidateTotpPostData,
-	VerifyTotpApiV1LoginValidateTotpPostResponse,
-	RefreshAccessTokenApiV1LoginRefreshTokenPostData,
-	RefreshAccessTokenApiV1LoginRefreshTokenPostResponse,
-	RecoverPasswordApiV1PasswordRecoveryEmailPostData,
-	RecoverPasswordApiV1PasswordRecoveryEmailPostResponse,
-	ResetPasswordApiV1ResetPasswordPostData,
-	ResetPasswordApiV1ResetPasswordPostResponse,
-	SetUpPasswordApiV1SetupPasswordPostData,
-	SetUpPasswordApiV1SetupPasswordPostResponse,
-	GetServicesApiV1ServicesGetData,
-	GetServicesApiV1ServicesGetResponse,
-	CreateServiceApiV1ServicesPostData,
-	CreateServiceApiV1ServicesPostResponse,
-	GetServiceApiV1ServicesServiceIdGetData,
-	GetServiceApiV1ServicesServiceIdGetResponse,
-	DeleteServiceApiV1ServicesServiceIdDeleteData,
-	DeleteServiceApiV1ServicesServiceIdDeleteResponse,
-	GetServiceUsersApiV1ServicesServiceIdUsersGetData,
-	GetServiceUsersApiV1ServicesServiceIdUsersGetResponse,
-	GetServiceConfigApiV1ServicesServiceIdConfigGetData,
-	GetServiceConfigApiV1ServicesServiceIdConfigGetResponse,
-	UpdateServiceConfigApiV1ServicesServiceIdConfigPatchData,
-	UpdateServiceConfigApiV1ServicesServiceIdConfigPatchResponse,
-	EnableTotpApiV1TotpEnablePostData,
-	EnableTotpApiV1TotpEnablePostResponse,
-	TotpLoginVerifyApiV1TotpVerifyPostData,
-	TotpLoginVerifyApiV1TotpVerifyPostResponse,
-	DisableTotpApiV1TotpDisableDeleteData,
-	DisableTotpApiV1TotpDisableDeleteResponse,
-	AdminDisableTotpApiV1TotpDisableUserIdPostData,
-	AdminDisableTotpApiV1TotpDisableUserIdPostResponse,
-	ReadUsersApiV1UsersGetData,
-	ReadUsersApiV1UsersGetResponse,
-	ReadUserMeApiV1UsersMeGetData,
-	ReadUserMeApiV1UsersMeGetResponse,
-	ReadUserByIdApiV1UsersUserIdGetData,
-	ReadUserByIdApiV1UsersUserIdGetResponse,
-	UpdateUserApiV1UsersUserIdPatchData,
-	UpdateUserApiV1UsersUserIdPatchResponse,
-	DeleteUserApiV1UsersUserIdDeleteData,
-	DeleteUserApiV1UsersUserIdDeleteResponse,
-	RegisterUserApiV1UsersAdduserPostData,
-	RegisterUserApiV1UsersAdduserPostResponse,
-	UpdatePasswordMeApiV1UsersMePasswordPatchData,
-	UpdatePasswordMeApiV1UsersMePasswordPatchResponse,
-	GetUserServicesApiV1UsersUserIdServicesGetData,
-	GetUserServicesApiV1UsersUserIdServicesGetResponse,
-	AddServicesToUserApiV1UsersUserIdServicesPatchData,
-	AddServicesToUserApiV1UsersUserIdServicesPatchResponse,
-	TestEmailApiV1UtilsTestEmailPostData,
-	TestEmailApiV1UtilsTestEmailPostResponse,
-	HealthCheckApiV1UtilsHealthCheckGetResponse,
+	LoginLoginAccessTokenData,
+	LoginLoginAccessTokenResponse,
+	LoginValidateTotpData,
+	LoginValidateTotpResponse,
+	LoginRefreshAccessTokenData,
+	LoginRefreshAccessTokenResponse,
+	LoginRecoverPasswordData,
+	LoginRecoverPasswordResponse,
+	LoginResetPasswordData,
+	LoginResetPasswordResponse,
+	LoginSetUpPasswordData,
+	LoginSetUpPasswordResponse,
+	ServicesGetServicesData,
+	ServicesGetServicesResponse,
+	ServicesCreateServiceData,
+	ServicesCreateServiceResponse,
+	ServicesGetServiceData,
+	ServicesGetServiceResponse,
+	ServicesDeleteServiceData,
+	ServicesDeleteServiceResponse,
+	ServicesGetServiceUsersData,
+	ServicesGetServiceUsersResponse,
+	ServicesGetServiceConfigData,
+	ServicesGetServiceConfigResponse,
+	ServicesUpdateServiceConfigData,
+	ServicesUpdateServiceConfigResponse,
+	TotpEnableTotpResponse,
+	TotpTotpLoginVerifyData,
+	TotpTotpLoginVerifyResponse,
+	TotpDisableTotpResponse,
+	TotpAdminDisableTotpData,
+	TotpAdminDisableTotpResponse,
+	UsersReadUsersData,
+	UsersReadUsersResponse,
+	UsersReadUserMeResponse,
+	UsersReadUserByIdData,
+	UsersReadUserByIdResponse,
+	UsersUpdateUserData,
+	UsersUpdateUserResponse,
+	UsersDeleteUserData,
+	UsersDeleteUserResponse,
+	UsersRegisterUserData,
+	UsersRegisterUserResponse,
+	UsersUpdatePasswordMeData,
+	UsersUpdatePasswordMeResponse,
+	UsersServicesGetUserServicesData,
+	UsersServicesGetUserServicesResponse,
+	UsersServicesAddServicesToUserData,
+	UsersServicesAddServicesToUserResponse,
+	UtilsTestEmailData,
+	UtilsTestEmailResponse,
+	UtilsHealthCheckResponse,
 } from "./types.gen";
 
 export class LoginService {
@@ -70,9 +67,9 @@ export class LoginService {
 	 * @returns unknown Successful Response
 	 * @throws ApiError
 	 */
-	public static accessTokenApiV1LoginAccessTokenPost(
-		data: LoginAccessTokenApiV1LoginAccessTokenPostData,
-	): CancelablePromise<LoginAccessTokenApiV1LoginAccessTokenPostResponse> {
+	public static loginAccessToken(
+		data: LoginLoginAccessTokenData,
+	): CancelablePromise<LoginLoginAccessTokenResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/login/access-token",
@@ -85,16 +82,16 @@ export class LoginService {
 	}
 
 	/**
-	 * Verify Totp
+	 * Validate Totp
 	 * Validate TOTP code and issue an access token
 	 * @param data The data for the request.
 	 * @param data.requestBody
 	 * @returns unknown Successful Response
 	 * @throws ApiError
 	 */
-	public static verifyTotpApiV1LoginValidateTotpPost(
-		data: VerifyTotpApiV1LoginValidateTotpPostData,
-	): CancelablePromise<VerifyTotpApiV1LoginValidateTotpPostResponse> {
+	public static validateTotp(
+		data: LoginValidateTotpData,
+	): CancelablePromise<LoginValidateTotpResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/login/validate-totp",
@@ -114,9 +111,9 @@ export class LoginService {
 	 * @returns unknown Successful Response
 	 * @throws ApiError
 	 */
-	public static refreshAccessTokenApiV1LoginRefreshTokenPost(
-		data: RefreshAccessTokenApiV1LoginRefreshTokenPostData = {},
-	): CancelablePromise<RefreshAccessTokenApiV1LoginRefreshTokenPostResponse> {
+	public static refreshAccessToken(
+		data: LoginRefreshAccessTokenData = {},
+	): CancelablePromise<LoginRefreshAccessTokenResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/login/refresh-token",
@@ -137,9 +134,9 @@ export class LoginService {
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static recoverPasswordApiV1PasswordRecoveryEmailPost(
-		data: RecoverPasswordApiV1PasswordRecoveryEmailPostData,
-	): CancelablePromise<RecoverPasswordApiV1PasswordRecoveryEmailPostResponse> {
+	public static recoverPassword(
+		data: LoginRecoverPasswordData,
+	): CancelablePromise<LoginRecoverPasswordResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/password-recovery/{email}",
@@ -160,9 +157,9 @@ export class LoginService {
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static resetPasswordApiV1ResetPasswordPost(
-		data: ResetPasswordApiV1ResetPasswordPostData,
-	): CancelablePromise<ResetPasswordApiV1ResetPasswordPostResponse> {
+	public static resetPassword(
+		data: LoginResetPasswordData,
+	): CancelablePromise<LoginResetPasswordResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/reset-password",
@@ -182,9 +179,9 @@ export class LoginService {
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static setUpPasswordApiV1SetupPasswordPost(
-		data: SetUpPasswordApiV1SetupPasswordPostData,
-	): CancelablePromise<SetUpPasswordApiV1SetupPasswordPostResponse> {
+	public static setUpPassword(
+		data: LoginSetUpPasswordData,
+	): CancelablePromise<LoginSetUpPasswordResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/setup-password",
@@ -204,20 +201,18 @@ export class ServicesService {
 	 * @param data The data for the request.
 	 * @param data.skip
 	 * @param data.limit
-	 * @param data.expectTotp
 	 * @returns ServicesPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static getServicesApiV1ServicesGet(
-		data: GetServicesApiV1ServicesGetData = {},
-	): CancelablePromise<GetServicesApiV1ServicesGetResponse> {
+	public static getServices(
+		data: ServicesGetServicesData = {},
+	): CancelablePromise<ServicesGetServicesResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/services/",
 			query: {
 				skip: data.skip,
 				limit: data.limit,
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -230,19 +225,15 @@ export class ServicesService {
 	 * Register a service
 	 * @param data The data for the request.
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static createServiceApiV1ServicesPost(
-		data: CreateServiceApiV1ServicesPostData,
-	): CancelablePromise<CreateServiceApiV1ServicesPostResponse> {
+	public static createService(
+		data: ServicesCreateServiceData,
+	): CancelablePromise<ServicesCreateServiceResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/services/",
-			query: {
-				expect_totp: data.expectTotp,
-			},
 			body: data.requestBody,
 			mediaType: "application/json",
 			errors: {
@@ -256,21 +247,17 @@ export class ServicesService {
 	 * List a user that can edit the service
 	 * @param data The data for the request.
 	 * @param data.serviceId
-	 * @param data.expectTotp
 	 * @returns ServicePublic Successful Response
 	 * @throws ApiError
 	 */
-	public static getServiceApiV1ServicesServiceIdGet(
-		data: GetServiceApiV1ServicesServiceIdGetData,
-	): CancelablePromise<GetServiceApiV1ServicesServiceIdGetResponse> {
+	public static getService(
+		data: ServicesGetServiceData,
+	): CancelablePromise<ServicesGetServiceResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/services/{service_id}",
 			path: {
 				service_id: data.serviceId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -283,21 +270,17 @@ export class ServicesService {
 	 * Delete a service
 	 * @param data The data for the request.
 	 * @param data.serviceId
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static deleteServiceApiV1ServicesServiceIdDelete(
-		data: DeleteServiceApiV1ServicesServiceIdDeleteData,
-	): CancelablePromise<DeleteServiceApiV1ServicesServiceIdDeleteResponse> {
+	public static deleteService(
+		data: ServicesDeleteServiceData,
+	): CancelablePromise<ServicesDeleteServiceResponse> {
 		return __request(OpenAPI, {
 			method: "DELETE",
 			url: "/api/v1/services/{service_id}",
 			path: {
 				service_id: data.serviceId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -310,21 +293,17 @@ export class ServicesService {
 	 * List service users
 	 * @param data The data for the request.
 	 * @param data.serviceId
-	 * @param data.expectTotp
 	 * @returns UserPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static getServiceUsersApiV1ServicesServiceIdUsersGet(
-		data: GetServiceUsersApiV1ServicesServiceIdUsersGetData,
-	): CancelablePromise<GetServiceUsersApiV1ServicesServiceIdUsersGetResponse> {
+	public static getServiceUsers(
+		data: ServicesGetServiceUsersData,
+	): CancelablePromise<ServicesGetServiceUsersResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/services/{service_id}/users",
 			path: {
 				service_id: data.serviceId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -337,21 +316,17 @@ export class ServicesService {
 	 * Read a service's config
 	 * @param data The data for the request.
 	 * @param data.serviceId
-	 * @param data.expectTotp
 	 * @returns ConfigOut Successful Response
 	 * @throws ApiError
 	 */
-	public static getServiceConfigApiV1ServicesServiceIdConfigGet(
-		data: GetServiceConfigApiV1ServicesServiceIdConfigGetData,
-	): CancelablePromise<GetServiceConfigApiV1ServicesServiceIdConfigGetResponse> {
+	public static getServiceConfig(
+		data: ServicesGetServiceConfigData,
+	): CancelablePromise<ServicesGetServiceConfigResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/services/{service_id}/config",
 			path: {
 				service_id: data.serviceId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -365,21 +340,17 @@ export class ServicesService {
 	 * @param data The data for the request.
 	 * @param data.serviceId
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static updateServiceConfigApiV1ServicesServiceIdConfigPatch(
-		data: UpdateServiceConfigApiV1ServicesServiceIdConfigPatchData,
-	): CancelablePromise<UpdateServiceConfigApiV1ServicesServiceIdConfigPatchResponse> {
+	public static updateServiceConfig(
+		data: ServicesUpdateServiceConfigData,
+	): CancelablePromise<ServicesUpdateServiceConfigResponse> {
 		return __request(OpenAPI, {
 			method: "PATCH",
 			url: "/api/v1/services/{service_id}/config",
 			path: {
 				service_id: data.serviceId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			body: data.requestBody,
 			mediaType: "application/json",
@@ -394,23 +365,13 @@ export class TotpService {
 	/**
 	 * Enable Totp
 	 * Creation of totp if totp not enabled
-	 * @param data The data for the request.
-	 * @param data.expectTotp
 	 * @returns QRUri Successful Response
 	 * @throws ApiError
 	 */
-	public static enableTotpApiV1TotpEnablePost(
-		data: EnableTotpApiV1TotpEnablePostData = {},
-	): CancelablePromise<EnableTotpApiV1TotpEnablePostResponse> {
+	public static enableTotp(): CancelablePromise<TotpEnableTotpResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/totp/enable",
-			query: {
-				expect_totp: data.expectTotp,
-			},
-			errors: {
-				422: "Validation Error",
-			},
 		});
 	}
 
@@ -419,19 +380,15 @@ export class TotpService {
 	 * Verify TOTP token for the first time.
 	 * @param data The data for the request.
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static loginVerifyApiV1TotpVerifyPost(
-		data: TotpLoginVerifyApiV1TotpVerifyPostData,
-	): CancelablePromise<TotpLoginVerifyApiV1TotpVerifyPostResponse> {
+	public static totpLoginVerify(
+		data: TotpTotpLoginVerifyData,
+	): CancelablePromise<TotpTotpLoginVerifyResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/totp/verify",
-			query: {
-				expect_totp: data.expectTotp,
-			},
 			body: data.requestBody,
 			mediaType: "application/json",
 			errors: {
@@ -443,23 +400,13 @@ export class TotpService {
 	/**
 	 * Disable Totp
 	 * Disable TOTP for the current user.
-	 * @param data The data for the request.
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static disableTotpApiV1TotpDisableDelete(
-		data: DisableTotpApiV1TotpDisableDeleteData = {},
-	): CancelablePromise<DisableTotpApiV1TotpDisableDeleteResponse> {
+	public static disableTotp(): CancelablePromise<TotpDisableTotpResponse> {
 		return __request(OpenAPI, {
 			method: "DELETE",
 			url: "/api/v1/totp/disable",
-			query: {
-				expect_totp: data.expectTotp,
-			},
-			errors: {
-				422: "Validation Error",
-			},
 		});
 	}
 
@@ -468,21 +415,17 @@ export class TotpService {
 	 * Disable TOTP for the certain user.
 	 * @param data The data for the request.
 	 * @param data.userId
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static adminDisableTotpApiV1TotpDisableUserIdPost(
-		data: AdminDisableTotpApiV1TotpDisableUserIdPostData,
-	): CancelablePromise<AdminDisableTotpApiV1TotpDisableUserIdPostResponse> {
+	public static adminDisableTotp(
+		data: TotpAdminDisableTotpData,
+	): CancelablePromise<TotpAdminDisableTotpResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/totp/disable/{user_id}",
 			path: {
 				user_id: data.userId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -498,20 +441,18 @@ export class UsersService {
 	 * @param data The data for the request.
 	 * @param data.skip
 	 * @param data.limit
-	 * @param data.expectTotp
 	 * @returns UsersPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static readUsersApiV1UsersGet(
-		data: ReadUsersApiV1UsersGetData = {},
-	): CancelablePromise<ReadUsersApiV1UsersGetResponse> {
+	public static readUsers(
+		data: UsersReadUsersData = {},
+	): CancelablePromise<UsersReadUsersResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/users/",
 			query: {
 				skip: data.skip,
 				limit: data.limit,
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -522,23 +463,13 @@ export class UsersService {
 	/**
 	 * Read User Me
 	 * Get current user.
-	 * @param data The data for the request.
-	 * @param data.expectTotp
 	 * @returns UserPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static readUserMeApiV1UsersMeGet(
-		data: ReadUserMeApiV1UsersMeGetData = {},
-	): CancelablePromise<ReadUserMeApiV1UsersMeGetResponse> {
+	public static readUserMe(): CancelablePromise<UsersReadUserMeResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/users/me",
-			query: {
-				expect_totp: data.expectTotp,
-			},
-			errors: {
-				422: "Validation Error",
-			},
 		});
 	}
 
@@ -547,21 +478,17 @@ export class UsersService {
 	 * Get a specific user by id.
 	 * @param data The data for the request.
 	 * @param data.userId
-	 * @param data.expectTotp
 	 * @returns UserPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static readUserByIdApiV1UsersUserIdGet(
-		data: ReadUserByIdApiV1UsersUserIdGetData,
-	): CancelablePromise<ReadUserByIdApiV1UsersUserIdGetResponse> {
+	public static readUserById(
+		data: UsersReadUserByIdData,
+	): CancelablePromise<UsersReadUserByIdResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/users/{user_id}",
 			path: {
 				user_id: data.userId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -575,21 +502,17 @@ export class UsersService {
 	 * @param data The data for the request.
 	 * @param data.userId
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns UserPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static updateUserApiV1UsersUserIdPatch(
-		data: UpdateUserApiV1UsersUserIdPatchData,
-	): CancelablePromise<UpdateUserApiV1UsersUserIdPatchResponse> {
+	public static updateUser(
+		data: UsersUpdateUserData,
+	): CancelablePromise<UsersUpdateUserResponse> {
 		return __request(OpenAPI, {
 			method: "PATCH",
 			url: "/api/v1/users/{user_id}",
 			path: {
 				user_id: data.userId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			body: data.requestBody,
 			mediaType: "application/json",
@@ -604,21 +527,17 @@ export class UsersService {
 	 * Delete a user.
 	 * @param data The data for the request.
 	 * @param data.userId
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static deleteUserApiV1UsersUserIdDelete(
-		data: DeleteUserApiV1UsersUserIdDeleteData,
-	): CancelablePromise<DeleteUserApiV1UsersUserIdDeleteResponse> {
+	public static deleteUser(
+		data: UsersDeleteUserData,
+	): CancelablePromise<UsersDeleteUserResponse> {
 		return __request(OpenAPI, {
 			method: "DELETE",
 			url: "/api/v1/users/{user_id}",
 			path: {
 				user_id: data.userId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -631,19 +550,15 @@ export class UsersService {
 	 * Create new user without the need to be logged in.
 	 * @param data The data for the request.
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static registerUserApiV1UsersAdduserPost(
-		data: RegisterUserApiV1UsersAdduserPostData,
-	): CancelablePromise<RegisterUserApiV1UsersAdduserPostResponse> {
+	public static registerUser(
+		data: UsersRegisterUserData,
+	): CancelablePromise<UsersRegisterUserResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/users/adduser",
-			query: {
-				expect_totp: data.expectTotp,
-			},
 			body: data.requestBody,
 			mediaType: "application/json",
 			errors: {
@@ -657,19 +572,15 @@ export class UsersService {
 	 * Update own password.
 	 * @param data The data for the request.
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static updatePasswordMeApiV1UsersMePasswordPatch(
-		data: UpdatePasswordMeApiV1UsersMePasswordPatchData,
-	): CancelablePromise<UpdatePasswordMeApiV1UsersMePasswordPatchResponse> {
+	public static updatePasswordMe(
+		data: UsersUpdatePasswordMeData,
+	): CancelablePromise<UsersUpdatePasswordMeResponse> {
 		return __request(OpenAPI, {
 			method: "PATCH",
 			url: "/api/v1/users/me/password",
-			query: {
-				expect_totp: data.expectTotp,
-			},
 			body: data.requestBody,
 			mediaType: "application/json",
 			errors: {
@@ -685,21 +596,17 @@ export class UsersServicesService {
 	 * Get user's services
 	 * @param data The data for the request.
 	 * @param data.userId
-	 * @param data.expectTotp
 	 * @returns ServicePublic Successful Response
 	 * @throws ApiError
 	 */
-	public static getUserServicesApiV1UsersUserIdServicesGet(
-		data: GetUserServicesApiV1UsersUserIdServicesGetData,
-	): CancelablePromise<GetUserServicesApiV1UsersUserIdServicesGetResponse> {
+	public static getUserServices(
+		data: UsersServicesGetUserServicesData,
+	): CancelablePromise<UsersServicesGetUserServicesResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/users/{user_id}/services",
 			path: {
 				user_id: data.userId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -713,21 +620,17 @@ export class UsersServicesService {
 	 * @param data The data for the request.
 	 * @param data.userId
 	 * @param data.requestBody
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static addServicesToUserApiV1UsersUserIdServicesPatch(
-		data: AddServicesToUserApiV1UsersUserIdServicesPatchData,
-	): CancelablePromise<AddServicesToUserApiV1UsersUserIdServicesPatchResponse> {
+	public static addServicesToUser(
+		data: UsersServicesAddServicesToUserData,
+	): CancelablePromise<UsersServicesAddServicesToUserResponse> {
 		return __request(OpenAPI, {
 			method: "PATCH",
 			url: "/api/v1/users/{user_id}/services",
 			path: {
 				user_id: data.userId,
-			},
-			query: {
-				expect_totp: data.expectTotp,
 			},
 			body: data.requestBody,
 			mediaType: "application/json",
@@ -744,19 +647,17 @@ export class UtilsService {
 	 * Test emails.
 	 * @param data The data for the request.
 	 * @param data.emailTo
-	 * @param data.expectTotp
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static testEmailApiV1UtilsTestEmailPost(
-		data: TestEmailApiV1UtilsTestEmailPostData,
-	): CancelablePromise<TestEmailApiV1UtilsTestEmailPostResponse> {
+	public static testEmail(
+		data: UtilsTestEmailData,
+	): CancelablePromise<UtilsTestEmailResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/utils/test-email",
 			query: {
 				email_to: data.emailTo,
-				expect_totp: data.expectTotp,
 			},
 			errors: {
 				422: "Validation Error",
@@ -769,7 +670,7 @@ export class UtilsService {
 	 * @returns boolean Successful Response
 	 * @throws ApiError
 	 */
-	public static healthCheckApiV1UtilsHealthCheckGet(): CancelablePromise<HealthCheckApiV1UtilsHealthCheckGetResponse> {
+	public static healthCheck(): CancelablePromise<UtilsHealthCheckResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/utils/health-check",

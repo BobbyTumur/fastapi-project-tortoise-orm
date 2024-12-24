@@ -15,7 +15,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { type ApiError, UsersService, ServicesService } from "../../client";
+import { type ApiError, ServicesService, UsersServicesService } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 import CheckboxWithControl from "../Common/CheckboxWithControl";
 import { handleError } from "../../utils";
@@ -37,18 +37,18 @@ const EditUserService = ({
 
   const { data: userServices, isLoading: isUserServicesLoading } = useQuery({
     queryKey: ["userServices", userId],
-    queryFn: () => UsersService.readUserServices({ userId }),
+    queryFn: () => UsersServicesService.getUserServices({ userId }),
   });
 
   const { data: services, isLoading: isServicesLoading } = useQuery({
     queryKey: ["services"],
-    queryFn: () => ServicesService.readAllServices(),
+    queryFn: () => ServicesService.getServices(),
   });
 
   const isLoading = isUserServicesLoading || isServicesLoading;
 
   const { handleSubmit, reset, setValue, control, watch } = useForm<{
-    added_services: number[];
+    added_services: string[];
   }>({
     mode: "onBlur",
     defaultValues: { added_services: [] },
@@ -63,8 +63,8 @@ const EditUserService = ({
   }, [isOpen, userServices, reset]);
 
   const mutation = useMutation({
-    mutationFn: (data: { added_services: number[] }) =>
-      UsersService.updateUserService({ requestBody: data, userId }),
+    mutationFn: (data: { added_services: string[] }) =>
+      UsersServicesService.addServicesToUser({ requestBody: data, userId }),
     onSuccess: () => {
       showToast(t("toast.success"), t("toast.userUpdate"), "success");
       onClose();
@@ -83,7 +83,7 @@ const EditUserService = ({
     return JSON.stringify(originalServices) !== JSON.stringify(currentServices);
   };
 
-  const onSubmit = (data: { added_services: number[] }) =>
+  const onSubmit = (data: { added_services: string[] }) =>
     mutation.mutate(data);
 
   const onCancel = () => {

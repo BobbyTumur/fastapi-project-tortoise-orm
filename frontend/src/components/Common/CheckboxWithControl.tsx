@@ -4,11 +4,11 @@ import { useController, Control, UseFormSetValue } from "react-hook-form";
 
 interface CheckboxWithControlProps {
   service: {
-    id: number;
+    id: string;
     name: string;
   };
-  control: Control<{ added_services: number[] }>;
-  setValue: UseFormSetValue<{ added_services: number[] }>;
+  control: Control<{ added_services: string[] }>;
+  setValue: UseFormSetValue<{ added_services: string[] }>;
 }
 
 const CheckboxWithControl: React.FC<CheckboxWithControlProps> = React.memo(
@@ -19,10 +19,10 @@ const CheckboxWithControl: React.FC<CheckboxWithControlProps> = React.memo(
       defaultValue: [],
     });
 
-    const isChecked = (field.value as number[]).includes(service.id);
+    const isChecked = (field.value as string[]).includes(service.id);
 
     const handleChange = () => {
-      const currentIds = field.value as number[];
+      const currentIds = field.value as string[];
       const updatedIds = isChecked
         ? currentIds.filter((id) => id !== service.id)
         : [...currentIds, service.id];

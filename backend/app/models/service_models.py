@@ -1,3 +1,4 @@
+import uuid
 from typing import Optional
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 
@@ -11,7 +12,7 @@ class ServiceCreate(ServiceBase):
 class ServicePublic(ServiceBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: uuid.UUID
 
 class ServicesPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -36,7 +37,7 @@ class ConfigIn(ConfigBase):
 class ConfigOut(ConfigBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: uuid.UUID
 
 class ConfigsOut(ConfigBase):
     model_config = ConfigDict(from_attributes=True)

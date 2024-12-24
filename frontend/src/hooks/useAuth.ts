@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react"
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { useMutation, useQuery,} from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
-import { useState } from "react"
 
-import axios, { AxiosResponse, AxiosError } from "axios"
+import axios from "axios"
 import {
-  type Body_login_login_access_token as AccessToken,
+  type Body_login___login_access_token as AccessToken,
   type TOTPToken,
   type ApiError,
   LoginService,
@@ -12,59 +13,51 @@ import {
   UsersService,
 } from "../client"
 
-
-const refreshAuthToken = async () => {
+// Utility: Get Token Expiration Time
+const getTokenExpiration = (token: string): number | null => {
   try {
-    // Assuming refresh token is stored in an HttpOnly cookie, the browser sends it automatically
-    const response = await axios.post('/login/refresh-token');
-    const newAccessToken = response.data.access_token;
-
-    // Save the new access token
-    localStorage.setItem('access_token', newAccessToken);
-
-    return newAccessToken;
-  } catch (error) {
-    // If refresh token fails, remove the access token and redirect to login
-    localStorage.removeItem('access_token');
-    window.location.href = '/login';
-    throw error;
+    const decoded = jwtDecode<JwtPayload>(token);
+    return decoded.exp ? decoded.exp * 1000 : null; // Convert to milliseconds
+  } catch {
+    return null; // Invalid token, return null
   }
 };
 
-axios.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response; // If response is successful, just return it
-  },
-  async (error: AxiosError) => {
-    const { response } = error;
+// Function: Refresh Auth Token
+const refreshAuthToken = async () => {
+  try {
+    const apiBaseUrl = import.meta.env.VITE_API_URL;
+    const refreshTokenEndpoint = "/api/v1/login/refresh-token";
+    const url = `${apiBaseUrl}${refreshTokenEndpoint}`;
 
-    // Check if the error is a 401 Unauthorized error
-    if (response && response.status === 401) {
-      try {
-        // Attempt to refresh the token
-        const newAccessToken = await refreshAuthToken();
+    const response = await axios.post(url, {}, { withCredentials: true });
+    const newAccessToken = response.data.access_token;
 
-        // Retry the original request with the new access token
-        if (response.config) {
-          response.config.headers['Authorization'] = `Bearer ${newAccessToken}`;
-          return axios(response.config); // Retry the request
-        }
-      } catch (refreshError) {
-        // If refresh fails, redirect to login page
-        window.location.href = '/login';
-      }
-    }
-
-    // For other errors, simply return the error
-    return Promise.reject(error);
+    localStorage.setItem("access_token", newAccessToken);
+    return newAccessToken;
+  } catch (error) {
+    // localStorage.removeItem("access_token");
+    // window.location.href = "/login"; // Redirect on failure
+    // throw error;
   }
-);
+};
 
+// Function: Refresh Token if Needed
+const refreshIfNeeded = async () => {
+  const token = localStorage.getItem("access_token");
+  if (!token) return;
 
-const isLoggedIn = () => {
+  const expiration = getTokenExpiration(token);
+  if (expiration && Date.now() > expiration - 60 * 1000) {
+    // Refresh 1 min before expiry
+    await refreshAuthToken();
+  }
+};
+
+const isLoggedIn = (): boolean => {
   const token = localStorage.getItem("access_token")
   const is_totp_required = localStorage.getItem("is_totp_required")
-  return token !== null && is_totp_required === null
+  return !!token && is_totp_required === null
 }
 
 const useAuth = () => {
@@ -75,6 +68,13 @@ const useAuth = () => {
     queryFn: UsersService.readUserMe,      
     enabled: isLoggedIn(),
   })
+  // Periodic Token Expiration Check
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshIfNeeded().catch(() => logout());
+    }, 60 * 1000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   const login = async (data: AccessToken) => {
     const response = await LoginService.loginAccessToken({
@@ -93,7 +93,7 @@ const useAuth = () => {
 
   const validateTotp = async (totp: TOTPToken) => {
     const response = await LoginService.validateTotp({
-      totp: totp
+      requestBody: totp
     });
     localStorage.setItem("access_token", response.access_token)
     localStorage.removeItem("is_totp_required")
@@ -111,16 +111,9 @@ const useAuth = () => {
       }
     },
     onError: (err: ApiError) => {
-      let errDetail = (err.body as any)?.detail
-
-      if (err instanceof AxiosError) {
-        errDetail = err.message
-      }
-
-      if (Array.isArray(errDetail)) {
-        errDetail = "Something went wrong"
-      }
-
+      const errDetail = Array.isArray(err.body)
+        ? "An unexpected error occurred."
+        : (err.body as any)?.detail || "Failed to log in. Please try again.";
       setError(errDetail);
     },
   })
@@ -131,21 +124,14 @@ const useAuth = () => {
       navigate({ to: "/" });
     },
     onError: (err: ApiError) => {
-      let errDetail = (err.body as any)?.detail
-
-      if (err instanceof AxiosError) {
-        errDetail = err.message
-      }
-
-      if (Array.isArray(errDetail)) {
-        errDetail = "Something went wrong"
-      }
-
+      const errDetail = Array.isArray(err.body)
+        ? "An unexpected error occurred."
+        : (err.body as any)?.detail || "Failed to validate TOTP. Please try again.";
       setError(errDetail);
     },
   })
 
-  const logout = () => {
+  const logout = (): void => {
     localStorage.removeItem("access_token")
     navigate({ to: "/login" })
   }

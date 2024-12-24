@@ -38,7 +38,7 @@ const PER_PAGE = 5;
 function getServicesQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      ServicesService.readAllServices({
+      ServicesService.getServices({
         skip: (page - 1) * PER_PAGE,
         limit: PER_PAGE,
       }),

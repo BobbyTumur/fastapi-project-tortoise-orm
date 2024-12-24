@@ -1,3 +1,4 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends
 
 from app import crud
@@ -14,7 +15,7 @@ router = APIRouter(prefix="/users", tags=["users_services"])
         dependencies=[Depends(get_current_active_superuser)],
         response_model=list[ServicePublic])
 async def get_user_services(
-    user_id: int,
+    user_id: UUID,
 ) -> list[ServicePublic]:
     """
     Get user's services
@@ -28,7 +29,7 @@ async def get_user_services(
     response_model=Message
 )
 async def add_services_to_user(
-    user_id: int,
+    user_id: UUID,
     services_in: UserUpdateServices
 ) -> Message:
     """

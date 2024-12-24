@@ -1,4 +1,5 @@
 from typing import Any
+from uuid import UUID
 
 from tortoise.transactions import in_transaction
 from fastapi import APIRouter, Depends, HTTPException
@@ -29,7 +30,7 @@ async def read_user_me(current_user: CurrentUser) -> Any:
     return current_user
 
 @router.get("/{user_id}", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic)
-async def read_user_by_id(user_id: int) -> Any:
+async def read_user_by_id(user_id: UUID) -> Any:
     """
     Get a specific user by id.
     """
@@ -96,7 +97,7 @@ async def update_password_me(body: UpdatePassword, current_user: CurrentUser) ->
     return Message(message="Password updated successfully")
 
 @router.patch("/{user_id}", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic)
-async def update_user(current_user: CurrentUser, user_id: int, user_in: UserUpdate) -> Any:
+async def update_user(current_user: CurrentUser, user_id: UUID, user_in: UserUpdate) -> Any:
     """
     Update a user.
     """
@@ -109,7 +110,7 @@ async def update_user(current_user: CurrentUser, user_id: int, user_in: UserUpda
     return user
 
 @router.delete("/{user_id}", dependencies=[Depends(get_current_active_superuser)])
-async def delete_user(current_user: CurrentUser, user_id: int) -> Message:
+async def delete_user(current_user: CurrentUser, user_id: UUID) -> Message:
     """
     Delete a user.
     """

@@ -1,4 +1,4 @@
-from typing import Literal
+
 from pydantic import BaseModel, Field
 
 class Message(BaseModel):
@@ -14,7 +14,7 @@ class Token(BaseModel):
 
 class TokenPayLoad(BaseModel):
     sub: str | None = None
-    is_auth: bool = False
+    totp_verified: bool = False
 
 class QRUri(BaseModel):
     uri: str

@@ -1,4 +1,4 @@
-from typing import Any
+from uuid import UUID
 
 from tortoise.exceptions import IntegrityError
 from fastapi import APIRouter, Depends, HTTPException
@@ -26,7 +26,7 @@ async def get_services(current_user: CurrentUser, skip: int = 0, limit: int = 10
     return ServicesPublic(data=services, count=count)
 
 @router.get("/{service_id}", response_model=ServicePublic)
-async def get_service(current_user: CurrentUser, service_id: int) -> ServicePublic:
+async def get_service(current_user: CurrentUser, service_id: UUID) -> ServicePublic:
     """
     List a user that can edit the service
     """
@@ -38,7 +38,7 @@ async def get_service(current_user: CurrentUser, service_id: int) -> ServicePubl
 
 
 @router.get("/{service_id}/users", response_model=list[UserPublic])
-async def get_service_users(current_user: CurrentUser, service_id: int) -> list[UserPublic]:
+async def get_service_users(current_user: CurrentUser, service_id: UUID) -> list[UserPublic]:
     """
     List service users
     """
@@ -63,7 +63,7 @@ async def create_service(service_in: ServiceCreate) -> Message:
         raise HTTPException(status_code=409, detail="The service already exists")
     
 @router.delete("/{service_id}", dependencies=[Depends(get_current_active_superuser)], response_model=Message)
-async def delete_service(service_id: int) -> Message:
+async def delete_service(service_id: UUID) -> Message:
     """
     Delete a service
     """
@@ -74,7 +74,7 @@ async def delete_service(service_id: int) -> Message:
         raise HTTPException(status_code=404, detail="Service not found")
     
 @router.get("/{service_id}/config", response_model=ConfigOut)
-async def get_service_config(service_id: int, current_user: CurrentUser) -> ConfigOut:
+async def get_service_config(service_id: UUID, current_user: CurrentUser) -> ConfigOut:
     """
     Read a service's config
     """
@@ -88,7 +88,7 @@ async def get_service_config(service_id: int, current_user: CurrentUser) -> Conf
     return config
 
 @router.patch("/{service_id}/config", response_model=Message)
-async def update_service_config(service_id: int, config_in: ConfigIn, current_user: CurrentUser) -> Message:
+async def update_service_config(service_id: UUID, config_in: ConfigIn, current_user: CurrentUser) -> Message:
     """
     Register a service's config
     """

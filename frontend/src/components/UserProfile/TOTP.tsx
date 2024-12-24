@@ -21,7 +21,7 @@ import { handleError } from "../../utils";
 import useCustomToast from "../../hooks/useCustomToast";
 import { useQuery } from "@tanstack/react-query";
 import Delete from "../Common/DeleteAlert";
-import { type ApiError, type TOTPToken, UsersService } from "../../client";
+import { type ApiError, TotpService, type TOTPToken, UsersService } from "../../client";
 
 function getUserQuery() {
   return {
@@ -55,7 +55,7 @@ const TOTP: React.FC = () => {
 
   // Mutation to enable TOTP
   const enableTotpMutation = useMutation({
-    mutationFn: UsersService.enableTOTP,
+    mutationFn: TotpService.enableTotp,
     onSuccess: (data) => {
       setQrUri(data.uri); // Set QR code URI
       onOpen(); // Open the modal to display QR code
@@ -68,7 +68,7 @@ const TOTP: React.FC = () => {
   // Mutation to verify TOTP token
   const verifyTotpMutation = useMutation({
     mutationFn: (data: TOTPToken) =>
-      UsersService.verifyTOTP({ requestBody: data }),
+      TotpService.totpLoginVerify({ requestBody: data }),
     onSuccess: () => {
       showToast(t("toast.success"), t("toast.totpEnabled"), "success");
       setQrUri(null); // Clear QR URI after verification

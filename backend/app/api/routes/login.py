@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app import crud, utils
 from app.core import security
 from app.core.config import settings
-from app.api.dep import CurrentTotpUser
+from app.api.dep import TotpUser
 from app.models.db_models import User
 from app.models.general_models import Token, Message, NewPassword, TOTPToken
 
@@ -36,24 +36,33 @@ async def login_access_token(
             access_token=security.create_access_token(
                 user.id, 
                 expires_delta=access_token_expires/3,
-                is_auth=False
+                totp_verified=False
                 ),
             token_type="totp"
             )
     
     # Generate tokens
-    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, is_auth=True)
+    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, totp_verified=True)
     refresh_token =  security.create_refresh_token(user.id)
 
     # Send the refresh token in an HttpOnly cookie
     response = JSONResponse(content=Token(access_token=access_token).model_dump())
-    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=True)
+    response.set_cookie(
+        key="refresh_token", 
+        value=refresh_token, 
+        httponly=True, 
+        secure=False,  # HTTPS prod, HTTP local
+        samesite="None",
+        path="/"
+        # samesite="None",
+        # path="/" # CSRF counter measure
+    )
 
     return response
 
 @router.post("/login/validate-totp")
-async def verify_totp(
-    current_user: CurrentTotpUser,
+async def validate_totp(
+    current_user: TotpUser,
     totp_token: TOTPToken,
 ) -> JSONResponse:
     """
@@ -63,16 +72,25 @@ async def verify_totp(
     is_valid_totp = security.verify_totp(totp=totp_token.token, user_secret=current_user.totp_secret)
     
     if not is_valid_totp:
-        raise HTTPException(status_code=400, detail="Invalid TOTP code")
+        raise HTTPException(status_code=401, detail="Invalid TOTP code")
     
     # If TOTP is valid, issue the access token
     # Generate tokens
-    access_token = security.create_access_token(current_user.id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES), is_auth=True)
+    access_token = security.create_access_token(current_user.id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES), totp_verified=True)
     refresh_token =  security.create_refresh_token(current_user.id)
 
     # Send the refresh token in an HttpOnly cookie
     response = JSONResponse(content=Token(access_token=access_token).model_dump())
-    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=True)
+    response.set_cookie(
+        key="refresh_token", 
+        value=refresh_token, 
+        httponly=True, 
+        secure=False,  # HTTPS prod, HTTP local
+        samesite="None",
+        path="/"
+        # samesite="None",
+        # path="/" # CSRF counter measure
+    )
 
     return response
 
@@ -88,14 +106,14 @@ async def refresh_access_token(
 
     # Validate the refresh token
     try:
-        payload = security.decode_refresh_token(refresh_token)
+        payload = security.decode_jwt_token(refresh_token)
     except security.InvalidTokenError:
         raise HTTPException(status_code=400, detail="Invalid or expired refresh token")
 
     # Extract user ID from the payload
     user_id = payload.get("sub")
     if not user_id:
-        raise HTTPException(status_code=400, detail="Invalid refresh token payload")
+        raise HTTPException(status_code=401, detail="Invalid refresh token payload")
 
     # Fetch the user from the database
     user = await crud.get_or_404(User, id=user_id)
@@ -104,12 +122,21 @@ async def refresh_access_token(
 
     # Generate new tokens
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, is_auth=True)
+    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, totp_verified=True)
     new_refresh_token = security.create_refresh_token(user.id)
 
     # Set the new refresh token in an HttpOnly cookie
     response = JSONResponse(content=Token(access_token=access_token).model_dump())
-    response.set_cookie(key="refresh_token", value=new_refresh_token, httponly=True, secure=True)
+    response.set_cookie(
+        key="refresh_token", 
+        value=new_refresh_token, 
+        httponly=True, 
+        secure=False,  # HTTPS prod, HTTP local
+        samesite="None",
+        path="/"
+        # samesite="None",
+        # path="/" # CSRF counter measure
+    )
 
     return response
     

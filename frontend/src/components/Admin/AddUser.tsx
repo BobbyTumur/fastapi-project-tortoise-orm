@@ -54,7 +54,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: UserRegister) =>
-      UsersService.createUser({ requestBody: data }),
+      UsersService.registerUser({ requestBody: data }),
     onSuccess: () => {
       showToast(
         t("toast.userCreateSuccess"),

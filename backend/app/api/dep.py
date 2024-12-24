@@ -1,9 +1,9 @@
-from typing import Annotated, Any
+from typing import Annotated
 
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from pydantic import ValidationError
 from tortoise.exceptions import DoesNotExist
 
@@ -12,32 +12,36 @@ from app.core.config import settings
 from app.models.db_models import User
 from app.models.general_models import TokenPayLoad
 
-resuasble_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
-TokenDep = Annotated[str, Depends(resuasble_oauth2)]
+# Token dependency
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
+TokenDep = Annotated[str, Depends(reusable_oauth2)]
 
-async def get_current_user(token: TokenDep, expect_totp: bool = False) -> User:
+async def get_current_user(token: TokenDep) -> User:
     try:
         payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM], options={"verify_exp": True}
-            )
+            token,
+            settings.SECRET_KEY,
+            algorithms=[security.ALGORITHM],
+            options={"verify_exp": True},  # Ensure expiration is verified
+        )
         token_data = TokenPayLoad(**payload)
-
-        if expect_totp and token_data.is_auth:
-            raise HTTPException(status_code=401, detail="Invalid token type for TOTP")
-        
-        if not expect_totp and not token_data.is_auth:
-            raise HTTPException(status_code=401, detail="Invalid token type")
-        
         user = await User.get(id=token_data.sub)
         if not user.is_active:
             raise HTTPException(status_code=400, detail="Inactive user")
-        
+
+        if user.is_totp_enabled and not token_data.totp_verified:
+            raise HTTPException(status_code=401, detail="OTP validation required")
         return user
-    
+
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=401,
+            detail="Access token has expired.",
+        )
     except (InvalidTokenError, ValidationError):
         raise HTTPException(
             status_code=401,
-            detail="Could not validate credentials",
+            detail="Could not validate credentials.",
         )
     except DoesNotExist:
         raise HTTPException(status_code=404, detail="User not found")
@@ -45,9 +49,27 @@ async def get_current_user(token: TokenDep, expect_totp: bool = False) -> User:
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 async def get_totp_user(token: TokenDep) -> User:
-    return await get_current_user(token, expect_totp=True)
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM], options={"verify_exp": True}
+            )
+        token_data = TokenPayLoad(**payload)
+        user = await User.get(id=token_data.sub)
+        if not user.is_active:
+            raise HTTPException(status_code=400, detail="Inactive user")
 
-CurrentTotpUser = Annotated[User, Depends(get_totp_user)]
+        if not user.is_totp_enabled:
+            raise HTTPException(status_code=401, detail="OTP not set for the user")
+        return user
+    except (InvalidTokenError, ValidationError):
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+        )
+    except DoesNotExist:
+        raise HTTPException(status_code=404, detail="User not found")
+
+TotpUser = Annotated[User, Depends(get_totp_user)]
 
 def get_current_active_superuser(current_user: CurrentUser) -> User:
     if not current_user.is_superuser:

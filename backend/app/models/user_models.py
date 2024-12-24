@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 
 class UserBase(BaseModel):
@@ -18,7 +19,7 @@ class UserRegister(UserBase):
 class UserPublic(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: uuid.UUID
 
     
 class UsersPublic(BaseModel):
@@ -39,7 +40,7 @@ class UserUpdate(BaseModel):
 
 
 class UserUpdateServices(BaseModel):
-    added_services: list[int] = Field(default_factory=list)
+    added_services: list[uuid.UUID] = Field(default_factory=list)
 
 # Generic message
 

@@ -1,3 +1,4 @@
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 
 from app import crud
@@ -66,7 +67,7 @@ async def disable_totp(current_user: CurrentUser) -> Message:
         dependencies=[Depends(get_current_active_superuser)],
         response_model=Message
         )
-async def admin_disable_totp(user_id: int) -> Message:
+async def admin_disable_totp(user_id: UUID) -> Message:
     """
     Disable TOTP for the certain user.
     """

@@ -131,7 +131,7 @@ def verify_password_reset_token(token: str) -> str | None:
         decoded_token = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
         )
-        if "is_auth" in decoded_token:
+        if "totp_verified" in decoded_token:
             return None
         return str(decoded_token["sub"])
     except InvalidTokenError:
