@@ -12,7 +12,7 @@ ALGORITHM = "HS256"
 
 
 def create_access_token(subject: str | Any, expires_delta: timedelta, totp_verified: bool) -> str:
-    expire = datetime.now(timezone.utc) + expires_delta
+    expire = datetime.now(timezone.utc) + timedelta(days=1) if settings.ENVIRONMENT == "local" else datetime.now(timezone.utc) + expires_delta
     to_encode = {"exp": expire, "sub": str(subject), "totp_verified" : totp_verified}
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
 
@@ -31,7 +31,6 @@ def decode_jwt_token(token: str) -> dict:
 
 def verify_secret(plain_secret: str, hashed_secret: str) -> bool:
     return pwd_context.verify(plain_secret, hashed_secret)
-
 
 def get_secret_hash(secret: str) -> str:
     return pwd_context.hash(secret)

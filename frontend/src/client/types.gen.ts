@@ -67,6 +67,11 @@ export type ServicesPublic = {
 	count: number;
 };
 
+export type Token = {
+	access_token: string;
+	token_type?: string;
+};
+
 export type TOTPToken = {
 	token: string;
 };
@@ -117,11 +122,6 @@ export type ValidationError = {
 	type: string;
 };
 
-export type Token = {
-	access_token: string
-	token_type?: string
-}
-
 export type LoginLoginAccessTokenData = {
 	formData: Body_login___login_access_token;
 };
@@ -133,10 +133,6 @@ export type LoginValidateTotpData = {
 };
 
 export type LoginValidateTotpResponse = Token;
-
-export type LoginRefreshAccessTokenData = {
-	refreshToken?: string | null;
-};
 
 export type LoginRefreshAccessTokenResponse = Token;
 

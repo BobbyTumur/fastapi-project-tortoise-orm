@@ -21,8 +21,8 @@ import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutProfileImport } from './routes/_layout/profile'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 import { Route as LayoutServicesIndexImport } from './routes/_layout/services/index'
-import { Route as LayoutServicesserviceidTemplateImport } from './routes/_layout/services/[service_id]/template'
-import { Route as LayoutServicesserviceidLogImport } from './routes/_layout/services/[service_id]/log'
+import { Route as LayoutServicesServiceidTemplateImport } from './routes/_layout/services/$service_id/template'
+import { Route as LayoutServicesServiceidLogImport } from './routes/_layout/services/$service_id/log'
 
 // Create/Update Routes
 
@@ -76,15 +76,15 @@ const LayoutServicesIndexRoute = LayoutServicesIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutServicesserviceidTemplateRoute =
-  LayoutServicesserviceidTemplateImport.update({
-    path: '/services/[service_id]/template',
+const LayoutServicesServiceidTemplateRoute =
+  LayoutServicesServiceidTemplateImport.update({
+    path: '/services/$service_id/template',
     getParentRoute: () => LayoutRoute,
   } as any)
 
-const LayoutServicesserviceidLogRoute = LayoutServicesserviceidLogImport.update(
+const LayoutServicesServiceidLogRoute = LayoutServicesServiceidLogImport.update(
   {
-    path: '/services/[service_id]/log',
+    path: '/services/$service_id/log',
     getParentRoute: () => LayoutRoute,
   } as any,
 )
@@ -163,18 +163,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutServicesIndexImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/services/[service_id]/log': {
-      id: '/_layout/services/[service_id]/log'
-      path: '/services/[service_id]/log'
-      fullPath: '/services/[service_id]/log'
-      preLoaderRoute: typeof LayoutServicesserviceidLogImport
+    '/_layout/services/$service_id/log': {
+      id: '/_layout/services/$service_id/log'
+      path: '/services/$service_id/log'
+      fullPath: '/services/$service_id/log'
+      preLoaderRoute: typeof LayoutServicesServiceidLogImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/services/[service_id]/template': {
-      id: '/_layout/services/[service_id]/template'
-      path: '/services/[service_id]/template'
-      fullPath: '/services/[service_id]/template'
-      preLoaderRoute: typeof LayoutServicesserviceidTemplateImport
+    '/_layout/services/$service_id/template': {
+      id: '/_layout/services/$service_id/template'
+      path: '/services/$service_id/template'
+      fullPath: '/services/$service_id/template'
+      preLoaderRoute: typeof LayoutServicesServiceidTemplateImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -187,8 +187,8 @@ interface LayoutRouteChildren {
   LayoutProfileRoute: typeof LayoutProfileRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutServicesIndexRoute: typeof LayoutServicesIndexRoute
-  LayoutServicesserviceidLogRoute: typeof LayoutServicesserviceidLogRoute
-  LayoutServicesserviceidTemplateRoute: typeof LayoutServicesserviceidTemplateRoute
+  LayoutServicesServiceidLogRoute: typeof LayoutServicesServiceidLogRoute
+  LayoutServicesServiceidTemplateRoute: typeof LayoutServicesServiceidTemplateRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -196,8 +196,8 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutProfileRoute: LayoutProfileRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutServicesIndexRoute: LayoutServicesIndexRoute,
-  LayoutServicesserviceidLogRoute: LayoutServicesserviceidLogRoute,
-  LayoutServicesserviceidTemplateRoute: LayoutServicesserviceidTemplateRoute,
+  LayoutServicesServiceidLogRoute: LayoutServicesServiceidLogRoute,
+  LayoutServicesServiceidTemplateRoute: LayoutServicesServiceidTemplateRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -214,8 +214,8 @@ export interface FileRoutesByFullPath {
   '/profile': typeof LayoutProfileRoute
   '/': typeof LayoutIndexRoute
   '/services': typeof LayoutServicesIndexRoute
-  '/services/[service_id]/log': typeof LayoutServicesserviceidLogRoute
-  '/services/[service_id]/template': typeof LayoutServicesserviceidTemplateRoute
+  '/services/$service_id/log': typeof LayoutServicesServiceidLogRoute
+  '/services/$service_id/template': typeof LayoutServicesServiceidTemplateRoute
 }
 
 export interface FileRoutesByTo {
@@ -228,8 +228,8 @@ export interface FileRoutesByTo {
   '/profile': typeof LayoutProfileRoute
   '/': typeof LayoutIndexRoute
   '/services': typeof LayoutServicesIndexRoute
-  '/services/[service_id]/log': typeof LayoutServicesserviceidLogRoute
-  '/services/[service_id]/template': typeof LayoutServicesserviceidTemplateRoute
+  '/services/$service_id/log': typeof LayoutServicesServiceidLogRoute
+  '/services/$service_id/template': typeof LayoutServicesServiceidTemplateRoute
 }
 
 export interface FileRoutesById {
@@ -244,8 +244,8 @@ export interface FileRoutesById {
   '/_layout/profile': typeof LayoutProfileRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/services/': typeof LayoutServicesIndexRoute
-  '/_layout/services/[service_id]/log': typeof LayoutServicesserviceidLogRoute
-  '/_layout/services/[service_id]/template': typeof LayoutServicesserviceidTemplateRoute
+  '/_layout/services/$service_id/log': typeof LayoutServicesServiceidLogRoute
+  '/_layout/services/$service_id/template': typeof LayoutServicesServiceidTemplateRoute
 }
 
 export interface FileRouteTypes {
@@ -261,8 +261,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/'
     | '/services'
-    | '/services/[service_id]/log'
-    | '/services/[service_id]/template'
+    | '/services/$service_id/log'
+    | '/services/$service_id/template'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -274,8 +274,8 @@ export interface FileRouteTypes {
     | '/profile'
     | '/'
     | '/services'
-    | '/services/[service_id]/log'
-    | '/services/[service_id]/template'
+    | '/services/$service_id/log'
+    | '/services/$service_id/template'
   id:
     | '__root__'
     | '/_layout'
@@ -288,8 +288,8 @@ export interface FileRouteTypes {
     | '/_layout/profile'
     | '/_layout/'
     | '/_layout/services/'
-    | '/_layout/services/[service_id]/log'
-    | '/_layout/services/[service_id]/template'
+    | '/_layout/services/$service_id/log'
+    | '/_layout/services/$service_id/template'
   fileRoutesById: FileRoutesById
 }
 
@@ -338,8 +338,8 @@ export const routeTree = rootRoute
         "/_layout/profile",
         "/_layout/",
         "/_layout/services/",
-        "/_layout/services/[service_id]/log",
-        "/_layout/services/[service_id]/template"
+        "/_layout/services/$service_id/log",
+        "/_layout/services/$service_id/template"
       ]
     },
     "/login": {
@@ -373,12 +373,12 @@ export const routeTree = rootRoute
       "filePath": "_layout/services/index.tsx",
       "parent": "/_layout"
     },
-    "/_layout/services/[service_id]/log": {
-      "filePath": "_layout/services/[service_id]/log.tsx",
+    "/_layout/services/$service_id/log": {
+      "filePath": "_layout/services/$service_id/log.tsx",
       "parent": "/_layout"
     },
-    "/_layout/services/[service_id]/template": {
-      "filePath": "_layout/services/[service_id]/template.tsx",
+    "/_layout/services/$service_id/template": {
+      "filePath": "_layout/services/$service_id/template.tsx",
       "parent": "/_layout"
     }
   }

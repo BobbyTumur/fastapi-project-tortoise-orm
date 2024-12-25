@@ -8,7 +8,6 @@ import type {
 	LoginLoginAccessTokenResponse,
 	LoginValidateTotpData,
 	LoginValidateTotpResponse,
-	LoginRefreshAccessTokenData,
 	LoginRefreshAccessTokenResponse,
 	LoginRecoverPasswordData,
 	LoginRecoverPasswordResponse,
@@ -64,7 +63,7 @@ export class LoginService {
 	 * OAuth2 compatible token login, get an access token for future requests
 	 * @param data The data for the request.
 	 * @param data.formData
-	 * @returns unknown Successful Response
+	 * @returns Token Successful Response
 	 * @throws ApiError
 	 */
 	public static loginAccessToken(
@@ -86,7 +85,7 @@ export class LoginService {
 	 * Validate TOTP code and issue an access token
 	 * @param data The data for the request.
 	 * @param data.requestBody
-	 * @returns unknown Successful Response
+	 * @returns Token Successful Response
 	 * @throws ApiError
 	 */
 	public static validateTotp(
@@ -106,23 +105,13 @@ export class LoginService {
 	/**
 	 * Refresh Access Token
 	 * Refresh the access token using the refresh token stored in the cookie.
-	 * @param data The data for the request.
-	 * @param data.refreshToken
-	 * @returns unknown Successful Response
+	 * @returns Token Successful Response
 	 * @throws ApiError
 	 */
-	public static refreshAccessToken(
-		data: LoginRefreshAccessTokenData = {},
-	): CancelablePromise<LoginRefreshAccessTokenResponse> {
+	public static refreshAccessToken(): CancelablePromise<LoginRefreshAccessTokenResponse> {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/login/refresh-token",
-			cookies: {
-				refresh_token: data.refreshToken,
-			},
-			errors: {
-				422: "Validation Error",
-			},
 		});
 	}
 

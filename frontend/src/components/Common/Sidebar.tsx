@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiMenu } from "react-icons/fi";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 
 import Logo from "/assets/images/bobby-logo.png";
 import type { UserPublic } from "../../client";
@@ -27,42 +27,50 @@ const Sidebar = () => {
   const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const location = useLocation();
+
+  {/* Log page should have shrinked sidebar */}
+  const isServicePage =location.pathname.endsWith("/log");
 
   return (
     <>
-      {/* Mobile */}
-      <IconButton
-        onClick={onOpen}
-        display={{ base: "flex", md: "none" }}
-        aria-label="Open Menu"
-        position="absolute"
-        fontSize="20px"
-        m={4}
-        icon={<FiMenu />}
-      />
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent maxW="250px">
-          <DrawerCloseButton />
-          <DrawerBody py={8}>
-            <Flex flexDir="column" justify="space-between">
-              <Box>
-                <Link to="/">
-                  <Image src={Logo} alt="logo" p={6} />
-                </Link>
-                <SidebarItems onClose={onClose} />
-              </Box>
-              {currentUser?.email && (
-                <Text color={textColor} noOfLines={2} fontSize="sm" p={2}>
-                  Logged in as: {currentUser.email}
-                </Text>
-              )}
-            </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+      {/* Mobile, /log */}
+        <>
+              <IconButton
+              onClick={onOpen}
+              display={isServicePage ? ({ base: "flex", md: "flex" }) : ({ base: "flex", md: "none" })}
+              aria-label="Open Menu"
+              position="absolute"
+              fontSize="20px"
+              m={4}
+              icon={<FiMenu />}
+            />
+            <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+              <DrawerOverlay />
+              <DrawerContent maxW="250px">
+                <DrawerCloseButton />
+                <DrawerBody py={8}>
+                  <Flex flexDir="column" justify="space-between">
+                    <Box>
+                      <Link to="/">
+                        <Image src={Logo} alt="logo" p={6} />
+                      </Link>
+                      <SidebarItems onClose={onClose} />
+                    </Box>
+                    {currentUser?.email && (
+                      <Text color={textColor} noOfLines={2} fontSize="sm" p={2}>
+                        Logged in as: {currentUser.email}
+                      </Text>
+                    )}
+                  </Flex>
+                </DrawerBody>
+              </DrawerContent>
+            </Drawer>
+            </>
+
 
       {/* Desktop */}
+      {!isServicePage &&(
       <Box
         bg={bgColor}
         p={3}
@@ -97,6 +105,7 @@ const Sidebar = () => {
           )}
         </Flex>
       </Box>
+      )}
     </>
   );
 };
