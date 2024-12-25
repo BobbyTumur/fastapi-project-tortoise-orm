@@ -8,7 +8,7 @@ from app.api.dep import CurrentUser, get_current_active_superuser
 from app.models.db_models import Service, Config
 from app.models.user_models import UserPublic
 from app.models.general_models import Message
-from app.models.service_models import ServiceCreate, ServicePublic, ServicesPublic, ConfigIn, ConfigOut, ServiceConfig
+from app.models.service_models import ServiceCreate, ServicePublic, ServicesPublic, ConfigPublic, ServiceConfig
 
 router = APIRouter(prefix="/services", tags=["services"])
 
@@ -91,7 +91,7 @@ async def get_service_config(service_id: UUID, current_user: CurrentUser) -> Ser
     )
 
 @router.patch("/{service_id}/config", response_model=Message)
-async def update_service_config(service_id: UUID, config_in: ConfigIn, current_user: CurrentUser) -> Message:
+async def update_service_config(service_id: UUID, config_in: ConfigPublic, current_user: CurrentUser) -> Message:
     """
     Register a service's config
     """

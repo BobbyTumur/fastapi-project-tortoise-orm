@@ -11,31 +11,40 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
-import AlertNotification from "../../../../components/Services/AlertNotification";
+import AlertNotificationTemplate from "../../../../components/Services/AlertNotificationTemplate";
 import LOG from "../../../../components/Services/Log";
-import { type ServicePublic, ServicesService } from "../../../../client";
+import { type ServiceConfig, ServicesService } from "../../../../client";
 
-export const Route = createFileRoute('/_layout/services/$service_id/template')({
+export const Route = createFileRoute("/_layout/services/$service_id/template")({
   component: Template,
 });
 
 function Template() {
   // Use `useParams` with an options object
-  const { service_id } = useParams({ from: '/_layout/services/$service_id/template' });
+  const { service_id } = useParams({
+    from: "/_layout/services/$service_id/template",
+  });
   const { t } = useTranslation();
-  const { data: service } = useQuery<ServicePublic | null, Error>({
-    queryKey: ["currentService"],
-    queryFn: () => ServicesService.getServiceConfig({ serviceId: service_id}),      
-  })
+  const { data: serviceConfig } = useQuery<ServiceConfig, Error>({
+    queryKey: ["currentServiceConfig"],
+    queryFn: () => ServicesService.getServiceConfig({ serviceId: service_id }),
+  });
+
+  if (!serviceConfig) {
+    return <p>Loading...</p>; // Add proper loading state if necessary
+  }
 
   const tabsConfig = [
-    { title: t("titles.summary"), component: EditServiceTemplate },
+    {
+      title: t("titles.summary"),
+      component: () => <AlertNotificationTemplate service={serviceConfig} />,
+    },
     { title: t("titles.updatePassword"), component: LOG },
   ];
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={4}>
-        {service?.name} {service?.sub_name}
+        {serviceConfig?.name} {serviceConfig?.sub_name}
       </Heading>
       <Tabs variant="enclosed">
         <TabList>

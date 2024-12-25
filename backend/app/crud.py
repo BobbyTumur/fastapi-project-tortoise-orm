@@ -6,7 +6,7 @@ from tortoise.queryset import QuerySet
 from app.core.security import get_secret_hash
 from app.models.db_models import User, Service, Log, Config
 from app.models.user_models import UserCreate, UserUpdate
-from app.models.service_models import ConfigIn
+from app.models.service_models import ConfigPublic
 
 
 async def create_user(*, user_create: UserCreate) -> User:
@@ -57,7 +57,7 @@ async def get_or_404(
     return instance
 
 
-async def create_or_update_config(service: Service, config_data: ConfigIn):
+async def create_or_update_config(service: Service, config_data: ConfigPublic):
     """
     Create or update the configuration for a given service.
     """

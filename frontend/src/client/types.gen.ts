@@ -9,19 +9,7 @@ export type Body_login___login_access_token = {
 	client_secret?: string | null;
 };
 
-export type ConfigIn = {
-	mail_from?: string | null;
-	mail_cc?: string | null;
-	mail_to?: string | null;
-	alert_mail_title?: string | null;
-	recovery_mail_title?: string | null;
-	alert_mail_body?: string | null;
-	recovery_mail_body?: string | null;
-	slack_link?: string | null;
-	teams_link?: string | null;
-};
-
-export type ConfigOut = {
+export type ConfigPublic = {
 	mail_from?: string | null;
 	mail_cc?: string | null;
 	mail_to?: string | null;
@@ -54,7 +42,7 @@ export type ServiceConfig = {
 	name: string;
 	sub_name: string;
 	id: string;
-	config: ConfigOut | null;
+	config: ConfigPublic | null;
 };
 
 export type ServiceCreate = {
@@ -198,7 +186,7 @@ export type ServicesGetServiceConfigData = {
 export type ServicesGetServiceConfigResponse = ServiceConfig;
 
 export type ServicesUpdateServiceConfigData = {
-	requestBody: ConfigIn;
+	requestBody: ConfigPublic;
 	serviceId: string;
 };
 

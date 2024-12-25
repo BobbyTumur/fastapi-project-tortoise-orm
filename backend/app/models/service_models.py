@@ -30,14 +30,11 @@ class ConfigBase(BaseModel):
     recovery_mail_body: Optional[str] = None  # Optional
     slack_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
     teams_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
-
-class ConfigIn(ConfigBase):
-    pass
-
-class ConfigOut(ConfigBase):
+    
+class ConfigPublic(ConfigBase):
     model_config = ConfigDict(from_attributes=True)
 
 class ServiceConfig(ServicePublic):
-    config: Optional[ConfigOut]
+    config: Optional[ConfigPublic]
 
 
