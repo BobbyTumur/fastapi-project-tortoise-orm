@@ -9,11 +9,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { type SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
-import { type ApiError, type UpdatePassword, UsersService } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
+import { type ApiError, type UpdatePassword, UsersService } from "../../client";
 import { confirmPasswordRules, handleError, passwordRules } from "../../utils";
 
 interface UpdatePasswordForm extends UpdatePassword {

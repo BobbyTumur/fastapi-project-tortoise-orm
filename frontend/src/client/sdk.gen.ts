@@ -305,7 +305,7 @@ export class ServicesService {
 	 * Read a service's config
 	 * @param data The data for the request.
 	 * @param data.serviceId
-	 * @returns ConfigOut Successful Response
+	 * @returns ServiceConfig Successful Response
 	 * @throws ApiError
 	 */
 	public static getServiceConfig(

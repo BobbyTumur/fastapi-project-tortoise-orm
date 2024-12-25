@@ -10,28 +10,27 @@ export type Body_login___login_access_token = {
 };
 
 export type ConfigIn = {
-	email_from?: string | null;
-	email_cc?: string | null;
-	email_to?: string | null;
-	alert_email_title?: string | null;
-	recovery_email_title?: string | null;
-	alert_email_body?: string | null;
-	recovery_email_body?: string | null;
+	mail_from?: string | null;
+	mail_cc?: string | null;
+	mail_to?: string | null;
+	alert_mail_title?: string | null;
+	recovery_mail_title?: string | null;
+	alert_mail_body?: string | null;
+	recovery_mail_body?: string | null;
 	slack_link?: string | null;
 	teams_link?: string | null;
 };
 
 export type ConfigOut = {
-	email_from?: string | null;
-	email_cc?: string | null;
-	email_to?: string | null;
-	alert_email_title?: string | null;
-	recovery_email_title?: string | null;
-	alert_email_body?: string | null;
-	recovery_email_body?: string | null;
+	mail_from?: string | null;
+	mail_cc?: string | null;
+	mail_to?: string | null;
+	alert_mail_title?: string | null;
+	recovery_mail_title?: string | null;
+	alert_mail_body?: string | null;
+	recovery_mail_body?: string | null;
 	slack_link?: string | null;
 	teams_link?: string | null;
-	id: string;
 };
 
 export type HTTPValidationError = {
@@ -49,6 +48,13 @@ export type NewPassword = {
 
 export type QRUri = {
 	uri: string;
+};
+
+export type ServiceConfig = {
+	name: string;
+	sub_name: string;
+	id: string;
+	config: ConfigOut | null;
 };
 
 export type ServiceCreate = {
@@ -189,7 +195,7 @@ export type ServicesGetServiceConfigData = {
 	serviceId: string;
 };
 
-export type ServicesGetServiceConfigResponse = ConfigOut;
+export type ServicesGetServiceConfigResponse = ServiceConfig;
 
 export type ServicesUpdateServiceConfigData = {
 	requestBody: ConfigIn;

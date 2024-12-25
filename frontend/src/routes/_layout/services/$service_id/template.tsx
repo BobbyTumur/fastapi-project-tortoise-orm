@@ -8,12 +8,12 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
-import EditServiceTemplate from "../../../../components/Services/EditServiceTemplate";
+import AlertNotification from "../../../../components/Services/AlertNotification";
 import LOG from "../../../../components/Services/Log";
-import { type ServicePublic,type ServicesPublic, ServicesService } from "../../../../client";
+import { type ServicePublic, ServicesService } from "../../../../client";
 
 export const Route = createFileRoute('/_layout/services/$service_id/template')({
   component: Template,
@@ -25,7 +25,7 @@ function Template() {
   const { t } = useTranslation();
   const { data: service } = useQuery<ServicePublic | null, Error>({
     queryKey: ["currentService"],
-    queryFn: () => ServicesService.getService({ serviceId: service_id}),      
+    queryFn: () => ServicesService.getServiceConfig({ serviceId: service_id}),      
   })
 
   const tabsConfig = [
@@ -34,7 +34,7 @@ function Template() {
   ];
   return (
     <Container maxW="full">
-      <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={12}>
+      <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={4}>
         {service?.name} {service?.sub_name}
       </Heading>
       <Tabs variant="enclosed">

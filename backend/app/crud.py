@@ -24,6 +24,7 @@ async def update_user(*, db_user: User, user_in: UserUpdate) -> User:
 async def get_or_404(
     model: Model,
     prefetch_related: Optional[List[str]] = None,
+    select_related: Optional[List[str]] = None,
     **filters: Any
 ) -> Model:
     """
@@ -44,6 +45,9 @@ async def get_or_404(
     # Apply prefetch_related if provided
     if prefetch_related:
         query = query.prefetch_related(*prefetch_related)
+
+    if select_related:
+        query = query.select_related(*select_related)
 
     # Execute query
     instance = await query

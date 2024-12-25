@@ -19,7 +19,7 @@ class User(Model):
 class Service(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
     name = fields.CharField(max_length=255, unique=True)  # Unique and required
-    sub_name = fields.CharField(max_length=255, unique=True)  # Unique and required
+    sub_name = fields.CharField(max_length=255)  # Unique and required
 
     config: fields.OneToOneRelation["Config"]
     log: fields.OneToOneRelation["Log"]
@@ -28,18 +28,18 @@ class Service(Model):
         table = "services"  # Explicitly set the table name
 
 class Config(Model):
-    id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
+    id = fields.IntField(primary_key=True, auto_increment=True)  # Primary key, auto-incremented
     
     service = fields.OneToOneField(
         "models.Service", related_name="config", on_delete=fields.CASCADE
                                    )
-    email_from = fields.CharField(max_length=255, null=True)  # Optional
-    email_cc = fields.CharField(max_length=255, null=True)  # Optional
-    email_to = fields.CharField(max_length=255, null=True)  # Optional
-    alert_email_title = fields.CharField(max_length=255, null=True)  # Optional
-    recovery_email_title = fields.CharField(max_length=255, null=True)  # Optional
-    alert_email_body = fields.TextField(null=True)  # Optional
-    recovery_email_body = fields.TextField(null=True)  # Optional
+    mail_from = fields.CharField(max_length=255, null=True)  # Optional
+    mail_cc = fields.CharField(max_length=255, null=True)  # Optional
+    mail_to = fields.CharField(max_length=255, null=True)  # Optional
+    alert_mail_title = fields.CharField(max_length=255, null=True)  # Optional
+    recovery_mail_title = fields.CharField(max_length=255, null=True)  # Optional
+    alert_mail_body = fields.TextField(null=True)  # Optional
+    recovery_mail_body = fields.TextField(null=True)  # Optional
     slack_link = fields.CharField(max_length=255, null=True)  # Optional
     teams_link = fields.CharField(max_length=255, null=True)  # Optional
 
@@ -47,7 +47,7 @@ class Config(Model):
         table = "service_configs"  # Explicitly set the table name
 
 class Log(Model):
-    id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
+    id = fields.IntField(primary_key=True)  # Primary key, auto-incremented
     
     service = fields.OneToOneField(
         "models.Service", related_name="log", on_delete=fields.CASCADE
