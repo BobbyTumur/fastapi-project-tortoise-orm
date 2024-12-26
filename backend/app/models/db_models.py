@@ -21,30 +21,47 @@ class Service(Model):
     name = fields.CharField(max_length=255, unique=True)  # Unique and required
     sub_name = fields.CharField(max_length=255)  # Unique and required
 
-    config: fields.OneToOneRelation["Config"]
+    alert_config: fields.OneToOneRelation["AlertConfig"]
+    publish_config: fields.OneToOneRelation["PublishConfig"]
     log: fields.OneToOneRelation["Log"]
 
     class Meta:
         table = "services"  # Explicitly set the table name
 
-class Config(Model):
+class AlertConfig(Model):
     id = fields.IntField(primary_key=True, auto_increment=True)  # Primary key, auto-incremented
     
     service = fields.OneToOneField(
-        "models.Service", related_name="config", on_delete=fields.CASCADE
-                                   )
+        "models.Service", related_name="alert_config", on_delete=fields.CASCADE
+    )
     mail_from = fields.CharField(max_length=255, null=True)  # Optional
     mail_cc = fields.CharField(max_length=255, null=True)  # Optional
     mail_to = fields.CharField(max_length=255, null=True)  # Optional
     alert_mail_title = fields.CharField(max_length=255, null=True)  # Optional
+    alert_mail_body = fields.TextField(null=True)  # Optional 
     recovery_mail_title = fields.CharField(max_length=255, null=True)  # Optional
-    alert_mail_body = fields.TextField(null=True)  # Optional
-    recovery_mail_body = fields.TextField(null=True)  # Optional
+    recovery_mail_body = fields.TextField(null=True)  # Optional 
+    extra_mail_to=fields.CharField(max_length=255, null=True)  # Optional
+    extra_mail_body = fields.TextField(max_length=255, null=True)  # Optional
     slack_link = fields.CharField(max_length=255, null=True)  # Optional
     teams_link = fields.CharField(max_length=255, null=True)  # Optional
 
     class Meta:
-        table = "service_configs"  # Explicitly set the table name
+        table = "alert_config"  # Explicitly set the table name
+
+class PublishConfig(Model):
+    id = fields.IntField(primary_key=True, auto_increment=True)  # Primary key, auto-incremented
+    
+    service = fields.OneToOneField(
+        "models.Service", related_name="publish_config", on_delete=fields.CASCADE
+    )
+    alert_publish_title = fields.CharField(max_length=255)
+    alert_publish_body = fields.CharField(max_length=511)
+    influenced_user = fields.BooleanField(default=False)
+    send_mail = fields.BooleanField(default=True)
+
+    class Meta:
+        table = "publish_config"
 
 class Log(Model):
     id = fields.IntField(primary_key=True)  # Primary key, auto-incremented

@@ -30,7 +30,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   {/* Log page should have shrinked sidebar */}
-  const isServicePage =location.pathname.endsWith("/log");
+  const isServicePage =location.pathname.endsWith("/log") || location.pathname.endsWith("/template");
 
   return (
     <>

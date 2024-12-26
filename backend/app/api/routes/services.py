@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app import crud, utils
 from app.api.dep import CurrentUser, get_current_active_superuser
-from app.models.db_models import Service, Config
+from app.models.db_models import Service
 from app.models.user_models import UserPublic
 from app.models.general_models import Message
-from app.models.service_models import ServiceCreate, ServicePublic, ServicesPublic, ConfigPublic, ServiceConfig
+from app.models.service_models import ServiceCreate, ServicePublic, ServicesPublic, AlertConfigPublic, ServiceConfig
 
 router = APIRouter(prefix="/services", tags=["services"])
 
@@ -78,7 +78,7 @@ async def get_service_config(service_id: UUID, current_user: CurrentUser) -> Ser
     """
     Read a service's config
     """
-    service_with_config = await crud.get_or_404(Service, id=service_id, select_related=["config"])
+    service_with_config = await crud.get_or_404(Service, id=service_id, select_related=["alert_config, publish_config"])
     is_associated = await current_user.services.filter(id=service_id).exists()
     if not current_user.is_superuser and not is_associated:
         raise HTTPException(status_code=403, detail="Not enough privileges")
@@ -87,15 +87,16 @@ async def get_service_config(service_id: UUID, current_user: CurrentUser) -> Ser
     #     raise HTTPException(status_code=404, detail="No config yet for this service") 
     return ServiceConfig(
         **service_with_config.__dict__,
-        config=service_with_config.config
+        alert_config=service_with_config.alert_config,
+        publish_config=service_with_config.publish_config
     )
 
 @router.patch("/{service_id}/config", response_model=Message)
-async def update_service_config(service_id: UUID, config_in: ConfigPublic, current_user: CurrentUser) -> Message:
+async def update_service_config(service_id: UUID, config_in: AlertConfigPublic, current_user: CurrentUser) -> Message:
     """
     Register a service's config
     """
-    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["config"])
+    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["alert_config, publish_config"])
     # if not await utils.check_user_privileges(current_user, service_id):
     #     raise HTTPException(status_code=403, detail="Not enough privileges")
     await crud.create_or_update_config(service, config_in)

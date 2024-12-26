@@ -4,9 +4,9 @@ from tortoise.models import Model
 from tortoise.queryset import QuerySet
 
 from app.core.security import get_secret_hash
-from app.models.db_models import User, Service, Log, Config
+from app.models.db_models import User, Service, AlertConfig, PublishConfig
 from app.models.user_models import UserCreate, UserUpdate
-from app.models.service_models import ConfigPublic
+from app.models.service_models import AlertConfigCreate, PublishConfigCreate
 
 
 async def create_user(*, user_create: UserCreate) -> User:
@@ -57,12 +57,13 @@ async def get_or_404(
     return instance
 
 
-async def create_or_update_config(service: Service, config_data: ConfigPublic):
+async def create_or_update_config(service: Service, config_data: AlertConfigCreate | PublishConfigCreate):
     """
     Create or update the configuration for a given service.
     """
+    database = AlertConfig if config_data == AlertConfigCreate else PublishConfig
     config_dict = config_data.model_dump(exclude_unset=True)
-    config, created = await Config.get_or_create(
+    config, created = await database.get_or_create(
         service=service,
         defaults=config_dict,
     )

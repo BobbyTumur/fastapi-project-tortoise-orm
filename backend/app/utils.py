@@ -11,7 +11,6 @@ from jinja2 import Template
 from jwt.exceptions import InvalidTokenError
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from fastapi import HTTPException
 
 from app.core import security
 from app.core.config import settings

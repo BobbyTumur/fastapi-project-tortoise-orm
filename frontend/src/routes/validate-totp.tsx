@@ -5,7 +5,7 @@ import {
   PinInput,
   PinInputField,
   Flex,
-  Heading
+  Heading,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";

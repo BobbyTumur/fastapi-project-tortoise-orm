@@ -20,21 +20,44 @@ class ServicesPublic(BaseModel):
     data: list[ServicePublic]
     count: int
 
-class ConfigBase(BaseModel):
-    mail_from: Optional[EmailStr] = Field(None, max_length=255)  # Optional, email validation
-    mail_cc: Optional[EmailStr] = Field(None, max_length=255)  # Optional, email validation
-    mail_to: Optional[EmailStr] = Field(None, max_length=255)  # Optional, email validation
+class AlertConfigBase(BaseModel):
+    mail_from: Optional[EmailStr] = Field(None, max_length=255)  # Optional
+    mail_cc: Optional[EmailStr] = Field(None, max_length=255)  # Optional
+    mail_to: Optional[EmailStr] = Field(None, max_length=255)  # Optional
     alert_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
-    recovery_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
     alert_mail_body: Optional[str] = None  # Optional
+    recovery_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
     recovery_mail_body: Optional[str] = None  # Optional
+    extra_mail_to: Optional[EmailStr] = Field(None, max_length=255)  # Optional
+    extra_mail_body: Optional[str] = None  # Optional
     slack_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
     teams_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
+
+class PublishConfigBase(BaseModel):
+    service_name: Optional[str] = Field(None, max_length=255)  # Optional
+    alert_publish_title: Optional[str] = Field(None, max_length=255)  # Optional
+    alert_publish_body: Optional[str] = Field(None)  # Optional
+    influenced_user: bool = False
+    send_mail: bool = True
+
+class AlertConfigCreate(PublishConfigBase):
+    pass
     
-class ConfigPublic(ConfigBase):
+class PublishConfigCreate(PublishConfigBase):
+    pass
+
+class AlertConfigPublic(AlertConfigBase):
     model_config = ConfigDict(from_attributes=True)
 
+    id: int
+
+class PublishConfigPublic(PublishConfigBase):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+
 class ServiceConfig(ServicePublic):
-    config: Optional[ConfigPublic]
+    alert_config: AlertConfigPublic
+    publish_config: PublishConfigPublic
 
 

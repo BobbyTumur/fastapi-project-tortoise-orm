@@ -1,11 +1,12 @@
 import {
   Container,
-  Heading,
+  Skeleton,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Heading
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -26,12 +27,15 @@ function Template() {
   });
   const { t } = useTranslation();
   const { data: serviceConfig } = useQuery<ServiceConfig, Error>({
-    queryKey: ["currentServiceConfig"],
+    queryKey: ["currentService"],
     queryFn: () => ServicesService.getServiceConfig({ serviceId: service_id }),
   });
 
   if (!serviceConfig) {
-    return <p>Loading...</p>; // Add proper loading state if necessary
+    return <Skeleton>
+    <div></div>
+    <div></div>
+  </Skeleton>; // Add proper loading state if necessary
   }
 
   const tabsConfig = [
@@ -43,8 +47,8 @@ function Template() {
   ];
   return (
     <Container maxW="full">
-      <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={4}>
-        {serviceConfig?.name} {serviceConfig?.sub_name}
+      <Heading size="lg" textAlign={{ base: "center", md: "left" }} p={6} pl={20}>
+        {serviceConfig?.name}: {serviceConfig?.sub_name}
       </Heading>
       <Tabs variant="enclosed">
         <TabList>

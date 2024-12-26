@@ -2,13 +2,22 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Input,
-  Select,
+  Stack,
   Text,
-  useColorModeValue,
+  Tooltip,
+  Divider,
+  IconButton,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  InputGroup,
+  InputLeftAddon
+
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { LuInfo } from "react-icons/lu";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -32,28 +41,25 @@ const AlertNotificationTemplate = ({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
-  const [selectedBody, setSelectedBody] = useState<"alert" | "recovery">(
-    "alert"
-  );
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty },
   } = useForm<ConfigPublic>({
     mode: "onBlur",
     criteriaMode: "all",
     defaultValues: service.config ?? {
-      mail_from: null,
-      mail_cc: null,
-      mail_to: null,
-      alert_mail_title: null,
-      recovery_mail_title: null,
-      alert_mail_body: null,
-      recovery_mail_body: null,
-      slack_link: null,
-      teams_link: null,
+      mail_from: "",
+      mail_cc: "",
+      mail_to: "",
+      alert_mail_title: "",
+      recovery_mail_title: "",
+      alert_mail_body: "",
+      recovery_mail_body: "",
+      slack_link: "",
+      teams_link: "",
     },
   });
 
@@ -71,7 +77,7 @@ const AlertNotificationTemplate = ({
       handleError(err, showToast);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["currentServiceConfig"] });
+      queryClient.invalidateQueries({ queryKey: ["currentService"] });
     },
   });
 
@@ -84,86 +90,85 @@ const AlertNotificationTemplate = ({
   };
 
   return (
-    <Box
-      as="form"
-      onSubmit={handleSubmit(onSubmit)}
-      bg={useColorModeValue("white", "gray.800")}
-      p={6}
-      borderRadius="md"
-      boxShadow="md"
-    >
-      <Heading as="h2" size="md" mb={4}>
-        {t("serviceConfig.title")}
-      </Heading>
-      <Flex gap={6}>
+    <Box as="form" height={100} onSubmit={handleSubmit(onSubmit)}>
+      <Flex>
         {/* Left Section */}
-        <Box flex="1">
+        <Box flex="1" mr={6}>
           {Object.keys(service.config ?? {})
-            .filter(
-              (key) => !["alert_mail_body", "recovery_mail_body"].includes(key)
-            )
+            .filter((key) => !["alert_mail_body", "recovery_mail_body"].includes(key))
             .map((key) => (
-              <Flex key={key} mb={4} align="center">
-                <Text flex="1" fontWeight="bold">
-                  {t(`serviceConfig.fields.${key}`)}
-                </Text>
+              <Flex key={key} mb={4} direction="column">
+                <InputGroup>
+                  <InputLeftAddon color='gray.600' bgColor="gray.400">
+                  {t(`notifConfig.${key}`)}:
+                  {["mail_to", "mail_cc"].includes(key) && (
+                    <Tooltip label="For multiple addresses, put comma and space in between" fontSize="md">
+                      <IconButton icon={<LuInfo />} aria-label="info" variant="ghost" size="xs" />
+                    </Tooltip>
+                  )}
+                  </InputLeftAddon>
                 <Input
                   flex="2"
+                  isDisabled={!isDirty}
+                  variant={service.config?.[key as keyof ConfigPublic] ? "filled" : "outline"}
                   defaultValue={(service.config as any)[key] || ""}
                   {...register(key as keyof ConfigPublic)}
                 />
+                </InputGroup>
               </Flex>
             ))}
         </Box>
-
-        {/* Right Section */}
+        <Divider orientation='vertical' />
+        {/* Right Section as Accordion */}
         <Box flex="1">
-          <Flex mb={4} align="center">
-            <Text flex="1" fontWeight="bold">
-              {t("serviceConfig.selectMailBody")}
-            </Text>
-            <Select
-              flex="2"
-              value={selectedBody}
-              onChange={(e) =>
-                setSelectedBody(e.target.value as "alert" | "recovery")
-              }
-            >
-              <option value="alert">
-                {t("serviceConfig.fields.alert_mail_body")}
-              </option>
-              <option value="recovery">
-                {t("serviceConfig.fields.recovery_mail_body")}
-              </option>
-            </Select>
-          </Flex>
-          <Input
-            as="textarea"
-            rows={10}
-            defaultValue={
-              selectedBody === "alert"
-                ? service.config?.alert_mail_body || ""
-                : service.config?.recovery_mail_body || ""
-            }
-            {...register(
-              selectedBody === "alert"
-                ? "alert_mail_body"
-                : "recovery_mail_body"
-            )}
-          />
+          <Accordion defaultIndex={[0]} allowMultiple>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    {t("notifConfig.alert_mail_body")}
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <Input
+                  as="textarea"
+                  resize="none"
+                  rows={10}
+                  defaultValue={service.config?.alert_mail_body || ""}
+                  {...register("alert_mail_body")}
+                />
+              </AccordionPanel>
+            </AccordionItem>
+
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    {t("notifConfig.recovery_mail_body")}
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <Input
+                  as="textarea"
+                  rows={10}
+                  defaultValue={service.config?.recovery_mail_body || ""}
+                  {...register("recovery_mail_body")}
+                />
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </Box>
       </Flex>
       <Flex justify="flex-end" gap={4} mt={6}>
-        <Button onClick={onCancel} variant="outline" colorScheme="gray">
-          {t("form.cancel")}
+        <Button onClick={onCancel} variant="outline" isDisabled={!isDirty}>
+          {t("buttons.reset")}
         </Button>
-        <Button
-          type="submit"
-          colorScheme="blue"
-          isLoading={isSubmitting}
-          isDisabled={!isDirty}
-        >
-          {t("form.save")}
+        <Button type="submit" variant="primary" isLoading={isSubmitting} isDisabled={!isDirty}>
+          {t("buttons.save")}
         </Button>
       </Flex>
     </Box>

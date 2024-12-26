@@ -66,7 +66,9 @@
         "cancel": "Cancel",
         "delete": "Delete",
         "disable": "Disable",
-        "register": "Save"
+        "register": "Save",
+        "reset": "Reset",
+        "save": "Save"
     },
     "required": {
         "totpRequired": "OTP code is required",
@@ -142,5 +144,16 @@
             "title": "パスワードの再設定",
             "body": "登録されたメールアドレスにパスワードリセットのリンクが送信されます。"
         }
+    },
+    "notifConfig": {
+        "mail_from": "Mail From",
+        "mail_to": "Mail To",
+        "mail_cc": "Mail CC",
+        "alert_mail_title": "Alert Mail Title",
+        "recovery_mail_title": "Recovery Mail Title",
+        "alert_mail_body": "Alert Mail Body",
+        "recovery_mail_body": "Recovery Mail Title",
+        "slack_link": "Slack Webhook",
+        "teams_link": "Teams Webhook"
     }
 }
