@@ -34,13 +34,12 @@ class AlertConfigBase(BaseModel):
     teams_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
 
 class PublishConfigBase(BaseModel):
-    service_name: Optional[str] = Field(None, max_length=255)  # Optional
     alert_publish_title: Optional[str] = Field(None, max_length=255)  # Optional
     alert_publish_body: Optional[str] = Field(None)  # Optional
     influenced_user: bool = False
     send_mail: bool = True
 
-class AlertConfigCreate(PublishConfigBase):
+class AlertConfigCreate(AlertConfigBase):
     pass
     
 class PublishConfigCreate(PublishConfigBase):
@@ -49,15 +48,10 @@ class PublishConfigCreate(PublishConfigBase):
 class AlertConfigPublic(AlertConfigBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-
 class PublishConfigPublic(PublishConfigBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-
 class ServiceConfig(ServicePublic):
-    alert_config: AlertConfigPublic
-    publish_config: PublishConfigPublic
-
+    alert_config: Optional[AlertConfigPublic]
+    publish_config: Optional[PublishConfigPublic]
 

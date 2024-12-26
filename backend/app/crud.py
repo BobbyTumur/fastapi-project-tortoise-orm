@@ -28,19 +28,23 @@ async def get_or_404(
     **filters: Any
 ) -> Model:
     """
-    Retrieve an object from the database with optional prefetch_related.
+    Retrieve an object from the database with optional prefetch_related and select_related.
     Raises 404 HTTPException if not found.
 
     Args:
         model: Tortoise model class.
-        filters: Filters to apply for the query.
         prefetch_related: Optional list of related fields to prefetch.
+        select_related: Optional list of related fields to select.
+        filters: Filters to apply for the query.
 
     Returns:
         Model instance if found.
+
+    Raises:
+        HTTPException: If the object is not found.
     """
     # Start with a base query
-    query: QuerySet = model.get_or_none(**filters)
+    query: QuerySet = model.filter(**filters)
     
     # Apply prefetch_related if provided
     if prefetch_related:
@@ -50,11 +54,11 @@ async def get_or_404(
         query = query.select_related(*select_related)
 
     # Execute query
-    instance = await query
-    if instance is None:
+    obj = await query.first()
+    if obj is None:
         raise HTTPException(status_code=404, detail=f"{model.__name__} not found")
 
-    return instance
+    return obj
 
 
 async def create_or_update_config(service: Service, config_data: AlertConfigCreate | PublishConfigCreate):

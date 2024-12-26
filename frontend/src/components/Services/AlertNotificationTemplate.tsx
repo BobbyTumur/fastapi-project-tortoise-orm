@@ -14,8 +14,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   InputGroup,
-  InputLeftAddon
-
+  InputLeftAddon,
 } from "@chakra-ui/react";
 import { LuInfo } from "react-icons/lu";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -28,7 +27,7 @@ import {
   type ApiError,
   ServiceConfig,
   ServicesService,
-  ConfigPublic,
+  AlertConfigCreate,
 } from "../../client";
 
 interface AlertNotificationTemplateProps {
@@ -47,24 +46,26 @@ const AlertNotificationTemplate = ({
     handleSubmit,
     reset,
     formState: { isSubmitting, isDirty },
-  } = useForm<ConfigPublic>({
+  } = useForm<AlertConfigCreate>({
     mode: "onBlur",
     criteriaMode: "all",
-    defaultValues: service.config ?? {
+    defaultValues: service.alert_config ?? {
       mail_from: "",
       mail_cc: "",
       mail_to: "",
       alert_mail_title: "",
-      recovery_mail_title: "",
       alert_mail_body: "",
+      recovery_mail_title: "",
       recovery_mail_body: "",
+      extra_mail_to: "",
+      extra_mail_body: "",
       slack_link: "",
       teams_link: "",
     },
   });
 
   const mutation = useMutation({
-    mutationFn: (data: ConfigPublic) =>
+    mutationFn: (data: AlertConfigCreate) =>
       ServicesService.updateServiceConfig({
         serviceId: service.id,
         requestBody: data,
@@ -81,7 +82,7 @@ const AlertNotificationTemplate = ({
     },
   });
 
-  const onSubmit: SubmitHandler<ConfigPublic> = async (data) => {
+  const onSubmit: SubmitHandler<AlertConfigCreate> = async (data) => {
     mutation.mutate(data);
   };
 
@@ -94,31 +95,45 @@ const AlertNotificationTemplate = ({
       <Flex>
         {/* Left Section */}
         <Box flex="1" mr={6}>
-          {Object.keys(service.config ?? {})
-            .filter((key) => !["alert_mail_body", "recovery_mail_body"].includes(key))
+          {Object.keys(service.alert_config ?? {})
+            .filter(
+              (key) => !["alert_mail_body", "recovery_mail_body"].includes(key)
+            )
             .map((key) => (
               <Flex key={key} mb={4} direction="column">
                 <InputGroup>
-                  <InputLeftAddon color='gray.600' bgColor="gray.400">
-                  {t(`notifConfig.${key}`)}:
-                  {["mail_to", "mail_cc"].includes(key) && (
-                    <Tooltip label="For multiple addresses, put comma and space in between" fontSize="md">
-                      <IconButton icon={<LuInfo />} aria-label="info" variant="ghost" size="xs" />
-                    </Tooltip>
-                  )}
+                  <InputLeftAddon color="gray.600" bgColor="gray.400">
+                    {t(`notifConfig.${key}`)}:
+                    {["mail_to", "mail_cc"].includes(key) && (
+                      <Tooltip
+                        label="For multiple addresses, put comma and space in between"
+                        fontSize="md"
+                      >
+                        <IconButton
+                          icon={<LuInfo />}
+                          aria-label="info"
+                          variant="ghost"
+                          size="xs"
+                        />
+                      </Tooltip>
+                    )}
                   </InputLeftAddon>
-                <Input
-                  flex="2"
-                  isDisabled={!isDirty}
-                  variant={service.config?.[key as keyof ConfigPublic] ? "filled" : "outline"}
-                  defaultValue={(service.config as any)[key] || ""}
-                  {...register(key as keyof ConfigPublic)}
-                />
+                  <Input
+                    flex="2"
+                    isDisabled={!isDirty}
+                    variant={
+                      service.alert_config?.[key as keyof AlertConfigCreate]
+                        ? "filled"
+                        : "outline"
+                    }
+                    defaultValue={(service.alert_config as any)[key] || ""}
+                    {...register(key as keyof AlertConfigCreate)}
+                  />
                 </InputGroup>
               </Flex>
             ))}
         </Box>
-        <Divider orientation='vertical' />
+        <Divider orientation="vertical" />
         {/* Right Section as Accordion */}
         <Box flex="1">
           <Accordion defaultIndex={[0]} allowMultiple>
@@ -136,7 +151,7 @@ const AlertNotificationTemplate = ({
                   as="textarea"
                   resize="none"
                   rows={10}
-                  defaultValue={service.config?.alert_mail_body || ""}
+                  defaultValue={service.alert_config?.alert_mail_body || ""}
                   {...register("alert_mail_body")}
                 />
               </AccordionPanel>
@@ -155,7 +170,7 @@ const AlertNotificationTemplate = ({
                 <Input
                   as="textarea"
                   rows={10}
-                  defaultValue={service.config?.recovery_mail_body || ""}
+                  defaultValue={service.alert_config?.recovery_mail_body || ""}
                   {...register("recovery_mail_body")}
                 />
               </AccordionPanel>
@@ -167,7 +182,12 @@ const AlertNotificationTemplate = ({
         <Button onClick={onCancel} variant="outline" isDisabled={!isDirty}>
           {t("buttons.reset")}
         </Button>
-        <Button type="submit" variant="primary" isLoading={isSubmitting} isDisabled={!isDirty}>
+        <Button
+          type="submit"
+          variant="primary"
+          isLoading={isSubmitting}
+          isDisabled={!isDirty}
+        >
           {t("buttons.save")}
         </Button>
       </Flex>
