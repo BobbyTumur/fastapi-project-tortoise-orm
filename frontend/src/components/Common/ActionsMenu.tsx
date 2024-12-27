@@ -94,7 +94,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
                 onClick={handleNavigateToTemplate}
                 icon={<FiClipboard fontSize="16px" />}
               >
-                {t("common.viewTemplate")}
+                {t("common.viewEditTemplate")}
               </MenuItem>
             </>
           )}

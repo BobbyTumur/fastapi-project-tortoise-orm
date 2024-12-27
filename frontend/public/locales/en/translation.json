@@ -32,7 +32,9 @@
         "healthy": "Healthy",
         "unhealthy": "Unhealthy",
         "name": "Name",
-        "subName": "Sub Name"
+        "subName": "Sub Name",
+        "viewEditTemplate": "View or Edit Template",
+        "viewLog": "View Log"
 
     },
     "titles": {
@@ -50,7 +52,9 @@
         "editUserService": "Edit User's Services",
         "disableTotp": "Disable 2FA",
         "enableTotp": "Enable 2FA",
-        "scanQrCode": "Scan QR Code"
+        "scanQrCode": "Scan QR Code",
+        "alertNotificationTemplate": "Alert Notification Template",
+        "autoPublishTemplate": "Auto Publish Template"
     },
     "texts": {
         "totpIsEnabled": "2FA is already set up",
@@ -127,13 +131,15 @@
         "invalidName": "Invalid name",
         "passwordLength": "Password must be at least 8 characters",
         "passwordNotMatch": "The passwords do not match",
-        "passwordConfirmRequired": "Password confirmation is required"
+        "passwordConfirmRequired": "Password confirmation is required",
+        "invalidWebhook": "Invalid URL",
+        "invalidMultiMail": "Either invalid email address or spacing error"
     },
     "warnings": {
         "deleteUserAlert": "All items associated with this user",
         "permaUserDelete": "will also be deleted.",
         "disableOtpAlert": "The OTP associated with previous set up",
-        "permaOtpDisable": "will no longer be valid",
+        "permaOtpDisable": "will no longer be valid.",
         "areYouSure": " Are you sure? This operation cannot be undone."
     },
     "responses": {
@@ -150,10 +156,17 @@
         "mail_to": "Mail To",
         "mail_cc": "Mail CC",
         "alert_mail_title": "Alert Mail Title",
-        "recovery_mail_title": "Recovery Mail Title",
         "alert_mail_body": "Alert Mail Body",
+        "recovery_mail_title": "Recovery Mail Title",
         "recovery_mail_body": "Recovery Mail Title",
+        "extra_mail_to": "Extra Mail To",
+        "extra_mail_body": "Extra Mail Body",
         "slack_link": "Slack Webhook",
         "teams_link": "Teams Webhook"
+    },
+    "infos": {
+        "multipleAddresses": "For multiple addresses, put comma and space in between. Tip: john@example.com, doe@example.com",
+        "extraMailTo": "For different scenarios, use this address.",
+        "extraMailBody": "For different scenarios, use this body."
     }
 }

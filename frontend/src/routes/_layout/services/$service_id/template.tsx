@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
 import AlertNotificationTemplate from "../../../../components/Services/AlertNotificationTemplate";
-import LOG from "../../../../components/Services/Log";
+import AutoPublishTemplate from "../../../../components/Services/AutoPublishTemplate";
 import { type ServiceConfig, ServicesService } from "../../../../client";
 
 export const Route = createFileRoute("/_layout/services/$service_id/template")({
@@ -42,10 +42,13 @@ function Template() {
 
   const tabsConfig = [
     {
-      title: t("titles.summary"),
+      title: t("titles.alertNotificationTemplate"),
       component: () => <AlertNotificationTemplate service={serviceConfig} />,
     },
-    { title: t("titles.updatePassword"), component: LOG },
+    {
+      title: t("titles.autoPublishTemplate"),
+      component: () => <AutoPublishTemplate service={serviceConfig} />,
+    },
   ];
   return (
     <Container maxW="full">

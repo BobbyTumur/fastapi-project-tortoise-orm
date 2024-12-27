@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_layout/services/")({
   validateSearch: (search) => servicesSearchSchema.parse(search),
 });
 
-const PER_PAGE = 8;
+const PER_PAGE = 10;
 
 function getServicesQueryOptions({ page }: { page: number }) {
   return {
@@ -75,7 +75,7 @@ function ServicesTable() {
   return (
     <>
       <TableContainer>
-        <Table size={{ base: "sm", md: "md" }}>
+        <Table size={{ base: "sm", md: "sm" }}>
           <Thead>
             <Tr>
               <Th width="25%">{t("services.name")}</Th>

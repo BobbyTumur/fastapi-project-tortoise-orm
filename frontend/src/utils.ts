@@ -8,10 +8,24 @@ export const emailPattern = {
   },
 }
 
+export const multiEmailPattern = {
+  value: /^([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})(, )?([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})*$/i,
+  get message() {
+    return i18n.t("utils.invalidMultiMail");
+  },
+};
+
 export const namePattern = {
   value: /^[A-Za-z\s\u00C0-\u017F]{1,30}$/,
   get message () {
     return i18n.t("utils.invalidName");
+  },
+}
+
+export const webhookPattern = {
+  value: /^https:\/\//i,
+  get message() {
+    return i18n.t("utils.invalidWebhook");
   },
 }
 

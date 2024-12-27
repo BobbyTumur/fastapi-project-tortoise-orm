@@ -32,7 +32,9 @@
         "healthy": "正常",
         "unhealthy": "異常",
         "name": "名",
-        "subName": "サブ名"
+        "subName": "サブ名",
+        "viewEditTemplate": "テンプレート 閲覧・編集",
+        "viewLog": "ログ 閲覧"
         
     },
     "titles": {
@@ -50,7 +52,9 @@
         "editUserService": "ユーザーのサービスを編集",
         "disableTotp": "2FAの無効化",
         "enableTotp": "2FAの有効化",
-        "scanQrCode": "QRコードの読み取り"
+        "scanQrCode": "QRコードの読み取り",
+        "alertNotificationTemplate": "アラート通知テンプレート",
+        "autoPublishTemplate": "自動掲載テンプレート"
     },
     "texts": {
         "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
@@ -121,11 +125,13 @@
         "pageNotFound": "お探しのページが見つかりませんでした。"
     },
     "utils": {
-        "invalidMail": "無効なメールアドレスです",
-        "invalidName": "無効な名前です",
-        "passwordLength": "パスワードは8文字以上でなければなりません",
-        "passwordNotMatch": "パスワードが一致しません",
-        "passwordConfirmRequired": "パスワードの確認が必要です"
+        "invalidMail": "無効なメールアドレスです。",
+        "invalidName": "無効な名前です。",
+        "passwordLength": "パスワードは8文字以上でなければなりません。",
+        "passwordNotMatch": "パスワードが一致しません。",
+        "passwordConfirmRequired": "パスワードの確認が必要です。",
+        "invalidWebhook": "無効なウェブフックです。",
+        "invalidMultiMail": "無効なメールアドレスまたはスペーシングに問題があります。"
     },
     "warnings": {
         "deleteUserAlert": "このユーザーに関連付けられているものすべてが",
@@ -149,10 +155,17 @@
         "mail_to": "宛先",
         "mail_cc": "CC",
         "alert_mail_title": "発生件名",
-        "recovery_mail_title": "回復件名",
         "alert_mail_body": "発生本文",
+        "recovery_mail_title": "回復件名",
         "recovery_mail_body": "回復本文",
+        "extra_mail_to": "おまけ宛先",
+        "extra_mail_body": "おまけ本文",
         "slack_link": "Slackウェブフック",
         "teams_link": "Teamsウェブフック"
+    },
+    "infos": {
+        "multipleAddresses": "複数のアドレスを入力する場合は、カンマとスペースを間に記入ください。例: john@clap.com, doe@clap.com",
+        "extraMailTo": "アラートの結果によって宛先が異なる場合は、このアドレスを使ってください。",
+        "extraMailBody": "アラートの結果によって宛先が異なる場合のメールの本文です。"
     }
 }
