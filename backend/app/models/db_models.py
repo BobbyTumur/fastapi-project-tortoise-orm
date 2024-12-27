@@ -20,6 +20,8 @@ class Service(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
     name = fields.CharField(max_length=255, unique=True)  # Unique and required
     sub_name = fields.CharField(max_length=255)  # Unique and required
+    has_extra_email = fields.BooleanField(default=False)
+    has_teams_slack = fields.BooleanField(default=False)
 
     alert_config: fields.OneToOneRelation["AlertConfig"]
     publish_config: fields.OneToOneRelation["PublishConfig"]
@@ -55,10 +57,10 @@ class PublishConfig(Model):
     service = fields.OneToOneField(
         "models.Service", related_name="publish_config", on_delete=fields.CASCADE
     )
-    alert_publish_title = fields.CharField(max_length=255)
-    alert_publish_body = fields.CharField(max_length=511)
-    influenced_user = fields.BooleanField(default=False)
-    send_mail = fields.BooleanField(default=True)
+    alert_publish_title = fields.CharField(max_length=255, null=True)  # Optional
+    alert_publish_body = fields.CharField(max_length=511, null=True)  # Optional
+    influenced_user = fields.BooleanField(default=False, null=True)  # Optional
+    send_mail = fields.BooleanField(default=True, null=True)  # Optional
 
     class Meta:
         table = "publish_config"

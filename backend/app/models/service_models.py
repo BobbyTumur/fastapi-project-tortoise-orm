@@ -1,10 +1,12 @@
 import uuid
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict, EmailStr, HttpUrl
 
 class ServiceBase(BaseModel):
     name: str = Field(..., max_length=255)  # Unique and required
     sub_name: str = Field(..., max_length=255)  # Unique and required
+    has_extra_email: bool = False
+    has_teams_slack: bool = False
 
 class ServiceCreate(ServiceBase):
     pass
@@ -22,13 +24,13 @@ class ServicesPublic(BaseModel):
 
 class AlertConfigBase(BaseModel):
     mail_from: Optional[EmailStr] = Field(None, max_length=255)  # Optional
-    mail_cc: Optional[EmailStr] = Field(None, max_length=255)  # Optional
-    mail_to: Optional[EmailStr] = Field(None, max_length=255)  # Optional
+    mail_cc: Optional[List[EmailStr]] = Field(None, max_length=255)  # Optional list of EmailStr
+    mail_to: Optional[List[EmailStr]] = Field(None, max_length=255)  # Optional list of EmailStr
     alert_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
     alert_mail_body: Optional[str] = None  # Optional
     recovery_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
     recovery_mail_body: Optional[str] = None  # Optional
-    extra_mail_to: Optional[EmailStr] = Field(None, max_length=255)  # Optional
+    extra_mail_to: Optional[List[EmailStr]] = Field(None, max_length=255)  # Optional
     extra_mail_body: Optional[str] = None  # Optional
     slack_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
     teams_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
