@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiMenu } from "react-icons/fi";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import Logo from "/assets/images/bobby-logo.png";
 import type { UserPublic } from "../../client";
@@ -27,14 +27,6 @@ const Sidebar = () => {
   const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const location = useLocation();
-
-  {
-    /* Log page should have shrinked sidebar */
-  }
-  const isServicePage =
-    location.pathname.endsWith("/log") ||
-    location.pathname.endsWith("/template");
 
   return (
     <>
@@ -73,42 +65,40 @@ const Sidebar = () => {
       </>
 
       {/* Desktop */}
-      {!isServicePage && (
-        <Box
-          bg={bgColor}
-          p={3}
-          h="100vh"
-          position="sticky"
-          top="0"
-          display={{ base: "none", md: "flex" }}
+      <Box
+        bg={bgColor}
+        p={3}
+        h="100vh"
+        position="sticky"
+        top="0"
+        display={{ base: "none", md: "flex" }}
+      >
+        <Flex
+          flexDir="column"
+          justify="space-between"
+          bg={secBgColor}
+          p={4}
+          borderRadius={12}
         >
-          <Flex
-            flexDir="column"
-            justify="space-between"
-            bg={secBgColor}
-            p={4}
-            borderRadius={12}
-          >
-            <Box>
-              <Link to="/">
-                <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
-              </Link>
-              <SidebarItems />
-            </Box>
-            {currentUser?.email && (
-              <Text
-                color={textColor}
-                noOfLines={2}
-                fontSize="sm"
-                p={2}
-                maxW="180px"
-              >
-                Logged in as: {currentUser.email}
-              </Text>
-            )}
-          </Flex>
-        </Box>
-      )}
+          <Box>
+            <Link to="/">
+              <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+            </Link>
+            <SidebarItems />
+          </Box>
+          {currentUser?.email && (
+            <Text
+              color={textColor}
+              noOfLines={2}
+              fontSize="sm"
+              p={2}
+              maxW="180px"
+            >
+              Logged in as: {currentUser.email}
+            </Text>
+          )}
+        </Flex>
+      </Box>
     </>
   );
 };

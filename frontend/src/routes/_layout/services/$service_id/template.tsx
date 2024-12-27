@@ -57,7 +57,12 @@ function Template() {
   ];
   return (
     <Container maxW="full">
-      <Heading size="lg" textAlign={{ base: "center", md: "left" }} p={4}>
+      <Heading
+        size="lg"
+        textAlign={{ base: "center", md: "left" }}
+        paddingX={4}
+        pt={10}
+      >
         {serviceConfig?.name}: {serviceConfig?.sub_name}
       </Heading>
       <Tabs variant="enclosed" p={4}>

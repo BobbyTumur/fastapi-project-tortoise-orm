@@ -23,7 +23,7 @@ function UserProfile() {
   const tabsConfig = [
     { title: t("titles.summary"), component: UserInformation },
     { title: t("titles.updatePassword"), component: ChangePassword },
-    { title: t("titles.setup2FA"), component: TOTP },
+    { title: t("titles.setupMFA"), component: TOTP },
   ];
   return (
     <Container maxW="full">

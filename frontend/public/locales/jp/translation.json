@@ -44,14 +44,14 @@
         "updatePassword": "パスワードの更新",
         "myProfile": "プロフィール",
         "summary": "概要",
-        "setup2FA": "2FAの設定",
+        "setupMFA": "MFAの設定",
         "services": "サービス一覧",
         "addService": "サービス追加",
         "editUser": "ユーザー更新",
         "deleteUser": "ユーザー削除",
         "editUserService": "ユーザーのサービスを編集",
-        "disableTotp": "2FAの無効化",
-        "enableTotp": "2FAの有効化",
+        "disableTotp": "MFAの無効化",
+        "enableTotp": "MFAの有効化",
         "scanQrCode": "QRコードの読み取り",
         "alertNotificationTemplate": "アラート通知テンプレート",
         "autoPublishTemplate": "自動掲載テンプレート"
@@ -61,8 +61,8 @@
         "totpIsDisabled": "ワンタイムパスワードが設定されていません。"
     },
     "buttons": {
-        "enableTotp": "2FAを有効にする",
-        "disableTotp": "2FAを無効にする",
+        "enableTotp": "MFAを有効にする",
+        "disableTotp": "MFAを無効にする",
         "verifyTotp": "検証",
         "save1": "追加",
         "save2": "更新",
@@ -101,7 +101,7 @@
         "confirmPassword": "パスワードを確認",
         "forgotPassword": "パスワードをお忘れですか？",
         "enterTotp": "OTPコード",
-        "hasExtraAddress": "別途宛先アドレスが必須",
+        "hasExtraAddress": "別途宛先メールアドレスが必須",
         "hasTeamsAndSlack": "Teams & Slackウェブフックが必須"
     },
     "index": {
@@ -116,8 +116,8 @@
         "userCreateSuccess": "ユーザーを追加しました。",
         "userCreated": "パスワード設定リンクをユーザーに送信しました。",
         "userDeleted": "ユーザーが削除されました。",
-        "totpDisabled": "2FAが無効化されました。",
-        "totpEnabled": "2FAが有効化されました。",
+        "totpDisabled": "MFAが無効化されました。",
+        "totpEnabled": "MFAが有効化されました。",
         "error": "エラーが発生しました。",
         "errorDetail": "削除ができませんでした。",
         "serviceCreated": "サービスを追加しました。",

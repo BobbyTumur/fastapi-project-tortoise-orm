@@ -72,8 +72,10 @@ function ValidateTotp() {
             onChange={handlePinChange}
             onComplete={handlePinComplete} // Trigger submission when all fields are filled
           >
-            {[...Array(6)].map(() => (
+            {[...Array(6)].map((_, index) => (
               <PinInputField
+                key={index} // Always use a key for dynamic lists
+                id={`pin-input-field-${index + 1}`}
                 fontSize="2xl"
                 textAlign="center"
                 width="60px"

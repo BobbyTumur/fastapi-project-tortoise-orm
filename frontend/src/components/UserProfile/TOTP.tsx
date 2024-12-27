@@ -1,8 +1,3 @@
-import React, { useState } from "react";
-import { QRCodeSVG } from "qrcode.react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import { type SubmitHandler, useForm } from "react-hook-form";
 import {
   Box,
   Text,
@@ -17,25 +12,27 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { handleError } from "../../utils";
-import useCustomToast from "../../hooks/useCustomToast";
-import { useQuery } from "@tanstack/react-query";
-import Delete from "../Common/DeleteAlert";
-import { type ApiError, TotpService, type TOTPToken, UsersService } from "../../client";
+import React, { useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
-function getUserQuery() {
-  return {
-    queryFn: () => UsersService.readUserMe(),
-    queryKey: ["currentUser"],
-  };
-}
+import { handleError } from "../../utils";
+import Delete from "../Common/DeleteAlert";
+import useCustomToast from "../../hooks/useCustomToast";
+import {
+  type ApiError,
+  TotpService,
+  TOTPToken,
+  UserPublic,
+} from "../../client";
 
 const TOTP: React.FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { data: currentUser } = useQuery({
-    ...getUserQuery(),
-  });
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
+
   const [qrUri, setQrUri] = useState<string | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const deleteModal = useDisclosure();
@@ -99,27 +96,22 @@ const TOTP: React.FC = () => {
     <Box>
       {isTotpEnabled ? (
         <Flex direction="column" align="start" gap={4}>
-        <Text>
-          {t("texts.totpIsEnabled")}
-        </Text>
-        <Button variant="danger" onClick={deleteModal.onOpen}>
-          {t("buttons.disableTotp")}
-        </Button>
-      </Flex>
-      
+          <Text>{t("texts.totpIsEnabled")}</Text>
+          <Button variant="danger" onClick={deleteModal.onOpen}>
+            {t("buttons.disableTotp")}
+          </Button>
+        </Flex>
       ) : (
         <Flex direction="column" align="start" gap={4}>
-        <Text>
-          {t("texts.totpIsDisabled")}
-        </Text>
-        <Button
-          variant="primary"
-          onClick={handleEnableTotp}
-          isLoading={enableTotpMutation.isPending}
-        >
-          {t("buttons.enableTotp")}
-        </Button>
-      </Flex>
+          <Text>{t("texts.totpIsDisabled")}</Text>
+          <Button
+            variant="primary"
+            onClick={handleEnableTotp}
+            isLoading={enableTotpMutation.isPending}
+          >
+            {t("buttons.enableTotp")}
+          </Button>
+        </Flex>
       )}
 
       <Delete
@@ -155,7 +147,9 @@ const TOTP: React.FC = () => {
                   <Flex direction="column" align="center" gap={4}>
                     <Input
                       placeholder={t("forms.enterTotp")}
-                      {...register("token", { required: t("required.totpRequired") })}
+                      {...register("token", {
+                        required: t("required.totpRequired"),
+                      })}
                       size="md"
                       w="auto"
                       sx={{

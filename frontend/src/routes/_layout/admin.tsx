@@ -80,6 +80,7 @@ function UsersTable() {
               <Th width="20%">{t("common.username")}</Th>
               <Th width="50%">{t("common.email")}</Th>
               <Th width="10%">{t("common.role")}</Th>
+              <Th width="10%">MFA</Th>
               <Th width="10%">{t("common.status")}</Th>
               <Th width="10%">{t("common.actions")}</Th>
             </Tr>
@@ -119,6 +120,13 @@ function UsersTable() {
                       : user.can_edit
                         ? "Tier2"
                         : "Tier1"}
+                  </Td>
+                  <Td>
+                    <Flex gap={2}>
+                      {user.is_totp_enabled
+                        ? t("common.enabled")
+                        : t("common.notEnabled")}
+                    </Flex>
                   </Td>
                   <Td>
                     <Flex gap={2}>
