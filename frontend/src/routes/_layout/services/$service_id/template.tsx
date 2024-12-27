@@ -26,8 +26,8 @@ function Template() {
     from: "/_layout/services/$service_id/template",
   });
   const { t } = useTranslation();
-  const { data: serviceConfig } = useQuery<ServiceConfig, Error>({
-    queryKey: ["currentService"],
+  const { data: serviceConfig, isLoading } = useQuery<ServiceConfig, Error>({
+    queryKey: ["currentService", service_id],
     queryFn: () => ServicesService.getServiceConfig({ serviceId: service_id }),
   });
 
@@ -43,7 +43,12 @@ function Template() {
   const tabsConfig = [
     {
       title: t("titles.alertNotificationTemplate"),
-      component: () => <AlertNotificationTemplate service={serviceConfig} />,
+      component: () => (
+        <AlertNotificationTemplate
+          service={serviceConfig}
+          serviceLoading={isLoading}
+        />
+      ),
     },
     {
       title: t("titles.autoPublishTemplate"),
@@ -52,15 +57,10 @@ function Template() {
   ];
   return (
     <Container maxW="full">
-      <Heading
-        size="lg"
-        textAlign={{ base: "center", md: "left" }}
-        p={6}
-        pl={20}
-      >
+      <Heading size="lg" textAlign={{ base: "center", md: "left" }} p={4}>
         {serviceConfig?.name}: {serviceConfig?.sub_name}
       </Heading>
-      <Tabs variant="enclosed">
+      <Tabs variant="enclosed" p={4}>
         <TabList>
           {tabsConfig.map((tab, index) => (
             <Tab key={index}>{tab.title}</Tab>

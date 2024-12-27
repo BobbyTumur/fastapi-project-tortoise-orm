@@ -24,16 +24,23 @@ class ServicesPublic(BaseModel):
 
 class AlertConfigBase(BaseModel):
     mail_from: Optional[EmailStr] = Field(None, max_length=255)  # Optional
-    mail_cc: Optional[List[EmailStr]] = Field(None, max_length=255)  # Optional list of EmailStr
-    mail_to: Optional[List[EmailStr]] = Field(None, max_length=255)  # Optional list of EmailStr
+    mail_cc: Optional[str] = Field(None, max_length=255)  # Optional
+    mail_to: Optional[str] = Field(None, max_length=255)  # Optional
     alert_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
     alert_mail_body: Optional[str] = None  # Optional
     recovery_mail_title: Optional[str] = Field(None, max_length=255)  # Optional
     recovery_mail_body: Optional[str] = None  # Optional
-    extra_mail_to: Optional[List[EmailStr]] = Field(None, max_length=255)  # Optional
+    extra_mail_to: Optional[str] = Field(None, max_length=255)  # Optional
     extra_mail_body: Optional[str] = None  # Optional
     slack_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
     teams_link: Optional[HttpUrl] = Field(None, max_length=255)  # Optional
+
+class AlertConfigCreate(AlertConfigBase):
+    pass
+    
+class AlertConfigPublic(AlertConfigBase):
+    model_config = ConfigDict(from_attributes=True)
+
 
 class PublishConfigBase(BaseModel):
     alert_publish_title: Optional[str] = Field(None, max_length=255)  # Optional
@@ -41,19 +48,11 @@ class PublishConfigBase(BaseModel):
     influenced_user: bool = False
     send_mail: bool = True
 
-class AlertConfigCreate(AlertConfigBase):
-    pass
-    
 class PublishConfigCreate(PublishConfigBase):
     pass
-
-class AlertConfigPublic(AlertConfigBase):
-    model_config = ConfigDict(from_attributes=True)
-
 class PublishConfigPublic(PublishConfigBase):
     model_config = ConfigDict(from_attributes=True)
 
 class ServiceConfig(ServicePublic):
     alert_config: Optional[AlertConfigPublic]
     publish_config: Optional[PublishConfigPublic]
-

@@ -1,7 +1,6 @@
 import {
   Badge,
   Box,
-  Button,
   Container,
   Flex,
   Heading,
@@ -22,8 +21,9 @@ import { useTranslation } from "react-i18next";
 
 import { type UserPublic, UsersService } from "../../client";
 import AddUser from "../../components/Admin/AddUser";
-import ActionsMenu from "../../components/Common/ActionsMenu";
 import Navbar from "../../components/Common/Navbar";
+import ActionsMenu from "../../components/Common/ActionsMenu";
+import { PaginationFooter } from "../../components/Common/PaginatorFooter";
 
 const usersSearchSchema = z.object({
   page: z.number().catch(1),
@@ -147,23 +147,12 @@ function UsersTable() {
           )}
         </Table>
       </TableContainer>
-      <Flex
-        gap={4}
-        alignItems="center"
-        mt={4}
-        direction="row"
-        justifyContent="flex-end"
-      >
-        <Button onClick={() => setPage(page - 1)} isDisabled={!hasPreviousPage}>
-          {t("common.previous")}
-        </Button>
-        <span>
-          {t("common.page")} {page}
-        </span>
-        <Button isDisabled={!hasNextPage} onClick={() => setPage(page + 1)}>
-          {t("common.next")}
-        </Button>
-      </Flex>
+      <PaginationFooter
+        onChangePage={setPage}
+        page={page}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+      />
     </>
   );
 }

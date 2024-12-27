@@ -72,6 +72,7 @@ async def delete_service(service_id: UUID) -> Message:
         await service.delete()
     else:
         raise HTTPException(status_code=404, detail="Service not found")
+    return Message(message="Successfully deleted the service.")
     
 @router.get("/{service_id}/config", response_model=ServiceConfig)
 async def get_service_config(service_id: UUID, current_user: CurrentUser) -> ServiceConfig:

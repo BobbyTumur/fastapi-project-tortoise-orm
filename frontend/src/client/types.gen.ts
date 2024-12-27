@@ -64,6 +64,8 @@ export type QRUri = {
 export type ServiceConfig = {
 	name: string;
 	sub_name: string;
+	has_extra_email?: boolean;
+	has_teams_slack?: boolean;
 	id: string;
 	alert_config: AlertConfigPublic | null;
 	publish_config: PublishConfigPublic | null;
@@ -72,11 +74,15 @@ export type ServiceConfig = {
 export type ServiceCreate = {
 	name: string;
 	sub_name: string;
+	has_extra_email?: boolean;
+	has_teams_slack?: boolean;
 };
 
 export type ServicePublic = {
 	name: string;
 	sub_name: string;
+	has_extra_email?: boolean;
+	has_teams_slack?: boolean;
 	id: string;
 };
 

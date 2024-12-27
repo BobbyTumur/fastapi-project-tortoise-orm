@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Container,
   Flex,
   Heading,
@@ -20,9 +19,10 @@ import { z } from "zod";
 import { useTranslation } from "react-i18next";
 
 import { type UserPublic, ServicesService } from "../../../client";
+import Navbar from "../../../components/Common/Navbar";
 import AddService from "../../../components/Admin/AddService";
 import ActionsMenu from "../../../components/Common/ActionsMenu";
-import Navbar from "../../../components/Common/Navbar";
+import { PaginationFooter } from "../../../components/Common/PaginatorFooter";
 
 const servicesSearchSchema = z.object({
   page: z.number().catch(1),
@@ -129,23 +129,12 @@ function ServicesTable() {
           )}
         </Table>
       </TableContainer>
-      <Flex
-        gap={4}
-        alignItems="center"
-        mt={4}
-        direction="row"
-        justifyContent="flex-end"
-      >
-        <Button onClick={() => setPage(page - 1)} isDisabled={!hasPreviousPage}>
-          {t("common.previous")}
-        </Button>
-        <span>
-          {t("common.page")} {page}
-        </span>
-        <Button isDisabled={!hasNextPage} onClick={() => setPage(page + 1)}>
-          {t("common.next")}
-        </Button>
-      </Flex>
+      <PaginationFooter
+        onChangePage={setPage}
+        page={page}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+      />
     </>
   );
 }

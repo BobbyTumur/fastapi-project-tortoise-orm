@@ -72,7 +72,9 @@
         "disable": "無効にする",
         "register": "登録",
         "reset": "リセット",
-        "save": "保存"
+        "save": "保存",
+        "previous": "前のページ",
+        "next": "次のページ"
     },
     "required": {
         "totpRequired": "OTPコードが必須です。",
@@ -98,7 +100,9 @@
         "setPassword": "パスワードを設定",
         "confirmPassword": "パスワードを確認",
         "forgotPassword": "パスワードをお忘れですか？",
-        "enterTotp": "OTPコード"
+        "enterTotp": "OTPコード",
+        "hasExtraAddress": "別途宛先アドレスが必須",
+        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須"
     },
     "index": {
         "greet": "こんにちは",
@@ -116,7 +120,8 @@
         "totpEnabled": "2FAが有効化されました。",
         "error": "エラーが発生しました。",
         "errorDetail": "削除ができませんでした。",
-        "serviceCreated": "サービスを追加しました。"
+        "serviceCreated": "サービスを追加しました。",
+        "serviceUpdated": "サービスを編集しました。"
     },
 
     "error": {
@@ -160,12 +165,12 @@
         "recovery_mail_body": "回復本文",
         "extra_mail_to": "おまけ宛先",
         "extra_mail_body": "おまけ本文",
-        "slack_link": "Slackウェブフック",
-        "teams_link": "Teamsウェブフック"
+        "slack_link": "Slackフック",
+        "teams_link": "Teamsフック"
     },
     "infos": {
         "multipleAddresses": "複数のアドレスを入力する場合は、カンマとスペースを間に記入ください。例: john@clap.com, doe@clap.com",
-        "extraMailTo": "アラートの結果によって宛先が異なる場合は、このアドレスを使ってください。",
+        "extraMailTo": "アラートの結果によって宛先が異なる場合は、このアドレスをご利用ください。",
         "extraMailBody": "アラートの結果によって宛先が異なる場合のメールの本文です。"
     }
 }

@@ -72,7 +72,9 @@
         "disable": "Disable",
         "register": "Save",
         "reset": "Reset",
-        "save": "Save"
+        "save": "Save",
+        "previous": "Previous",
+        "next": "Next"
     },
     "required": {
         "totpRequired": "OTP code is required",
@@ -98,7 +100,9 @@
         "setPassword": "Set Password",
         "confirmPassword": "Confirm Password",
         "forgotPassword": "Forgot password?",
-        "enterTotp": "Enter Your OTP Code"
+        "enterTotp": "Enter Your OTP Code",
+        "hasExtraAddress": "Need extra address",
+        "hasTeamsAndSlack": "Need Teams & Slack webhooks"
 
     },
     "index": {
