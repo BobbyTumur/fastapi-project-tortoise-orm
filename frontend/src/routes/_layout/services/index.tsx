@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_layout/services/")({
   validateSearch: (search) => servicesSearchSchema.parse(search),
 });
 
-const PER_PAGE = 5;
+const PER_PAGE = 8;
 
 function getServicesQueryOptions({ page }: { page: number }) {
   return {

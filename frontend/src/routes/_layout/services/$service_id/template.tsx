@@ -6,7 +6,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Heading
+  Heading,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -32,10 +32,12 @@ function Template() {
   });
 
   if (!serviceConfig) {
-    return <Skeleton>
-    <div></div>
-    <div></div>
-  </Skeleton>; // Add proper loading state if necessary
+    return (
+      <Skeleton>
+        <div></div>
+        <div></div>
+      </Skeleton>
+    ); // Add proper loading state if necessary
   }
 
   const tabsConfig = [
@@ -47,7 +49,12 @@ function Template() {
   ];
   return (
     <Container maxW="full">
-      <Heading size="lg" textAlign={{ base: "center", md: "left" }} p={6} pl={20}>
+      <Heading
+        size="lg"
+        textAlign={{ base: "center", md: "left" }}
+        p={6}
+        pl={20}
+      >
         {serviceConfig?.name}: {serviceConfig?.sub_name}
       </Heading>
       <Tabs variant="enclosed">

@@ -65,7 +65,7 @@ async def create_or_update_config(service: Service, config_data: AlertConfigCrea
     """
     Create or update the configuration for a given service.
     """
-    database = AlertConfig if config_data == AlertConfigCreate else PublishConfig
+    database = AlertConfig if isinstance(config_data, AlertConfigCreate) else PublishConfig
     config_dict = config_data.model_dump(exclude_unset=True)
     config, created = await database.get_or_create(
         service=service,

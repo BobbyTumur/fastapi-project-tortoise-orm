@@ -29,6 +29,7 @@ const ChangePassword = () => {
     handleSubmit,
     reset,
     getValues,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<UpdatePasswordForm>({
     mode: "onBlur",
@@ -50,6 +51,16 @@ const ChangePassword = () => {
   const onSubmit: SubmitHandler<UpdatePasswordForm> = async (data) => {
     mutation.mutate(data);
   };
+  // Watch form fields
+  const currentPassword = watch("current_password");
+  const newPassword = watch("new_password");
+  const confirmPassword = watch("confirm_password");
+
+  // Disable logic for the submit button
+  const isButtonDisabled =
+    !currentPassword || // Current password is empty
+    newPassword.length < 8 || // New password is less than 8 characters
+    confirmPassword !== newPassword;
 
   return (
     <>
@@ -111,6 +122,7 @@ const ChangePassword = () => {
             mt={4}
             type="submit"
             isLoading={isSubmitting}
+            isDisabled={isButtonDisabled}
           >
             {t("common.save2")}
           </Button>

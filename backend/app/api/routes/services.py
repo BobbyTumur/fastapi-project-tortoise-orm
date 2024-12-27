@@ -97,7 +97,7 @@ async def update_service_config(service_id: UUID, config_in: AlertConfigCreate, 
     """
     Register a service's config
     """
-    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["alert_config, publish_config"])
+    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["alert_config", "publish_config"])
     # if not await utils.check_user_privileges(current_user, service_id):
     #     raise HTTPException(status_code=403, detail="Not enough privileges")
     await crud.create_or_update_config(service, config_in)
