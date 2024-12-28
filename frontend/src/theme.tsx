@@ -1,10 +1,10 @@
-import { extendTheme } from "@chakra-ui/react"
+import { extendTheme } from "@chakra-ui/react";
 
 const disabledStyles = {
   _disabled: {
     backgroundColor: "ui.main",
   },
-}
+};
 
 const theme = extendTheme({
   colors: {
@@ -56,6 +56,6 @@ const theme = extendTheme({
       },
     },
   },
-})
+});
 
-export default theme
+export default theme;

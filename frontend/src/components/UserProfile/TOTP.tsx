@@ -12,10 +12,10 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { handleError } from "../../utils";
@@ -25,13 +25,16 @@ import {
   type ApiError,
   TotpService,
   TOTPToken,
-  UserPublic,
+  UsersService,
 } from "../../client";
 
-const TOTP: React.FC = () => {
+const TOTP = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
+  const { data: currentUser } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => UsersService.readUserMe(),
+  });
 
   const [qrUri, setQrUri] = useState<string | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -115,7 +118,7 @@ const TOTP: React.FC = () => {
       )}
 
       <Delete
-        type="TOTP"
+        type={t("common.totp")}
         id="TOTP"
         isOpen={deleteModal.isOpen}
         onClose={deleteModal.onClose}
@@ -134,7 +137,7 @@ const TOTP: React.FC = () => {
             {qrUri && (
               <Flex direction="column" align="center" gap={4}>
                 {qrUri ? (
-                  <Box mb={4}>
+                  <Box mb={4} bgColor="#FFFFFF" p={4}>
                     <QRCodeSVG value={qrUri} size={128} />
                   </Box>
                 ) : (

@@ -22,10 +22,10 @@ import SidebarItems from "./SidebarItems";
 
 const Sidebar = () => {
   const queryClient = useQueryClient();
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const bgColor = useColorModeValue("ui.light", "ui.dark");
   const textColor = useColorModeValue("ui.dark", "ui.light");
   const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

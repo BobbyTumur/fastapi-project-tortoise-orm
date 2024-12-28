@@ -105,6 +105,10 @@ export type UpdatePassword = {
 	new_password: string;
 };
 
+export type Usernames = {
+	usernames: Array<string>;
+};
+
 export type UserPublic = {
 	username: string;
 	email: string;
@@ -207,7 +211,7 @@ export type ServicesGetServiceUsersData = {
 	serviceId: string;
 };
 
-export type ServicesGetServiceUsersResponse = Array<UserPublic>;
+export type ServicesGetServiceUsersResponse = Usernames;
 
 export type ServicesGetServiceConfigData = {
 	serviceId: string;

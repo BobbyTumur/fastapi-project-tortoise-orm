@@ -49,12 +49,14 @@
         "addService": "Add Service",
         "editUser": "Edit User",
         "deleteUser": "Delete User",
+        "deleteService": "Delete Service",
         "editUserService": "Edit User's Services",
         "disableTotp": "Disable MFA",
         "enableTotp": "Enable MFA",
         "scanQrCode": "Scan QR Code",
         "alertNotificationTemplate": "Alert Notification Template",
-        "autoPublishTemplate": "Auto Publish Template"
+        "autoPublishTemplate": "Auto Publish Template",
+        "infoAndQuickEdit": "Info / Quick Edit"
     },
     "texts": {
         "totpIsEnabled": "MFA is already set up",
@@ -120,8 +122,11 @@
         "error": "An error occurred.",
         "totpDisabled": "The MFA was disabled successfully",
         "totpEnabled": "The MFA was enabled successfully",
+        "totpErrorDetail": "Failed to disable MFA",
         "errorDetail": " deletion has failed.",
-        "serviceCreated": "Service created successfully"
+        "serviceCreated": "Service created successfully",
+        "serviceUpdated": "Service updated successfully",
+        "serviceDeleted": "Service deleted successfully"
     },
 
 
@@ -144,6 +149,8 @@
         "permaUserDelete": "will also be deleted.",
         "disableOtpAlert": "The OTP associated with previous set up",
         "permaOtpDisable": "will no longer be valid.",
+        "deleteServiceAlert": "All configs and templates associated with the service",
+        "permaServiceDelete": "will also be deleted.",
         "areYouSure": " Are you sure? This operation cannot be undone."
     },
     "responses": {

@@ -21,6 +21,7 @@ import type { UserPublic, ServicePublic } from "../../client";
 import EditUser from "../Admin/EditUser";
 import EditUserService from "../Admin/EditUserService";
 import Delete from "./DeleteAlert";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ActionsMenuProps {
   type: string;
@@ -34,6 +35,8 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const deleteModal = useDisclosure();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
 
   const handleNavigateToLog = () => {
     if (type === t("common.service")) {
@@ -98,13 +101,15 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
               </MenuItem>
             </>
           )}
-          <MenuItem
-            onClick={deleteModal.onOpen}
-            icon={<FiTrash fontSize="16px" />}
-            color="ui.danger"
-          >
-            {type} {t("common.delete")}
-          </MenuItem>
+          {currentUser?.is_superuser && (
+            <MenuItem
+              onClick={deleteModal.onOpen}
+              icon={<FiTrash fontSize="16px" />}
+              color="ui.danger"
+            >
+              {type} {t("common.delete")}
+            </MenuItem>
+          )}
         </MenuList>
         <Delete
           type={type}

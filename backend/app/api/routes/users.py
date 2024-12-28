@@ -106,7 +106,7 @@ async def update_user(current_user: CurrentUser, user_id: UUID, user_in: UserUpd
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to update themselves"
         )
-    user = await crud.update_user(db_user=user, user_in=user_in)
+    user = await crud.update_instance(instance=user, data_in=user_in)
     return user
 
 @router.delete("/{user_id}", dependencies=[Depends(get_current_active_superuser)])

@@ -8,8 +8,13 @@ class ServiceBase(BaseModel):
     has_extra_email: bool = False
     has_teams_slack: bool = False
 
+class ServiceUpdate(BaseModel):
+    has_extra_email: bool = False
+    has_teams_slack: bool = False
+
 class ServiceCreate(ServiceBase):
     pass
+
 
 class ServicePublic(ServiceBase):
     model_config = ConfigDict(from_attributes=True)

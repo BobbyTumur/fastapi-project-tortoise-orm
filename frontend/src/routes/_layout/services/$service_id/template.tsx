@@ -15,6 +15,7 @@ import { createFileRoute, useParams } from "@tanstack/react-router";
 import AlertNotificationTemplate from "../../../../components/Services/AlertNotificationTemplate";
 import AutoPublishTemplate from "../../../../components/Services/AutoPublishTemplate";
 import { type ServiceConfig, ServicesService } from "../../../../client";
+import InfoAndQuickEdit from "../../../../components/Services/ServiceQuickEdit";
 
 export const Route = createFileRoute("/_layout/services/$service_id/template")({
   component: Template,
@@ -26,7 +27,7 @@ function Template() {
     from: "/_layout/services/$service_id/template",
   });
   const { t } = useTranslation();
-  const { data: serviceConfig, isLoading } = useQuery<ServiceConfig, Error>({
+  const { data: serviceConfig } = useQuery<ServiceConfig, Error>({
     queryKey: ["currentService", service_id],
     queryFn: () => ServicesService.getServiceConfig({ serviceId: service_id }),
   });
@@ -43,16 +44,15 @@ function Template() {
   const tabsConfig = [
     {
       title: t("titles.alertNotificationTemplate"),
-      component: () => (
-        <AlertNotificationTemplate
-          service={serviceConfig}
-          serviceLoading={isLoading}
-        />
-      ),
+      component: () => <AlertNotificationTemplate service={serviceConfig} />,
     },
     {
       title: t("titles.autoPublishTemplate"),
       component: () => <AutoPublishTemplate service={serviceConfig} />,
+    },
+    {
+      title: t("titles.infoAndQuickEdit"),
+      component: () => <InfoAndQuickEdit service={serviceConfig} />,
     },
   ];
   return (
@@ -60,12 +60,12 @@ function Template() {
       <Heading
         size="lg"
         textAlign={{ base: "center", md: "left" }}
-        paddingX={4}
-        pt={10}
+        pl={4}
+        pt={16}
       >
         {serviceConfig?.name}: {serviceConfig?.sub_name}
       </Heading>
-      <Tabs variant="enclosed" p={4}>
+      <Tabs variant="enclosed" align="center">
         <TabList>
           {tabsConfig.map((tab, index) => (
             <Tab key={index}>{tab.title}</Tab>

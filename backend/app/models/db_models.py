@@ -15,6 +15,12 @@ class User(Model):
 
     class Meta:
         table = "users"
+    
+    async def save(self, *args, **kwargs):
+        # Automatically set can_edit to True if is_superuser is True
+        if self.is_superuser:
+            self.can_edit = True
+        await super().save(*args, **kwargs)
 
 class Service(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented

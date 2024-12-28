@@ -46,15 +46,17 @@
         "summary": "概要",
         "setupMFA": "MFAの設定",
         "services": "サービス一覧",
-        "addService": "サービス追加",
+        "addService": "サービス登録",
         "editUser": "ユーザー更新",
         "deleteUser": "ユーザー削除",
+        "deleteService": "サービス削除",
         "editUserService": "ユーザーのサービスを編集",
         "disableTotp": "MFAの無効化",
         "enableTotp": "MFAの有効化",
         "scanQrCode": "QRコードの読み取り",
         "alertNotificationTemplate": "アラート通知テンプレート",
-        "autoPublishTemplate": "自動掲載テンプレート"
+        "autoPublishTemplate": "自動掲載テンプレート",
+        "infoAndQuickEdit": "インフォ / クイック編集"
     },
     "texts": {
         "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
@@ -101,8 +103,8 @@
         "confirmPassword": "パスワードを確認",
         "forgotPassword": "パスワードをお忘れですか？",
         "enterTotp": "OTPコード",
-        "hasExtraAddress": "別途宛先メールアドレスが必須",
-        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須"
+        "hasExtraAddress": "別途宛先メールアドレスが必須？",
+        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須？"
     },
     "index": {
         "greet": "こんにちは",
@@ -111,17 +113,19 @@
     },
     "toast": {
         "success": "成功!",
-        "userUpdate": "ユーザーが更新されました。",
+        "userUpdate": "ユーザーを更新しました。",
         "passwordUpdate": "パスワードを更新しました。",
         "userCreateSuccess": "ユーザーを追加しました。",
         "userCreated": "パスワード設定リンクをユーザーに送信しました。",
-        "userDeleted": "ユーザーが削除されました。",
-        "totpDisabled": "MFAが無効化されました。",
-        "totpEnabled": "MFAが有効化されました。",
-        "error": "エラーが発生しました。",
+        "userDeleted": "ユーザーを削除しました。",
+        "totpDisabled": "MFAを無効にしました。",
+        "totpEnabled": "MFAを有効にしました。",
+        "error": "エラー",
         "errorDetail": "削除ができませんでした。",
+        "totpErrorDetail": "MFAの無効化に失敗しました",
         "serviceCreated": "サービスを追加しました。",
-        "serviceUpdated": "サービスを編集しました。"
+        "serviceUpdated": "サービスを編集しました。",
+        "serviceDeleted": "サービスを削除しました。"
     },
 
     "error": {
@@ -143,6 +147,8 @@
         "permaUserDelete": "削除されます。",
         "disableOtpAlert": "既存の設定されたOTPコードが",
         "permaOtpDisable": "使えなくなります。",
+        "deleteServiceAlert": "サービスに関連するすべての設定やテンプレートなどが",
+        "permaServiceDelete": "削除されます。",
         "areYouSure": "よろしいですか？この操作を取り消すことはできません。"
     },
 

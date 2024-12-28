@@ -42,5 +42,6 @@ class UserUpdate(BaseModel):
 class UserUpdateServices(BaseModel):
     added_services: list[uuid.UUID] = Field(default_factory=list)
 
-# Generic message
+class Usernames(BaseModel):
+    usernames: list[str]
 

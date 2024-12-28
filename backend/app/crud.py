@@ -1,5 +1,6 @@
 from typing import Any, Optional, List
 from fastapi import HTTPException
+from pydantic import BaseModel
 from tortoise.models import Model
 from tortoise.queryset import QuerySet
 
@@ -21,10 +22,16 @@ async def update_user(*, db_user: User, user_in: UserUpdate) -> User:
     await db_user.save()
     return db_user
 
+async def update_instance(*, instance: Model, data_in: BaseModel) -> Model:
+    update_data = data_in.model_dump(exclude_unset=True)
+    instance.update_from_dict(update_data)
+    await instance.save()
+    return instance
+
 async def get_or_404(
     model: Model,
-    prefetch_related: Optional[List[str]] = None,
-    select_related: Optional[List[str]] = None,
+    prefetch_related: list[str] | None = None,
+    select_related: list[str] | None = None,
     **filters: Any
 ) -> Model:
     """
@@ -67,6 +74,11 @@ async def create_or_update_config(service: Service, config_data: AlertConfigCrea
     """
     database = AlertConfig if isinstance(config_data, AlertConfigCreate) else PublishConfig
     config_dict = config_data.model_dump(exclude_unset=True)
+
+    for field in config_data.model_fields:  # Loop through all fields in the model
+        if field not in config_dict:  # If the field is not in the config_dict
+            config_dict[field] = None 
+            
     config, created = await database.get_or_create(
         service=service,
         defaults=config_dict,

@@ -11,9 +11,68 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import { UsersService, TotpService } from "../../client";
+import { UsersService, TotpService, ServicesService } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 import { useTranslation } from "react-i18next";
+
+// Define the class to map types to their properties
+class DeleteEntity {
+  title: string;
+  warning: JSX.Element;
+  successMessage: string;
+  errorMessage: string;
+  queryKey: string;
+  button: string;
+
+  constructor(type: string, t: any) {
+    this.errorMessage =
+      type === t("common.totp")
+        ? t("toast.totpErrorDetail")
+        : `${type} t("toast.errorDetail")`;
+    this.button =
+      type === t("common.totp") ? t("buttons.disable") : t("buttons.delete");
+
+    if (type === t("common.user")) {
+      this.title = t("titles.deleteUser");
+      this.warning = (
+        <span>
+          {t("warnings.deleteUserAlert")}{" "}
+          <strong>{t("warnings.permaUserDelete")}</strong>
+        </span>
+      );
+      this.successMessage = t("toast.userDeleted");
+      this.errorMessage = `${type} ${t("toast.errorDetail")}`;
+      // this.button = t("buttons.delete");
+      this.queryKey = "users";
+    } else if (type === t("common.service")) {
+      this.title = t("titles.deleteService");
+      this.warning = (
+        <span>
+          {t("warnings.deleteServiceAlert")}{" "}
+          <strong>{t("warnings.permaServiceDelete")}</strong>
+        </span>
+      );
+      this.successMessage = t("toast.serviceDeleted");
+      this.errorMessage = `${type} ${t("toast.errorDetail")}`;
+      // this.button = t("buttons.delete");
+      this.queryKey = "services";
+    } else if (type === t("common.totp")) {
+      this.title = t("titles.disableTotp");
+      this.warning = (
+        <span>
+          {t("warnings.disableOtpAlert")}{" "}
+          <strong>{t("warnings.permaOtpDisable")}</strong>
+        </span>
+      );
+      this.successMessage = t("toast.totpDisabled");
+      this.errorMessage = t("toast.totpErrorDetail");
+      // this.button = t("buttons.disable");
+      this.queryKey = "currentUser";
+    } else {
+      throw new Error(`Unexpected type: ${type}`);
+    }
+  }
+}
 
 interface DeleteProps {
   type: string;
@@ -32,38 +91,38 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
     formState: { isSubmitting },
   } = useForm();
 
-  const deleteEntity = async (id: string) => {
-    if (type === "TOTP") {
-      await TotpService.disableTotp();
-    } else if (type === t("common.user")) {
-      await UsersService.deleteUser({ userId: id });
-    } else {
-      throw new Error(`Unexpected type: ${type}`);
-    }
-  };
+  // Instantiate the class with the type and id
+  const entity = new DeleteEntity(type, t);
 
+  // Define the mutation logic directly in the component
   const mutation = useMutation({
-    mutationFn: deleteEntity,
+    mutationFn: async () => {
+      if (type === t("common.user") && id) {
+        await UsersService.deleteUser({ userId: id });
+      } else if (type === t("common.service") && id) {
+        await ServicesService.deleteService({ serviceId: id });
+      } else if (type === t("common.totp")) {
+        await TotpService.disableTotp();
+      } else {
+        throw new Error(`Unexpected type or missing id: ${type}`);
+      }
+    },
     onSuccess: () => {
-      showToast(
-        t("toast.success"),
-        type === t("common.user") ? t("toast.userDeleted") : t("toast.totpDisabled"),
-        "success"
-      );
+      showToast(t("toast.success"), entity.successMessage, "success");
       onClose();
     },
     onError: () => {
-      showToast(t("toast.error"), `${type} t("toast.errorDetail")`, "error");
+      showToast(t("toast.error"), entity.errorMessage, "error");
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [type === t("common.user") ? "users" : "currentUser"],
+        queryKey: [entity.queryKey],
       });
     },
   });
 
   const onSubmit = async () => {
-    mutation.mutate(id);
+    mutation.mutate();
   };
 
   return (
@@ -77,32 +136,16 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <AlertDialogHeader>
-              {type === t("common.user")
-                ? t("titles.deleteUser")
-                : t("titles.disableTotp")}
-            </AlertDialogHeader>
+            <AlertDialogHeader>{entity.title}</AlertDialogHeader>
 
             <AlertDialogBody>
-              {
-                type === t("common.user") ? (
-                  <span>
-                    {t("warnings.deleteUserAlert")}{" "}
-                    <strong>{t("warnings.permaUserDelete")}</strong>
-                  </span>
-                ) : (
-                  <span>
-                    {t("warnings.disableOtpAlert")}{" "}
-                    <strong>{t("warnings.permaOtpDisable")}</strong>
-                  </span>
-                )
-              }
+              {entity.warning}
               {t("warnings.areYouSure")}
             </AlertDialogBody>
 
             <AlertDialogFooter gap={3}>
               <Button variant="danger" type="submit" isLoading={isSubmitting}>
-                {t("buttons.disable")}
+                {entity.button}
               </Button>
               <Button
                 ref={cancelRef}

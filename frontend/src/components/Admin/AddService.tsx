@@ -84,6 +84,7 @@ const AddService = ({ isOpen, onClose }: AddServiceProps) => {
               <FormLabel htmlFor="name">{t("services.name")}</FormLabel>
               <Input
                 id="name"
+                spellCheck="false"
                 {...register("name", {
                   required: t("required.serviceName"),
                 })}
@@ -94,13 +95,12 @@ const AddService = ({ isOpen, onClose }: AddServiceProps) => {
                 <FormErrorMessage>{errors.name.message}</FormErrorMessage>
               )}
             </FormControl>
-            <FormControl mt={4} isRequired isInvalid={!!errors.sub_name}>
+            <FormControl mt={4} isInvalid={!!errors.sub_name}>
               <FormLabel htmlFor="name">{t("services.subName")}</FormLabel>
               <Input
                 id="subName"
-                {...register("sub_name", {
-                  required: t("required.serviceSubName"),
-                })}
+                spellCheck="false"
+                {...register("sub_name")}
                 placeholder={t("services.subName")}
                 type="text"
               />

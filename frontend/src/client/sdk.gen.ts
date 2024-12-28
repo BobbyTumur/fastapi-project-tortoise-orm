@@ -282,7 +282,7 @@ export class ServicesService {
 	 * List service users
 	 * @param data The data for the request.
 	 * @param data.serviceId
-	 * @returns UserPublic Successful Response
+	 * @returns Usernames Successful Response
 	 * @throws ApiError
 	 */
 	public static getServiceUsers(
@@ -336,7 +336,7 @@ export class ServicesService {
 		data: ServicesUpdateServiceConfigData,
 	): CancelablePromise<ServicesUpdateServiceConfigResponse> {
 		return __request(OpenAPI, {
-			method: "PATCH",
+			method: "PUT",
 			url: "/api/v1/services/{service_id}/config",
 			path: {
 				service_id: data.serviceId,

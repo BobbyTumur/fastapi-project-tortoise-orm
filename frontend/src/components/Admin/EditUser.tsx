@@ -12,6 +12,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Input,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -49,7 +50,6 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   const {
     register,
     handleSubmit,
-    reset,
     setValue,
     formState: { isSubmitting, isDirty },
     trigger, // Use trigger to manually trigger form validation
@@ -84,7 +84,6 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   };
 
   const onCancel = () => {
-    reset();
     onClose();
   };
 
@@ -108,6 +107,15 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
           <ModalHeader>{t("titles.editUser")}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
+            <FormControl mt={4}>
+              <FormLabel htmlFor="name">{t("common.username")}</FormLabel>
+              <Input
+                id="name"
+                {...register("username")}
+                type="text"
+                spellCheck="false"
+              />
+            </FormControl>
             <FormControl mt={4}>
               <FormLabel htmlFor="role">{t("common.role")}</FormLabel>
               <Select id="role" value={role} onChange={handleRoleChange}>
