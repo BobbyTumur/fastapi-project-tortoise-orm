@@ -6,16 +6,20 @@ import {
   Tr,
   Td,
   Container,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import { type UserPublic } from "../../client";
+import { type UserPublic, UsersService } from "../../client";
 
 const UserInformation = () => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
+  const { data: currentUser, isLoading } = useQuery<UserPublic>({
+    queryKey: ["currentUser"],
+    queryFn: UsersService.readUserMe,
+    refetchOnWindowFocus: false, // Optionally disable refetch on window focus
+  });
 
   const role = currentUser?.is_superuser
     ? "Admin"
@@ -31,32 +35,44 @@ const UserInformation = () => {
         <Box w={{ sm: "full", md: "50%" }}>
           <TableContainer>
             <Table variant="simple">
-              <Tbody>
-                <Tr>
-                  <Td fontWeight="bold">{t("common.username")}</Td>
-                  <Td>{currentUser?.username}</Td>
-                </Tr>
-                <Tr>
-                  <Td fontWeight="bold">{t("common.email")}</Td>
-                  <Td>{currentUser?.email}</Td>
-                </Tr>
-                <Tr>
-                  <Td fontWeight="bold">{t("common.status")}</Td>
-                  <Td>
-                    {currentUser?.is_active
-                      ? t("common.active")
-                      : t("common.inactive")}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td fontWeight="bold">{t("common.role")}</Td>
-                  <Td>{t(role)}</Td>
-                </Tr>
-                <Tr>
-                  <Td fontWeight="bold">{t("common.totp")}</Td>
-                  <Td>{t(totp)}</Td>
-                </Tr>
-              </Tbody>
+              {isLoading ? (
+                <Tbody>
+                  <Tr>
+                    {new Array(4).fill(null).map((_, index) => (
+                      <Td key={index}>
+                        <SkeletonText noOfLines={1} paddingBlock="16px" />
+                      </Td>
+                    ))}
+                  </Tr>
+                </Tbody>
+              ) : (
+                <Tbody>
+                  <Tr>
+                    <Td fontWeight="bold">{t("common.username")}</Td>
+                    <Td>{currentUser?.username}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">{t("common.email")}</Td>
+                    <Td>{currentUser?.email}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">{t("common.status")}</Td>
+                    <Td>
+                      {currentUser?.is_active
+                        ? t("common.active")
+                        : t("common.inactive")}
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">{t("common.role")}</Td>
+                    <Td>{t(role)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold">{t("common.totp")}</Td>
+                    <Td>{t(totp)}</Td>
+                  </Tr>
+                </Tbody>
+              )}
             </Table>
           </TableContainer>
         </Box>
