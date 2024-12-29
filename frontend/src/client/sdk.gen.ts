@@ -19,6 +19,8 @@ import type {
 	ServicesGetServicesResponse,
 	ServicesCreateServiceData,
 	ServicesCreateServiceResponse,
+	ServicesUpdateServiceData,
+	ServicesUpdateServiceResponse,
 	ServicesGetServiceData,
 	ServicesGetServiceResponse,
 	ServicesDeleteServiceData,
@@ -27,8 +29,10 @@ import type {
 	ServicesGetServiceUsersResponse,
 	ServicesGetServiceConfigData,
 	ServicesGetServiceConfigResponse,
-	ServicesUpdateServiceConfigData,
-	ServicesUpdateServiceConfigResponse,
+	ServicesUpdateServiceAlertConfigData,
+	ServicesUpdateServiceAlertConfigResponse,
+	ServicesUpdateServicePublishConfigData,
+	ServicesUpdateServicePublishConfigResponse,
 	TotpEnableTotpResponse,
 	TotpTotpLoginVerifyData,
 	TotpTotpLoginVerifyResponse,
@@ -214,7 +218,7 @@ export class ServicesService {
 	 * Register a service
 	 * @param data The data for the request.
 	 * @param data.requestBody
-	 * @returns Message Successful Response
+	 * @returns ServicePublic Successful Response
 	 * @throws ApiError
 	 */
 	public static createService(
@@ -223,6 +227,32 @@ export class ServicesService {
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/services/",
+			body: data.requestBody,
+			mediaType: "application/json",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Update Service
+	 * Update a service
+	 * @param data The data for the request.
+	 * @param data.serviceId
+	 * @param data.requestBody
+	 * @returns ServicePublic Successful Response
+	 * @throws ApiError
+	 */
+	public static updateService(
+		data: ServicesUpdateServiceData,
+	): CancelablePromise<ServicesUpdateServiceResponse> {
+		return __request(OpenAPI, {
+			method: "PATCH",
+			url: "/api/v1/services/",
+			query: {
+				service_id: data.serviceId,
+			},
 			body: data.requestBody,
 			mediaType: "application/json",
 			errors: {
@@ -324,20 +354,46 @@ export class ServicesService {
 	}
 
 	/**
-	 * Update Service Config
-	 * Register a service's config
+	 * Update Service Alert Config
+	 * Update service's config (Alert)
 	 * @param data The data for the request.
 	 * @param data.serviceId
 	 * @param data.requestBody
 	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static updateServiceConfig(
-		data: ServicesUpdateServiceConfigData,
-	): CancelablePromise<ServicesUpdateServiceConfigResponse> {
+	public static updateServiceAlertConfig(
+		data: ServicesUpdateServiceAlertConfigData,
+	): CancelablePromise<ServicesUpdateServiceAlertConfigResponse> {
 		return __request(OpenAPI, {
 			method: "PUT",
-			url: "/api/v1/services/{service_id}/config",
+			url: "/api/v1/services/{service_id}/config/alert",
+			path: {
+				service_id: data.serviceId,
+			},
+			body: data.requestBody,
+			mediaType: "application/json",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Update Service Publish Config
+	 * Update service's config (Alert)
+	 * @param data The data for the request.
+	 * @param data.serviceId
+	 * @param data.requestBody
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static updateServicePublishConfig(
+		data: ServicesUpdateServicePublishConfigData,
+	): CancelablePromise<ServicesUpdateServicePublishConfigResponse> {
+		return __request(OpenAPI, {
+			method: "PUT",
+			url: "/api/v1/services/{service_id}/config/publish",
 			path: {
 				service_id: data.serviceId,
 			},

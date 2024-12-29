@@ -16,12 +16,6 @@ async def create_user(*, user_create: UserCreate) -> User:
     user = await User.create(**user_data)
     return user
 
-async def update_user(*, db_user: User, user_in: UserUpdate) -> User:
-    update_data = user_in.model_dump(exclude_unset=True)
-    db_user.update_from_dict(update_data)
-    await db_user.save()
-    return db_user
-
 async def update_instance(*, instance: Model, data_in: BaseModel) -> Model:
     update_data = data_in.model_dump(exclude_unset=True)
     instance.update_from_dict(update_data)
@@ -79,14 +73,14 @@ async def create_or_update_config(service: Service, config_data: AlertConfigCrea
         if field not in config_dict:  # If the field is not in the config_dict
             config_dict[field] = None 
             
-    config, created = await database.get_or_create(
+    instance, created = await database.get_or_create(
         service=service,
         defaults=config_dict,
     )
     
     if not created:
         # Update the existing config with new data
-        await config.update_from_dict(config_dict)
-        await config.save()
+        await instance.update_from_dict(config_dict)
+        await instance.save()
     
-    return config
+    return instance

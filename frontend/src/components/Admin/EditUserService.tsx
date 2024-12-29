@@ -15,7 +15,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { type ApiError, ServicesService, UsersServicesService } from "../../client";
+import {
+  type ApiError,
+  ServicesService,
+  UsersServicesService,
+} from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 import CheckboxWithControl from "../Common/CheckboxWithControl";
 import { handleError } from "../../utils";
@@ -121,7 +125,7 @@ const EditUserService = ({
         </ModalBody>
         <ModalFooter gap={3}>
           <Button variant="primary" type="submit" isDisabled={!hasChanges()}>
-            {t("common.save2")}
+            {t("buttons.update")}
           </Button>
           <Button onClick={onCancel}>{t("common.cancel")}</Button>
         </ModalFooter>

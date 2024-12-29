@@ -50,6 +50,13 @@ export type NewPassword = {
 	new_password: string;
 };
 
+export type PublishConfigCreate = {
+	alert_publish_title?: string | null;
+	alert_publish_body?: string | null;
+	influenced_user?: boolean;
+	send_mail?: boolean;
+};
+
 export type PublishConfigPublic = {
 	alert_publish_title?: string | null;
 	alert_publish_body?: string | null;
@@ -78,6 +85,10 @@ export type ServiceCreate = {
 	has_teams_slack?: boolean;
 };
 
+export type ServiceId = {
+	id: string;
+};
+
 export type ServicePublic = {
 	name: string;
 	sub_name: string;
@@ -89,6 +100,11 @@ export type ServicePublic = {
 export type ServicesPublic = {
 	data: Array<ServicePublic>;
 	count: number;
+};
+
+export type ServiceUpdate = {
+	has_extra_email?: boolean;
+	has_teams_slack?: boolean;
 };
 
 export type Token = {
@@ -117,6 +133,7 @@ export type UserPublic = {
 	is_active?: boolean;
 	is_totp_enabled?: boolean;
 	id: string;
+	services: Array<ServiceId>;
 };
 
 export type UserRegister = {
@@ -193,7 +210,14 @@ export type ServicesCreateServiceData = {
 	requestBody: ServiceCreate;
 };
 
-export type ServicesCreateServiceResponse = Message;
+export type ServicesCreateServiceResponse = ServicePublic;
+
+export type ServicesUpdateServiceData = {
+	requestBody: ServiceUpdate;
+	serviceId: string;
+};
+
+export type ServicesUpdateServiceResponse = ServicePublic;
 
 export type ServicesGetServiceData = {
 	serviceId: string;
@@ -219,12 +243,19 @@ export type ServicesGetServiceConfigData = {
 
 export type ServicesGetServiceConfigResponse = ServiceConfig;
 
-export type ServicesUpdateServiceConfigData = {
+export type ServicesUpdateServiceAlertConfigData = {
 	requestBody: AlertConfigCreate;
 	serviceId: string;
 };
 
-export type ServicesUpdateServiceConfigResponse = Message;
+export type ServicesUpdateServiceAlertConfigResponse = Message;
+
+export type ServicesUpdateServicePublishConfigData = {
+	requestBody: PublishConfigCreate;
+	serviceId: string;
+};
+
+export type ServicesUpdateServicePublishConfigResponse = Message;
 
 export type TotpEnableTotpResponse = QRUri;
 

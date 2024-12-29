@@ -9,7 +9,6 @@
         "next": "次のページ",
         "you": "あなた",
         "save1": "追加",
-        "save2": "更新",
         "save3": "編集",
         "cancel": "キャンセル",
         "active": "アクティブ",
@@ -34,7 +33,9 @@
         "name": "名",
         "subName": "サブ名",
         "viewEditTemplate": "テンプレート 閲覧・編集",
-        "viewLog": "ログ 閲覧"
+        "viewLog": "ログ 閲覧",
+        "notification": "通知",
+        "publish": "掲載"
         
     },
     "titles": {
@@ -56,7 +57,8 @@
         "scanQrCode": "QRコードの読み取り",
         "alertNotificationTemplate": "アラート通知テンプレート",
         "autoPublishTemplate": "自動掲載テンプレート",
-        "infoAndQuickEdit": "インフォ / クイック編集"
+        "infoAndQuickEdit": "クイック編集 / インフォ",
+        "peopleWhoCanEdit": "本サービスを編集できるメンバー"
     },
     "texts": {
         "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
@@ -67,7 +69,7 @@
         "disableTotp": "MFAを無効にする",
         "verifyTotp": "検証",
         "save1": "追加",
-        "save2": "更新",
+        "update": "更新",
         "save3": "編集",
         "cancel": "キャンセル",
         "delete": "削除",
@@ -103,8 +105,8 @@
         "confirmPassword": "パスワードを確認",
         "forgotPassword": "パスワードをお忘れですか？",
         "enterTotp": "OTPコード",
-        "hasExtraAddress": "別途宛先メールアドレスが必須？",
-        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須？"
+        "hasExtraAddress": "別途宛先メールアドレスが必須",
+        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須"
     },
     "index": {
         "greet": "こんにちは",

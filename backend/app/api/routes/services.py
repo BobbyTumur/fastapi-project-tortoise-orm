@@ -4,11 +4,11 @@ from tortoise.exceptions import IntegrityError
 from fastapi import APIRouter, Depends, HTTPException
 
 from app import crud, utils
-from app.api.dep import CurrentUser, PermittedUser, get_current_active_superuser
+from app.api.dep import CurrentUser, get_current_active_superuser
 from app.models.db_models import Service, User
 from app.models.user_models import Usernames
 from app.models.general_models import Message
-from app.models.service_models import ServiceCreate, ServiceUpdate, ServicePublic, ServicesPublic, AlertConfigCreate, ServiceConfig
+from app.models.service_models import ServiceCreate, ServiceUpdate, ServicePublic, ServicesPublic, AlertConfigCreate, PublishConfigCreate, ServiceConfig
 
 router = APIRouter(prefix="/services", tags=["services"])
 
@@ -32,8 +32,12 @@ async def get_service(current_user: CurrentUser, service_id: UUID) -> ServicePub
     List a user that can edit the service
     """
     service = await crud.get_or_404(Service, id=service_id)
-    is_associated = await current_user.services.filter(id=service_id).exists()
-    if not current_user.is_superuser and not is_associated:
+    can_read = await utils.check_privileges(
+        user=current_user, 
+        service_id=service_id, 
+        privilege="read"
+        )
+    if not can_read:
         raise HTTPException(status_code=403, detail="Not enough privileges")
     return service
 
@@ -42,16 +46,28 @@ async def get_service_users(current_user: CurrentUser, service_id: UUID) -> User
     """
     List service users
     """
-    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["users"])
-    is_associated = await current_user.services.filter(id=service_id).exists()
-    if not current_user.is_superuser and not is_associated:
+    service = await crud.get_or_404(
+        Service, 
+        id=service_id, 
+        prefetch_related=["users"]
+        )
+    can_read = await utils.check_privileges(
+        user=current_user, 
+        service_id=service_id, 
+        privilege="read"
+        )
+    if not can_read:
         raise HTTPException(status_code=403, detail="Not enough privileges")
     # Only fetch who can edit
     users = await service.users.filter(can_edit=True).all() + await User.filter(is_superuser=True).all()
     usernames = [user.username for user in users]
     return Usernames(usernames=usernames)
 
-@router.post("/", dependencies=[Depends(get_current_active_superuser)], response_model=ServicePublic)
+@router.post(
+        "/", 
+        dependencies=[Depends(get_current_active_superuser)], 
+        response_model=ServicePublic
+        )
 async def create_service(service_in: ServiceCreate) -> ServicePublic:
     """
     Register a service
@@ -64,27 +80,43 @@ async def create_service(service_in: ServiceCreate) -> ServicePublic:
         raise HTTPException(status_code=409, detail="The service already exists")
     
 @router.patch("/", response_model=ServicePublic)
-async def patch_service(service_id: UUID, service_in: ServiceUpdate, current_user: PermittedUser) -> ServicePublic:
+async def update_service(
+    service_id: UUID, service_in: ServiceUpdate, current_user: CurrentUser) -> ServicePublic:
     """
     Update a service
     """
     service = await crud.get_or_404(model=Service, id=service_id)
-    is_associated = await current_user.services.filter(id=service_id).exists()
-    if not current_user.is_superuser and not is_associated:
+
+    can_write = await utils.check_privileges(
+        user=current_user, 
+        service_id=service_id, 
+        privilege="write"
+        )
+    if not can_write:
         raise HTTPException(status_code=403, detail="Not enough privileges")
+    
     service = await crud.update_instance(instance=service, data_in=service_in)
+
     return service
     
-@router.delete("/{service_id}", dependencies=[Depends(get_current_active_superuser)], response_model=Message)
+@router.delete(
+        "/{service_id}", 
+        dependencies=[Depends(get_current_active_superuser)], 
+        response_model=Message
+        )
 async def delete_service(service_id: UUID) -> Message:
     """
     Delete a service
     """
-    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["users"])
+    service = await crud.get_or_404(
+        Service, 
+        id=service_id, 
+        prefetch_related=["users"])
     if service:
         await service.delete()
     else:
         raise HTTPException(status_code=404, detail="Service not found")
+    
     return Message(message="Successfully deleted the service.")
     
 @router.get("/{service_id}/config", response_model=ServiceConfig)
@@ -92,13 +124,19 @@ async def get_service_config(service_id: UUID, current_user: CurrentUser) -> Ser
     """
     Read a service's config
     """
-    service_with_config = await crud.get_or_404(Service, id=service_id, select_related=["alert_config", "publish_config"])
-    is_associated = await current_user.services.filter(id=service_id).exists()
-    if not current_user.is_superuser and not is_associated:
+    service_with_config = await crud.get_or_404(
+        Service, 
+        id=service_id, 
+        select_related=["alert_config", "publish_config"]
+        )
+
+    can_read = await utils.check_privileges(
+        user=current_user, 
+        service_id=service_id, 
+        privilege="read"
+        )
+    if not can_read:
         raise HTTPException(status_code=403, detail="Not enough privileges")
-    # config = await Config.get_or_none(service=service)
-    # if config is None:
-    #     raise HTTPException(status_code=404, detail="No config yet for this service") 
 
     return ServiceConfig(
         **service_with_config.__dict__,
@@ -106,13 +144,52 @@ async def get_service_config(service_id: UUID, current_user: CurrentUser) -> Ser
         publish_config=service_with_config.publish_config
     )
 
-@router.put("/{service_id}/config", response_model=Message)
-async def update_service_config(service_id: UUID, config_in: AlertConfigCreate, current_user: CurrentUser) -> Message:
+@router.put("/{service_id}/config/alert", response_model=Message)
+async def update_service_alert_config(
+    service_id: UUID, 
+    config_in: AlertConfigCreate, 
+    current_user: CurrentUser
+    ) -> Message:
     """
-    Register a service's config
+    Update service's config (Alert)
     """
-    service = await crud.get_or_404(Service, id=service_id, prefetch_related=["alert_config", "publish_config"])
-    # if not await utils.check_user_privileges(current_user, service_id):
-    #     raise HTTPException(status_code=403, detail="Not enough privileges")
-    await crud.create_or_update_config(service, config_in)
-    return Message(message="Config updated successfully")
+    service = await crud.get_or_404(
+        Service, 
+        id=service_id, 
+        prefetch_related=["alert_config"]
+        )
+
+    can_write = await utils.check_privileges(
+        user=current_user, 
+        service_id=service_id, 
+        privilege="write")
+    if not can_write:
+        raise HTTPException(status_code=403, detail="Not enough privileges")
+    
+    await crud.create_or_update_config(service=service, config_data=config_in)
+    return Message(message="Alert config updated successfully")
+
+@router.put("/{service_id}/config/publish", response_model=Message)
+async def update_service_publish_config(
+    service_id: UUID, 
+    config_in: PublishConfigCreate, 
+    current_user: CurrentUser
+    ) -> Message:
+    """
+    Update service's config (Alert)
+    """
+    service = await crud.get_or_404(
+        Service, 
+        id=service_id, 
+        prefetch_related=["publish_config"]
+        )
+
+    can_write = await utils.check_privileges(
+        user=current_user, 
+        service_id=service_id, 
+        privilege="write")
+    if not can_write:
+        raise HTTPException(status_code=403, detail="Not enough privileges")
+    
+    await crud.create_or_update_config(service=service, config_data=config_in)
+    return Message(message="Alert config updated successfully")

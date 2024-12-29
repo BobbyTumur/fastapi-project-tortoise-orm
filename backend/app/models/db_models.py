@@ -24,7 +24,7 @@ class User(Model):
 
 class Service(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
-    name = fields.CharField(max_length=255, unique=True)  # Unique and required
+    name = fields.CharField(max_length=255)  # Unique and required
     sub_name = fields.CharField(max_length=255)  # Unique and required
     has_extra_email = fields.BooleanField(default=False)
     has_teams_slack = fields.BooleanField(default=False)

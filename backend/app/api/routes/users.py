@@ -13,28 +13,37 @@ from app.models.user_models import UserPublic, UsersPublic, UserRegister, UserCr
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-@router.get("/", dependencies=[Depends(get_current_active_superuser)], response_model=UsersPublic)
+@router.get(
+        "/", 
+        dependencies=[Depends(get_current_active_superuser)], 
+        response_model=UsersPublic
+        )
 async def read_users(skip: int = 0, limit: int = 100):
     """
     Retreive users.
     """
-    users = await User.all().offset(skip).limit(limit)
+    users = await User.all().prefetch_related("services").offset(skip).limit(limit)
     count = await User.all().count()
     return UsersPublic(data=users, count=count)
 
 @router.get("/me", response_model=UserPublic)
-async def read_user_me(current_user: CurrentUser) -> Any:
+async def read_user_me(current_user: CurrentUser) -> UserPublic:
     """
     Get current user.
     """
-    return current_user
+    user = await crud.get_or_404(User, id=current_user.id, prefetch_related=["services"])
+    return user
 
-@router.get("/{user_id}", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic)
-async def read_user_by_id(user_id: UUID) -> Any:
+@router.get(
+        "/{user_id}", 
+        dependencies=[Depends(get_current_active_superuser)], 
+        response_model=UserPublic
+        )
+async def read_user_by_id(user_id: UUID) -> UserPublic:
     """
     Get a specific user by id.
     """
-    user = await crud.get_or_404(User, id=user_id)
+    user = await crud.get_or_404(User, id=user_id, prefetch_related=["services"])
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -96,8 +105,16 @@ async def update_password_me(body: UpdatePassword, current_user: CurrentUser) ->
     await current_user.save()
     return Message(message="Password updated successfully")
 
-@router.patch("/{user_id}", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic)
-async def update_user(current_user: CurrentUser, user_id: UUID, user_in: UserUpdate) -> Any:
+@router.patch(
+        "/{user_id}", 
+        dependencies=[Depends(get_current_active_superuser)], 
+        response_model=UserPublic
+        )
+async def update_user(
+    current_user: CurrentUser, 
+    user_id: UUID, 
+    user_in: UserUpdate
+    ) -> UserPublic:
     """
     Update a user.
     """

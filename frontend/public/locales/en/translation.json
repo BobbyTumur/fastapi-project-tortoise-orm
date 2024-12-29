@@ -9,7 +9,6 @@
         "next": "next",
         "you": "you",
         "save1": "Save",
-        "save2": "Save",
         "save3": "Save",
         "cancel": "Cancel",
         "active": "Active",
@@ -34,7 +33,9 @@
         "name": "Name",
         "subName": "Sub Name",
         "viewEditTemplate": "View or Edit Template",
-        "viewLog": "View Log"
+        "viewLog": "View Log",
+        "notification": "Notification",
+        "publish": "Publish"
 
     },
     "titles": {
@@ -56,7 +57,8 @@
         "scanQrCode": "Scan QR Code",
         "alertNotificationTemplate": "Alert Notification Template",
         "autoPublishTemplate": "Auto Publish Template",
-        "infoAndQuickEdit": "Info / Quick Edit"
+        "infoAndQuickEdit": "Quick Edit / Info",
+        "peopleWhoCanEdit": "Members who can edit the service"
     },
     "texts": {
         "totpIsEnabled": "MFA is already set up",
@@ -67,7 +69,7 @@
         "disableTotp": "Disable MFA",
         "verifyTotp": "Verify code",
         "save1": "Save",
-        "save2": "Save",
+        "update": "Save",
         "save3": "Save",
         "cancel": "Cancel",
         "delete": "Delete",

@@ -124,7 +124,7 @@ const ChangePassword = () => {
             isLoading={isSubmitting}
             isDisabled={isButtonDisabled}
           >
-            {t("common.save2")}
+            {t("buttons.update")}
           </Button>
         </Box>
       </Container>

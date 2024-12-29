@@ -62,9 +62,9 @@ const AlertNotificationTemplate = ({
   service,
 }: AlertNotificationTemplateProps) => {
   const { t } = useTranslation();
+  const showToast = useCustomToast();
   const queryClient = useQueryClient();
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
-  const showToast = useCustomToast();
   const isTier1 = currentUser
     ? !currentUser.is_superuser && !currentUser.can_edit
     : false;

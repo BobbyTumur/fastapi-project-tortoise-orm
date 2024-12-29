@@ -135,29 +135,43 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+    
 
-
-async def check_user_privileges(user: User, service_id: int) -> bool:
+async def check_privileges(*, user: User, service_id: int, privilege: str = "read") -> bool:
     """
-    Checks a user's privileges for a specific service.
+    Checks a user's privileges (read or write) for a specific service.
 
     Args:
         user (User): The current user object.
         service_id (int): The ID of the service to check privileges for.
+        privilege (str): The type of privilege to check ("read" or "write").
+
+    Returns:
+        bool: True if the user has the specified privilege, False otherwise.
 
     Raises:
-        HTTPException: If the user lacks sufficient privileges.
+        ValueError: If an invalid privilege type is provided.
     """
+    if privilege not in {"read", "write"}:
+        raise ValueError("Invalid privilege type. Use 'read' or 'write'.")
+    
     if user.is_superuser:
         # Superusers can access and edit all services
-        return
-    
-    if user.can_edit:
-        # Tier 2: Check if the user is associated with the service
-        is_associated = await user.services.filter(id=service_id).exists()
-        if not is_associated:
-            return False
         return True
     
-    # Tier 1: Users who cannot edit are not authorized
-    return False
+    # Check if the user is associated with the service
+    is_associated = await user.services.filter(id=service_id).exists()
+    if not is_associated:
+        return False
+
+    if privilege == "read":
+        # Read privilege: User only needs to be associated
+        return True
+
+    if privilege == "write":
+        # Write privilege: User must also have can_edit set to True
+        return user.can_edit
+    
+    return False  # Default fallback
+
+

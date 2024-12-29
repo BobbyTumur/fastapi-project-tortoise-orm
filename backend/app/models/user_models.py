@@ -15,13 +15,16 @@ class UserCreate(UserBase):
 class UserRegister(UserBase):
     pass
 
+class ServiceId(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: uuid.UUID
 
 class UserPublic(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
+    services: list[ServiceId]
 
-    
 class UsersPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

@@ -139,7 +139,7 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
               isLoading={isSubmitting}
               isDisabled={!isDirty}
             >
-              {t("common.save2")}
+              {t("buttons.update")}
             </Button>
             <Button onClick={onCancel}>{t("common.cancel")}</Button>
           </ModalFooter>
