@@ -42,16 +42,12 @@ const TOTP = () => {
   const showToast = useCustomToast();
   const isTotpEnabled = currentUser?.is_totp_enabled ?? false;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    formState: { isDirty },
-  } = useForm<TOTPToken>({
-    mode: "onBlur",
-    criteriaMode: "all",
-  });
+  const { register, handleSubmit, reset, watch, setValue } = useForm<TOTPToken>(
+    {
+      mode: "onBlur",
+      criteriaMode: "all",
+    }
+  );
 
   // Mutation to enable TOTP
   const enableTotpMutation = useMutation({
@@ -77,6 +73,7 @@ const TOTP = () => {
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
+      reset();
     },
 
     onSettled: () => {
@@ -85,6 +82,14 @@ const TOTP = () => {
       });
     },
   });
+
+  const currentToken = watch("token") || "";
+  const isDisabled = currentToken.length !== 6;
+
+  const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+    setValue("token", value); // Update form value using setValue
+  };
 
   // Handle enabling TOTP
   const handleEnableTotp = () => {
@@ -149,27 +154,20 @@ const TOTP = () => {
                 >
                   <Flex direction="column" align="center" gap={4}>
                     <Input
+                      maxLength={6}
+                      textAlign="center"
                       placeholder={t("forms.enterTotp")}
                       {...register("token", {
                         required: t("required.totpRequired"),
                       })}
-                      size="md"
-                      w="auto"
-                      sx={{
-                        "::placeholder": {
-                          fontStyle: "italic",
-                          fontSize: "sm",
-                        },
-                      }}
+                      w="150px"
+                      onChange={handleTokenChange}
                     />
-                    {errors.token && (
-                      <Box color="red.500">{errors.token.message}</Box>
-                    )}
                     <Button
                       variant="primary"
                       type="submit"
                       isLoading={verifyTotpMutation.isPending}
-                      isDisabled={!isDirty}
+                      isDisabled={isDisabled}
                     >
                       {t("buttons.verifyTotp")}
                     </Button>

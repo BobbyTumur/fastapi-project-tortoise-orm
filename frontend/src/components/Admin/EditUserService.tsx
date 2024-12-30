@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import {
   Button,
+  Checkbox,
   Flex,
   Modal,
   ModalBody,
@@ -12,63 +12,53 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
   type ApiError,
   ServicesService,
+  UserPublic,
   UsersServicesService,
+  UserUpdateServices,
 } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
-import CheckboxWithControl from "../Common/CheckboxWithControl";
 import { handleError } from "../../utils";
 
 interface EditUserServicesProps {
-  userId: string;
+  user: UserPublic;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const EditUserService = ({
-  userId,
-  isOpen,
-  onClose,
-}: EditUserServicesProps) => {
+const EditUserService = ({ user, isOpen, onClose }: EditUserServicesProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
   const { t } = useTranslation();
 
-  const { data: userServices, isLoading: isUserServicesLoading } = useQuery({
-    queryKey: ["userServices", userId],
-    queryFn: () => UsersServicesService.getUserServices({ userId }),
-  });
-
-  const { data: services, isLoading: isServicesLoading } = useQuery({
+  const { data: services, isLoading } = useQuery({
     queryKey: ["services"],
     queryFn: () => ServicesService.getServices(),
   });
 
-  const isLoading = isUserServicesLoading || isServicesLoading;
-
-  const { handleSubmit, reset, setValue, control, watch } = useForm<{
-    added_services: string[];
-  }>({
+  const {
+    handleSubmit,
+    reset,
+    register,
+    formState: { isDirty, isSubmitting },
+  } = useForm<UserUpdateServices>({
     mode: "onBlur",
-    defaultValues: { added_services: [] },
+    defaultValues: {
+      added_services: user?.services?.map((service) => service.id) || [],
+    },
   });
 
-  useEffect(() => {
-    if (isOpen && userServices) {
-      reset({
-        added_services: userServices.map((service) => service.id),
-      });
-    }
-  }, [isOpen, userServices, reset]);
-
   const mutation = useMutation({
-    mutationFn: (data: { added_services: string[] }) =>
-      UsersServicesService.addServicesToUser({ requestBody: data, userId }),
+    mutationFn: (data: UserUpdateServices) =>
+      UsersServicesService.addServicesToUser({
+        requestBody: data,
+        userId: user.id,
+      }),
     onSuccess: () => {
       showToast(t("toast.success"), t("toast.userUpdate"), "success");
       onClose();
@@ -77,26 +67,18 @@ const EditUserService = ({
       handleError(err, showToast);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["userServices", userId] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
-  const hasChanges = () => {
-    if (!userServices) return false;
-    const originalServices = userServices.map((service) => service.id).sort();
-    const currentServices = watch("added_services").sort();
-    return JSON.stringify(originalServices) !== JSON.stringify(currentServices);
-  };
 
-  const onSubmit = (data: { added_services: string[] }) =>
+  const onSubmit: SubmitHandler<UserUpdateServices> = async (data) =>
     mutation.mutate(data);
 
   const onCancel = () => {
-    if (userServices) {
-      reset({
-        added_services: userServices.map((service) => service.id),
-      });
-    }
     onClose();
+    setTimeout(() => {
+      reset();
+    }, 1000);
   };
 
   return (
@@ -113,18 +95,25 @@ const EditUserService = ({
           ) : (
             <Flex direction="column" gap={4}>
               {services?.data?.map((service) => (
-                <CheckboxWithControl
+                <Checkbox
                   key={service.id}
-                  service={service}
-                  control={control}
-                  setValue={setValue}
-                />
-              )) || <p>{t("loading.noServices")}</p>}
+                  colorScheme="teal"
+                  value={service.id.toString()}
+                  {...register("added_services")}
+                >
+                  {service.name}: {service.sub_name}
+                </Checkbox>
+              ))}
             </Flex>
           )}
         </ModalBody>
         <ModalFooter gap={3}>
-          <Button variant="primary" type="submit" isDisabled={!hasChanges()}>
+          <Button
+            variant="primary"
+            type="submit"
+            isLoading={isSubmitting}
+            isDisabled={!isDirty}
+          >
             {t("buttons.update")}
           </Button>
           <Button onClick={onCancel}>{t("common.cancel")}</Button>

@@ -80,14 +80,17 @@ function ServicesTable() {
             <Tr>
               <Th width="25%">{t("services.name")}</Th>
               <Th width="25%">{t("services.subName")}</Th>
-              <Th width="10%">{t("services.status")}</Th>
-              <Th width="10%">{t("services.actions")}</Th>
+              <Th width="10%" textAlign="center">
+                {t("services.class")}
+              </Th>
+              <Th width="5%">{t("services.status")}</Th>
+              <Th width="5%">{t("services.actions")}</Th>
             </Tr>
           </Thead>
           {isPending ? (
             <Tbody>
               <Tr>
-                {new Array(4).fill(null).map((_, index) => (
+                {new Array(5).fill(null).map((_, index) => (
                   <Td key={index}>
                     <SkeletonText noOfLines={1} paddingBlock="16px" />
                   </Td>
@@ -105,8 +108,16 @@ function ServicesTable() {
                   >
                     {service.name}
                   </Td>
-                  <Td isTruncated maxWidth="150px">
+                  <Td isTruncated maxWidth="80px">
                     {service.sub_name}
+                  </Td>
+                  <Td textAlign="center">
+                    {service.has_alert_notification &&
+                      t("services.notification")}
+                    {service.has_alert_notification &&
+                      service.has_auto_publish &&
+                      " ・ "}
+                    {service.has_auto_publish && t("services.publish")}
                   </Td>
                   <Td>
                     <Flex gap={2}>

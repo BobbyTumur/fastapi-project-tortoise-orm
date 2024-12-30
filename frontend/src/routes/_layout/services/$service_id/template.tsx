@@ -33,28 +33,32 @@ function Template() {
   });
 
   if (!serviceConfig) {
-    return (
-      <Skeleton>
-        <div></div>
-        <div></div>
-      </Skeleton>
-    ); // Add proper loading state if necessary
+    return <Skeleton height="200px" />;
   }
 
-  const tabsConfig = [
+  const baseTabsConfig = [
     {
       title: t("titles.alertNotificationTemplate"),
+      key: "alertNotification", // Add a unique key
       component: () => <AlertNotificationTemplate service={serviceConfig} />,
+      condition: serviceConfig.has_alert_notification,
     },
     {
       title: t("titles.autoPublishTemplate"),
+      key: "autoPublish", // Add a unique key
       component: () => <AutoPublishTemplate service={serviceConfig} />,
+      condition: serviceConfig.has_auto_publish,
     },
     {
       title: t("titles.infoAndQuickEdit"),
+      key: "infoAndQuickEdit",
       component: () => <InfoAndQuickEdit service={serviceConfig} />,
+      condition: true, // Always show this tab
     },
   ];
+
+  const tabsConfig = baseTabsConfig.filter((tab) => tab.condition);
+
   return (
     <Container maxW="full">
       <Heading

@@ -33,6 +33,8 @@ import type {
 	ServicesUpdateServiceAlertConfigResponse,
 	ServicesUpdateServicePublishConfigData,
 	ServicesUpdateServicePublishConfigResponse,
+	ServicesGetServiceLogsData,
+	ServicesGetServiceLogsResponse,
 	TotpEnableTotpResponse,
 	TotpTotpLoginVerifyData,
 	TotpTotpLoginVerifyResponse,
@@ -399,6 +401,35 @@ export class ServicesService {
 			},
 			body: data.requestBody,
 			mediaType: "application/json",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Get Service Logs
+	 * Retrieve logs for a specific service.
+	 * @param data The data for the request.
+	 * @param data.serviceId
+	 * @param data.skip
+	 * @param data.limit
+	 * @returns ServiceLogs Successful Response
+	 * @throws ApiError
+	 */
+	public static getServiceLogs(
+		data: ServicesGetServiceLogsData,
+	): CancelablePromise<ServicesGetServiceLogsResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/services/{service_id}/logs",
+			path: {
+				service_id: data.serviceId,
+			},
+			query: {
+				skip: data.skip,
+				limit: data.limit,
+			},
 			errors: {
 				422: "Validation Error",
 			},

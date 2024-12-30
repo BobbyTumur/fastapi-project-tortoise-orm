@@ -42,8 +42,8 @@ const AddService = ({ isOpen, onClose }: AddServiceProps) => {
     defaultValues: {
       name: "",
       sub_name: "",
-      has_extra_email: false,
-      has_teams_slack: false,
+      has_alert_notification: false,
+      has_auto_publish: false,
     },
   });
 
@@ -110,13 +110,16 @@ const AddService = ({ isOpen, onClose }: AddServiceProps) => {
             </FormControl>
             <Flex mt={4} flexDirection="column">
               <FormControl m={1}>
-                <Checkbox {...register("has_extra_email")} colorScheme="teal">
-                  {t("forms.hasExtraAddress")}
+                <Checkbox
+                  {...register("has_alert_notification")}
+                  colorScheme="teal"
+                >
+                  {t("forms.hasAlertNotification")}
                 </Checkbox>
               </FormControl>
               <FormControl m={1}>
-                <Checkbox {...register("has_teams_slack")} colorScheme="teal">
-                  {t("forms.hasTeamsAndSlack")}
+                <Checkbox {...register("has_auto_publish")} colorScheme="teal">
+                  {t("forms.hasAutoPublish")}
                 </Checkbox>
               </FormControl>
             </Flex>

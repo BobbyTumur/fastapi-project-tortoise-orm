@@ -72,7 +72,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
                 onClick={editUserServiceModal.onOpen}
                 icon={<FiFolder fontSize="16px" />}
               >
-                {type} {t("common.editService")}
+                {t("common.editService")}
               </MenuItem>
               <EditUser
                 user={value as UserPublic}
@@ -80,7 +80,7 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
                 onClose={editModal.onClose}
               />
               <EditUserService
-                userId={value.id}
+                user={value as UserPublic}
                 isOpen={editUserServiceModal.isOpen}
                 onClose={editUserServiceModal.onClose}
               />

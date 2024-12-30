@@ -40,6 +40,7 @@ const InfoAndQuickEdit = ({ service }: InfoAndQuickEditProps) => {
   const { data: serviceUsers, isLoading } = useQuery<Usernames>({
     queryKey: ["serviceUsers", service.id],
     queryFn: () => ServicesService.getServiceUsers({ serviceId: service.id }),
+    staleTime: 1000 * 60 * 5,
   });
   const {
     register,
@@ -58,7 +59,7 @@ const InfoAndQuickEdit = ({ service }: InfoAndQuickEditProps) => {
         serviceId: service.id,
       }),
     onSuccess: () => {
-      showToast(t("toast.success"), t("toast.passwordUpdate"), "success");
+      showToast(t("toast.success"), t("toast.templateUpdated"), "success");
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
@@ -76,75 +77,42 @@ const InfoAndQuickEdit = ({ service }: InfoAndQuickEditProps) => {
   return (
     <Flex
       width="100%"
-      height="75vh" /* Full viewport height for vertical centering */
+      height="60vh"
       gap={4}
       alignItems="center" /* Centers items vertically */
-      justifyContent="space-between" /* Evenly distributes parts horizontally */
+      paddingX={20}
     >
-      {/* Part 1 */}
       <Box
+        flex="1"
         display="flex"
-        flex="0 0 60%"
         flexDirection="column"
-        gap={2}
+        gap={6}
+        alignItems="center"
         as="form"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Flex alignItems="center">
-          <Box
-            flex="1"
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            alignItems="center"
-          >
-            <Heading size="md">{t("common.notification")}</Heading>
-            <Divider w="150px" />
-            <Checkbox
-              pt={2}
-              {...register("has_extra_email")}
-              colorScheme="teal"
-              isDisabled={isTier1}
-            >
-              {t("forms.hasExtraAddress")}
-            </Checkbox>
-            <Checkbox
-              {...register("has_teams_slack")}
-              colorScheme="teal"
-              isDisabled={isTier1}
-            >
-              {t("forms.hasTeamsAndSlack")}
-            </Checkbox>
-          </Box>
-          <Divider orientation="vertical" h={200} />
-          {/* Part 2 */}
-          <Box
-            flex="1"
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            alignItems="center"
-          >
-            <Heading size="md">{t("common.publish")}</Heading>
-            <Divider w="150px" />
-            <Checkbox colorScheme="teal" isDisabled={isTier1} pt={2}>
-              {t("forms.hasExtraAddress")}
-            </Checkbox>
-            <Checkbox colorScheme="teal" isDisabled={isTier1}>
-              {t("forms.hasTeamsAndSlack")}
-            </Checkbox>
-          </Box>
-        </Flex>
-        <Box pt={10}>
-          <Button
-            variant="primary"
-            type="submit"
-            isLoading={isSubmitting}
-            isDisabled={!isDirty || isTier1}
-          >
-            {t("buttons.update")}
-          </Button>
-        </Box>
+        <Checkbox
+          {...register("has_alert_notification")}
+          colorScheme="teal"
+          isDisabled={isTier1}
+        >
+          <Heading size="sm">{t("titles.notification")}</Heading>
+        </Checkbox>
+        <Checkbox
+          {...register("has_auto_publish")}
+          colorScheme="teal"
+          isDisabled={isTier1}
+        >
+          <Heading size="sm">{t("titles.publish")}</Heading>
+        </Checkbox>
+        <Button
+          variant="primary"
+          type="submit"
+          isLoading={isSubmitting}
+          isDisabled={!isDirty || isTier1}
+        >
+          {t("buttons.update")}
+        </Button>
       </Box>
       <Divider orientation="vertical" h={300} />
       {/* Part 3 */}

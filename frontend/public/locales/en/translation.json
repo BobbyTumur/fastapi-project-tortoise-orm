@@ -34,8 +34,7 @@
         "subName": "Sub Name",
         "viewEditTemplate": "View or Edit Template",
         "viewLog": "View Log",
-        "notification": "Notification",
-        "publish": "Publish"
+        "placeholder": "placeholder"
 
     },
     "titles": {
@@ -58,11 +57,16 @@
         "alertNotificationTemplate": "Alert Notification Template",
         "autoPublishTemplate": "Auto Publish Template",
         "infoAndQuickEdit": "Quick Edit / Info",
-        "peopleWhoCanEdit": "Members who can edit the service"
+        "peopleWhoCanEdit": "Members who can edit the service",
+        "notification": "Notification template",
+        "publish": "Publish template"
     },
     "texts": {
         "totpIsEnabled": "MFA is already set up",
-        "totpIsDisabled": "MFA is not set up yet"
+        "totpIsDisabled": "MFA is not set up yet",
+        "admin": "Admin: Every permission",
+        "tier1": "Tier1: Read permission",
+        "tier2": "Tier2: Write permission"
     },
     "buttons": {
         "enableTotp": "Enable MFA",
@@ -88,11 +92,22 @@
     "services": {
         "name": "Name",
         "subName": "Sub Name",
+        "actions": "Actions",
+        "status": "Status",
+        "class": "Class",
+        "notification": "Notif",
+        "publish": "Publish"
+    },
+    "logs": {
         "startTime": "Start time",
         "endTime": "End Time",
         "elapsedTime": "Elapsed Time",
         "status": "Status",
-        "actions": "Actions"
+        "screenshot": "Screenshot",
+        "content": "Content",
+        "noLogsYet": "No logs yet.",
+        "success": "Success",
+        "failure": "Failure"
     },
     "forms": {
         "emailRequired": "Email is required",
@@ -104,9 +119,11 @@
         "setPassword": "Set Password",
         "confirmPassword": "Confirm Password",
         "forgotPassword": "Forgot password?",
-        "enterTotp": "Enter Your OTP Code",
+        "enterTotp": "OTP Code",
         "hasExtraAddress": "Need extra address",
-        "hasTeamsAndSlack": "Need Teams & Slack webhooks"
+        "hasTeamsAndSlack": "Need Teams & Slack webhooks",
+        "hasAlertNotification": "Has Alert Notification",
+        "hasAutoPublish": "Has Auto Publish"
 
     },
     "index": {
@@ -127,8 +144,8 @@
         "totpErrorDetail": "Failed to disable MFA",
         "errorDetail": " deletion has failed.",
         "serviceCreated": "Service created successfully",
-        "serviceUpdated": "Service updated successfully",
-        "serviceDeleted": "Service deleted successfully"
+        "serviceDeleted": "Service deleted successfully",
+        "templateUpdated": "Template updated successfully"
     },
 
 
@@ -165,21 +182,28 @@
         }
     },
     "notifConfig": {
-        "mail_from": "Mail From",
-        "mail_to": "Mail To",
-        "mail_cc": "Mail CC",
-        "alert_mail_title": "Alert Mail Title",
-        "alert_mail_body": "Alert Mail Body",
-        "recovery_mail_title": "Recovery Mail Title",
-        "recovery_mail_body": "Recovery Mail Title",
-        "extra_mail_to": "Extra Mail To",
-        "extra_mail_body": "Extra Mail Body",
-        "slack_link": "Slack Webhook",
-        "teams_link": "Teams Webhook"
+        "mailFrom": "Mail From",
+        "mailTo": "Mail To",
+        "mailCc": "Mail CC",
+        "alertMailTitle": "Alert Mail Title",
+        "alertMailBody": "Alert Mail Body",
+        "recoveryMailTitle": "Recovery Mail Title",
+        "recoveryMailBody": "Recovery Mail Title",
+        "extraMailTo": "Extra Mail To",
+        "extraMailBody": "Extra Mail Body",
+        "slackLink": "Slack Webhook",
+        "teamsLink": "Teams Webhook"
+    },
+    "publishConfig": {
+        "alertPublishTitle": "Auto Publish Failure Title",
+        "alertPublishBody": "Auto Publish Failure Body",
+        "showInfluencedUser": "Show influenced user",
+        "sendEmail": "Send email to customer"
     },
     "infos": {
         "multipleAddresses": "For multiple addresses, put comma and space in between. Tip: john@example.com, doe@example.com",
         "extraMailTo": "For different scenarios, use this address.",
-        "extraMailBody": "For different scenarios, use this body."
+        "extraMailBody": "For different scenarios, use this body.",
+        "notYetImplemented": "Not yet implemented"
     }
 }

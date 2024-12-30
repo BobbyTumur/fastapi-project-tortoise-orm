@@ -38,7 +38,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<UserRegister>({
     mode: "onBlur",
     criteriaMode: "all",
@@ -143,6 +143,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
               variant="primary"
               type="submit"
               isLoading={isSubmittingLocal}
+              isDisabled={!isDirty}
             >
               {t("common.save1")}
             </Button>

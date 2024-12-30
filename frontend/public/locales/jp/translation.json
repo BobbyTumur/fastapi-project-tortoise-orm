@@ -34,9 +34,7 @@
         "subName": "サブ名",
         "viewEditTemplate": "テンプレート 閲覧・編集",
         "viewLog": "ログ 閲覧",
-        "notification": "通知",
-        "publish": "掲載"
-        
+        "placeholder": "プレースホルダー"
     },
     "titles": {
         "userManagement": "ユーザー管理",
@@ -58,11 +56,16 @@
         "alertNotificationTemplate": "アラート通知テンプレート",
         "autoPublishTemplate": "自動掲載テンプレート",
         "infoAndQuickEdit": "クイック編集 / インフォ",
-        "peopleWhoCanEdit": "本サービスを編集できるメンバー"
+        "peopleWhoCanEdit": "本テンプレを編集できるメンバー",
+        "notification": "通知テンプレ",
+        "publish": "掲載テンプレ"
     },
     "texts": {
         "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
-        "totpIsDisabled": "ワンタイムパスワードが設定されていません。"
+        "totpIsDisabled": "ワンタイムパスワードが設定されていません。",
+        "admin": "管理者: 全ての権限",
+        "tier1": "Tier1: 閲覧",
+        "tier2": "Tier2: 閲覧・編集"
     },
     "buttons": {
         "enableTotp": "MFAを有効にする",
@@ -88,11 +91,22 @@
     "services": {
         "name": "名",
         "subName": "サブ名",
+        "status": "ステータス",
+        "actions": "アクション",
+        "class": "種別",
+        "notification": "通知",
+        "publish": "掲載"
+    },
+    "logs": {
         "startTime": "開始時間",
         "endTime": "終了時間",
         "elapsedTime": "経過時間",
         "status": "ステータス",
-        "actions": "アクション"
+        "screenshot": "スクショ",
+        "content": "コンテンツ",
+        "noLogsYet": "過去ログはまだありません。",
+        "success": "成功",
+        "failure": "失敗"
     },
     "forms": {
         "emailRequired": "メールアドレスが必須です。",
@@ -106,7 +120,9 @@
         "forgotPassword": "パスワードをお忘れですか？",
         "enterTotp": "OTPコード",
         "hasExtraAddress": "別途宛先メールアドレスが必須",
-        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須"
+        "hasTeamsAndSlack": "Teams & Slackウェブフックが必須",
+        "hasAlertNotification": "メールにてアラート通知が必須",
+        "hasAutoPublish": "自動掲載テンプレートが必須"
     },
     "index": {
         "greet": "こんにちは",
@@ -126,8 +142,9 @@
         "errorDetail": "削除ができませんでした。",
         "totpErrorDetail": "MFAの無効化に失敗しました",
         "serviceCreated": "サービスを追加しました。",
-        "serviceUpdated": "サービスを編集しました。",
-        "serviceDeleted": "サービスを削除しました。"
+        "serviceDeleted": "サービスを削除しました。",
+        "templateUpdated": "テンプレートを編集しました。"
+        
     },
 
     "error": {
@@ -164,21 +181,28 @@
         }
     },
     "notifConfig": {
-        "mail_from": "差し出し",
-        "mail_to": "宛先",
-        "mail_cc": "CC",
-        "alert_mail_title": "発生件名",
-        "alert_mail_body": "発生本文",
-        "recovery_mail_title": "回復件名",
-        "recovery_mail_body": "回復本文",
-        "extra_mail_to": "おまけ宛先",
-        "extra_mail_body": "おまけ本文",
-        "slack_link": "Slackフック",
-        "teams_link": "Teamsフック"
+        "mailFrom": "差し出し",
+        "mailTo": "宛先",
+        "mailCc": "CC",
+        "alertMailTitle": "発生件名",
+        "alertMailBody": "発生本文",
+        "recoveryMailTitle": "回復件名",
+        "recoveryMailBody": "回復本文",
+        "extraMailTo": "おまけ宛先",
+        "extraMailBody": "おまけ本文",
+        "slackLink": "Slackフック",
+        "teamsLink": "Teamsフック"
+    },
+    "publishConfig": {
+        "alertPublishTitle": "自動故障掲載件名",
+        "alertPublishBody": "自動故障掲載本文",
+        "showInfluencedUser": "影響のあるお客さま表示",
+        "sendEmail": "メール送信"
     },
     "infos": {
         "multipleAddresses": "複数のアドレスを入力する場合は、カンマとスペースを間に記入ください。例: john@clap.com, doe@clap.com",
         "extraMailTo": "アラートの結果によって宛先が異なる場合は、このアドレスをご利用ください。",
-        "extraMailBody": "アラートの結果によって宛先が異なる場合のメールの本文です。"
+        "extraMailBody": "アラートの結果によって宛先が異なる場合のメールの本文です。",
+        "notYetImplemented": "まだ実施されていません。"
     }
 }

@@ -10,50 +10,35 @@ import {
   AccordionIcon,
   InputGroup,
   InputLeftAddon,
-  Tab,
-  Tabs,
-  TabList,
-  TabPanel,
-  TabPanels,
   Textarea,
-  FormErrorMessage,
-  FormControl,
-  Spacer,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
-import {
-  emailPattern,
-  handleError,
-  multiEmailPattern,
-  webhookPattern,
-} from "../../utils";
+import { handleError } from "../../utils";
 import {
   type ApiError,
   ServiceConfig,
   ServicesService,
-  AlertConfigCreate,
   UserPublic,
+  PublishConfigCreate,
 } from "../../client";
-import InfoTooltip from "../Common/InfoToolTip";
 import useCustomToast from "../../hooks/useCustomToast";
 
 const defaultValues = {
   alert_publish_title: null,
   alert_publish_body: null,
-  influenced_user: false,
+  show_influenced_user: false,
   send_mail: false,
 };
 
-interface AlertNotificationTemplateProps {
+interface AutoPublishTemplateProps {
   service: ServiceConfig;
 }
 
-const AlertNotificationTemplate = ({
-  service,
-}: AlertNotificationTemplateProps) => {
+const AutoPublishTemplate = ({ service }: AutoPublishTemplateProps) => {
   const { t } = useTranslation();
   const showToast = useCustomToast();
   const queryClient = useQueryClient();
@@ -66,7 +51,7 @@ const AlertNotificationTemplate = ({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { isSubmitting, isDirty },
   } = useForm<PublishConfigCreate>({
     mode: "onBlur",
     criteriaMode: "all",
@@ -75,12 +60,12 @@ const AlertNotificationTemplate = ({
 
   const mutation = useMutation({
     mutationFn: (data: PublishConfigCreate) =>
-      ServicesService.updateServiceConfig({
+      ServicesService.updateServicePublishConfig({
         serviceId: service.id,
         requestBody: data,
       }),
     onSuccess: () => {
-      showToast(t("toast.success"), t("toast.serviceUpdated"), "success");
+      showToast(t("toast.success"), t("toast.templateUpdated"), "success");
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
@@ -90,7 +75,7 @@ const AlertNotificationTemplate = ({
     },
   });
 
-  const onSubmit: SubmitHandler<AlertConfigCreate> = async (data) => {
+  const onSubmit: SubmitHandler<PublishConfigCreate> = async (data) => {
     const sanitizedData = Object.fromEntries(
       Object.entries(data).filter(
         ([_, value]) => value !== null && value !== ""
@@ -114,12 +99,12 @@ const AlertNotificationTemplate = ({
         <Flex>
           {/* Left Section */}
           <Box flex="1" mr={6}>
-            <Accordion height="vh" allowToggle defaultIndex={1}>
+            <Accordion height="vh" allowToggle defaultIndex={0}>
               <AccordionItem>
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
-                      {t("notifConfig.alert_mail_body")}
+                      {t("publishConfig.alertPublishBody")}
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -131,219 +116,47 @@ const AlertNotificationTemplate = ({
                     resize="none"
                     variant="filled"
                     height="550px"
-                    defaultValue={service.alert_config?.alert_mail_body || ""}
-                    {...register("alert_mail_body")}
+                    {...register("alert_publish_body")}
                   />
                 </AccordionPanel>
               </AccordionItem>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      {t("notifConfig.recovery_mail_body")}
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel>
-                  <Textarea
-                    isDisabled={isTier1}
-                    spellCheck={false}
-                    resize="none"
-                    variant="filled"
-                    height="550px"
-                    defaultValue={
-                      service.alert_config?.recovery_mail_body || ""
-                    }
-                    {...register("recovery_mail_body")}
-                  />
-                </AccordionPanel>
-              </AccordionItem>
-              {service.has_extra_email && (
-                <AccordionItem>
-                  <h2>
-                    <AccordionButton display="flex" flexDirection="row">
-                      <Box as="span" textAlign="left" mr={2}>
-                        {t("notifConfig.extra_mail_body")}
-                      </Box>
-                      <InfoTooltip label={t("infos.extraMailBody")} />
-                      <Spacer />
-                      <AccordionIcon />
-                    </AccordionButton>
-                  </h2>
-                  <AccordionPanel>
-                    <Textarea
-                      isDisabled={isTier1}
-                      spellCheck={false}
-                      resize="none"
-                      variant="filled"
-                      height="550px"
-                      defaultValue={service.alert_config?.extra_mail_body || ""}
-                      {...register("extra_mail_body")}
-                    />
-                  </AccordionPanel>
-                </AccordionItem>
-              )}
             </Accordion>
           </Box>
           {/* Right Section */}
           <Box flex="1" ml={6}>
             <Flex mb={4} direction="column">
-              <FormControl isInvalid={!!errors.mail_from}>
-                <InputGroup>
-                  <InputLeftAddon>{t("notifConfig.mail_from")}:</InputLeftAddon>
-                  <Input
-                    flex="2"
-                    spellCheck="false"
-                    isDisabled={isTier1}
-                    defaultValue={service.alert_config?.mail_from || ""}
-                    {...register("mail_from", { pattern: emailPattern })}
-                  />
-                </InputGroup>
-                {errors.mail_from && (
-                  <FormErrorMessage>
-                    {errors.mail_from.message}
-                  </FormErrorMessage>
-                )}
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.mail_to}>
-                <InputGroup mt={4}>
-                  <InputLeftAddon>
-                    {t("notifConfig.mail_to")}:
-                    <InfoTooltip label={t("infos.multipleAddresses")} />
-                  </InputLeftAddon>
-                  <Input
-                    flex="2"
-                    spellCheck="false"
-                    isDisabled={isTier1}
-                    defaultValue={service.alert_config?.mail_to || ""}
-                    transition="all 0.3s ease-in-out"
-                    {...register("mail_to", { pattern: multiEmailPattern })}
-                  />
-                </InputGroup>
-                {errors.mail_to && (
-                  <FormErrorMessage>{errors.mail_to.message}</FormErrorMessage>
-                )}
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.mail_cc}>
-                <InputGroup mt={4}>
-                  <InputLeftAddon>
-                    {t("notifConfig.mail_cc")}:
-                    <InfoTooltip label={t("infos.multipleAddresses")} />
-                  </InputLeftAddon>
-                  <Input
-                    flex="2"
-                    spellCheck="false"
-                    isDisabled={isTier1}
-                    defaultValue={service.alert_config?.mail_cc || ""}
-                    {...register("mail_cc", { pattern: multiEmailPattern })}
-                  />
-                </InputGroup>
-                {errors.mail_cc && (
-                  <FormErrorMessage>{errors.mail_cc.message}</FormErrorMessage>
-                )}
-              </FormControl>
-
               <InputGroup mt={4}>
                 <InputLeftAddon>
-                  {t("notifConfig.alert_mail_title")}:
+                  {t("publishConfig.alertPublishTitle")}:
                 </InputLeftAddon>
                 <Input
                   flex="2"
                   spellCheck="false"
                   isDisabled={isTier1}
-                  defaultValue={service.alert_config?.alert_mail_title || ""}
-                  {...register("alert_mail_title")}
+                  {...register("alert_publish_title")}
                 />
               </InputGroup>
-              <InputGroup mt={4}>
-                <InputLeftAddon>
-                  {t("notifConfig.recovery_mail_title")}:
-                </InputLeftAddon>
-                <Input
-                  flex="2"
-                  spellCheck="false"
+              <Flex flexDirection="column" gap={4} mt={4}>
+                <Checkbox
+                  pt={2}
+                  {...register("show_influenced_user")}
+                  colorScheme="teal"
                   isDisabled={isTier1}
-                  defaultValue={service.alert_config?.recovery_mail_title || ""}
-                  {...register("recovery_mail_title")}
-                />
-              </InputGroup>
-              {service.has_extra_email && (
-                <FormControl isInvalid={!!errors.extra_mail_to}>
-                  <InputGroup mt={4}>
-                    <InputLeftAddon>
-                      {t("notifConfig.extra_mail_to")}:
-                      <InfoTooltip label={t("infos.extraMailTo")} />
-                    </InputLeftAddon>
-                    <Input
-                      flex="2"
-                      spellCheck="false"
-                      isDisabled={isTier1}
-                      defaultValue={service.alert_config?.extra_mail_to || ""}
-                      {...register("extra_mail_to", {
-                        pattern: multiEmailPattern,
-                      })}
-                    />
-                  </InputGroup>
-                  {errors.extra_mail_to && (
-                    <FormErrorMessage>
-                      {errors.extra_mail_to.message}
-                    </FormErrorMessage>
-                  )}
-                </FormControl>
-              )}
-              {service.has_teams_slack && (
-                <Tabs variant="enclosed" mt={8}>
-                  <TabList>
-                    <Tab>{t("notifConfig.teams_link")}</Tab>
-                    <Tab>{t("notifConfig.slack_link")}</Tab>
-                  </TabList>
-                  <TabPanels>
-                    <TabPanel>
-                      <FormControl isInvalid={!!errors.teams_link}>
-                        <Textarea
-                          isDisabled={isTier1}
-                          spellCheck={false}
-                          resize="none"
-                          height="100px"
-                          variant="filled"
-                          defaultValue={service.alert_config?.teams_link || ""}
-                          {...register("teams_link", {
-                            pattern: webhookPattern,
-                          })}
-                        />
-                        {errors.teams_link && (
-                          <FormErrorMessage>
-                            {errors.teams_link.message}
-                          </FormErrorMessage>
-                        )}
-                      </FormControl>
-                    </TabPanel>
-                    <TabPanel>
-                      <FormControl isInvalid={!!errors.slack_link}>
-                        <Textarea
-                          isDisabled={isTier1}
-                          spellCheck={false}
-                          resize="none"
-                          height="100px"
-                          variant="filled"
-                          defaultValue={service.alert_config?.slack_link || ""}
-                          {...register("slack_link", {
-                            pattern: webhookPattern,
-                          })}
-                        />
-                        {errors.slack_link && (
-                          <FormErrorMessage>
-                            {errors.slack_link.message}
-                          </FormErrorMessage>
-                        )}
-                      </FormControl>
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              )}
+                  defaultChecked={
+                    service.publish_config?.show_influenced_user || false
+                  }
+                >
+                  {t("publishConfig.showInfluencedUser")}
+                </Checkbox>
+                <Checkbox
+                  {...register("send_mail")}
+                  colorScheme="teal"
+                  isDisabled={isTier1}
+                  defaultChecked={service.publish_config?.send_mail || false}
+                >
+                  {t("publishConfig.sendEmail")}
+                </Checkbox>
+              </Flex>
               <Flex justify="flex-end" gap={4} mt={4}>
                 <Button
                   onClick={onCancel}
@@ -369,4 +182,4 @@ const AlertNotificationTemplate = ({
   );
 };
 
-export default AlertNotificationTemplate;
+export default AutoPublishTemplate;

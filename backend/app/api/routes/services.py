@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app import crud, utils
 from app.api.dep import CurrentUser, get_current_active_superuser
-from app.models.db_models import Service, User
+from app.models.db_models import Service, User, Log
 from app.models.user_models import Usernames
 from app.models.general_models import Message
-from app.models.service_models import ServiceCreate, ServiceUpdate, ServicePublic, ServicesPublic, AlertConfigCreate, PublishConfigCreate, ServiceConfig
+from app.models.service_models import ServiceCreate, ServiceUpdate, ServicePublic, ServicesPublic, AlertConfigCreate, PublishConfigCreate, ServiceConfig, ServiceLogs
 
 router = APIRouter(prefix="/services", tags=["services"])
 
@@ -193,3 +193,35 @@ async def update_service_publish_config(
     
     await crud.create_or_update_config(service=service, config_data=config_in)
     return Message(message="Alert config updated successfully")
+
+@router.get(
+        "/{service_id}/logs", 
+        response_model=ServiceLogs
+        )
+async def get_service_logs(
+    current_user: CurrentUser, 
+    service_id: UUID, 
+    skip: int = 0, 
+    limit: int = 100):
+    """
+    Retrieve logs for a specific service.
+    """
+    service = await crud.get_or_404(
+        Service, 
+        id=service_id, 
+        prefetch_related=["logs"]
+        )
+    
+    can_read = await utils.check_privileges(
+        user=current_user,
+        service_id=service_id,
+        privilege="read"
+    )
+    if not can_read:
+        raise HTTPException(status_code=403, detail="Not enough privileges")
+
+    # Apply skip and limit manually (as get_or_404 retrieves a single instance by default)
+    logs_data = await Log.filter(service_id=service_id).offset(skip).limit(limit).all()
+    # if not logs_data:
+    #     raise HTTPException(status_code=404, detail="No logs found for this service.")
+    return ServiceLogs(**service.__dict__, logs=logs_data)

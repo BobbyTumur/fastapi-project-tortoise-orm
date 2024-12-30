@@ -118,13 +118,13 @@ async def update_user(
     """
     Update a user.
     """
-    user = await crud.get_or_404(User, id=user_id)
-    if user == current_user:
+    user_update = await crud.get_or_404(User, id=user_id, prefetch_related=["services"])
+    if user_update == current_user:
         raise HTTPException(
             status_code=403, detail="Super users are not allowed to update themselves"
         )
-    user = await crud.update_instance(instance=user, data_in=user_in)
-    return user
+    user_updated = await crud.update_instance(instance=user_update, data_in=user_in)
+    return user_updated
 
 @router.delete("/{user_id}", dependencies=[Depends(get_current_active_superuser)])
 async def delete_user(current_user: CurrentUser, user_id: UUID) -> Message:

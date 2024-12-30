@@ -19,6 +19,7 @@ import {
   FormErrorMessage,
   FormControl,
   Spacer,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -41,6 +42,8 @@ import InfoTooltip from "../Common/InfoToolTip";
 import useCustomToast from "../../hooks/useCustomToast";
 
 const defaultValues = {
+  has_extra_email: false,
+  has_teams_slack: false,
   mail_from: null,
   mail_cc: null,
   mail_to: null,
@@ -82,12 +85,12 @@ const AlertNotificationTemplate = ({
 
   const mutation = useMutation({
     mutationFn: (data: AlertConfigCreate) =>
-      ServicesService.updateServiceConfig({
+      ServicesService.updateServiceAlertConfig({
         serviceId: service.id,
         requestBody: data,
       }),
     onSuccess: () => {
-      showToast(t("toast.success"), t("toast.serviceUpdated"), "success");
+      showToast(t("toast.success"), t("toast.templateUpdated"), "success");
     },
     onError: (err: ApiError) => {
       handleError(err, showToast);
@@ -126,7 +129,7 @@ const AlertNotificationTemplate = ({
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
-                      {t("notifConfig.alert_mail_body")}
+                      {t("notifConfig.alertMailBody")}
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -138,7 +141,7 @@ const AlertNotificationTemplate = ({
                     resize="none"
                     variant="filled"
                     height="550px"
-                    defaultValue={service.alert_config?.alert_mail_body || ""}
+                    // defaultValue={service.alert_config?.alert_mail_body || ""}
                     {...register("alert_mail_body")}
                   />
                 </AccordionPanel>
@@ -147,7 +150,7 @@ const AlertNotificationTemplate = ({
                 <h2>
                   <AccordionButton>
                     <Box as="span" flex="1" textAlign="left">
-                      {t("notifConfig.recovery_mail_body")}
+                      {t("notifConfig.recoveryMailBody")}
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -159,19 +162,19 @@ const AlertNotificationTemplate = ({
                     resize="none"
                     variant="filled"
                     height="550px"
-                    defaultValue={
-                      service.alert_config?.recovery_mail_body || ""
-                    }
+                    // defaultValue={
+                    //   service.alert_config?.recovery_mail_body || ""
+                    // }
                     {...register("recovery_mail_body")}
                   />
                 </AccordionPanel>
               </AccordionItem>
-              {service.has_extra_email && (
+              {service.alert_config?.has_extra_email && (
                 <AccordionItem>
                   <h2>
                     <AccordionButton display="flex" flexDirection="row">
                       <Box as="span" textAlign="left" mr={2}>
-                        {t("notifConfig.extra_mail_body")}
+                        {t("notifConfig.extraMailBody")}
                       </Box>
                       <InfoTooltip label={t("infos.extraMailBody")} />
                       <Spacer />
@@ -185,7 +188,6 @@ const AlertNotificationTemplate = ({
                       resize="none"
                       variant="filled"
                       height="550px"
-                      defaultValue={service.alert_config?.extra_mail_body || ""}
                       {...register("extra_mail_body")}
                     />
                   </AccordionPanel>
@@ -198,12 +200,11 @@ const AlertNotificationTemplate = ({
             <Flex mb={4} direction="column">
               <FormControl isInvalid={!!errors.mail_from}>
                 <InputGroup>
-                  <InputLeftAddon>{t("notifConfig.mail_from")}:</InputLeftAddon>
+                  <InputLeftAddon>{t("notifConfig.mailFrom")}:</InputLeftAddon>
                   <Input
                     flex="2"
                     spellCheck="false"
                     isDisabled={isTier1}
-                    defaultValue={service.alert_config?.mail_from || ""}
                     {...register("mail_from", { pattern: emailPattern })}
                   />
                 </InputGroup>
@@ -217,15 +218,13 @@ const AlertNotificationTemplate = ({
               <FormControl isInvalid={!!errors.mail_to}>
                 <InputGroup mt={4}>
                   <InputLeftAddon>
-                    {t("notifConfig.mail_to")}:
+                    {t("notifConfig.mailTo")}:
                     <InfoTooltip label={t("infos.multipleAddresses")} />
                   </InputLeftAddon>
                   <Input
                     flex="2"
                     spellCheck="false"
                     isDisabled={isTier1}
-                    defaultValue={service.alert_config?.mail_to || ""}
-                    transition="all 0.3s ease-in-out"
                     {...register("mail_to", { pattern: multiEmailPattern })}
                   />
                 </InputGroup>
@@ -237,14 +236,13 @@ const AlertNotificationTemplate = ({
               <FormControl isInvalid={!!errors.mail_cc}>
                 <InputGroup mt={4}>
                   <InputLeftAddon>
-                    {t("notifConfig.mail_cc")}:
+                    {t("notifConfig.mailCc")}:
                     <InfoTooltip label={t("infos.multipleAddresses")} />
                   </InputLeftAddon>
                   <Input
                     flex="2"
                     spellCheck="false"
                     isDisabled={isTier1}
-                    defaultValue={service.alert_config?.mail_cc || ""}
                     {...register("mail_cc", { pattern: multiEmailPattern })}
                   />
                 </InputGroup>
@@ -255,40 +253,37 @@ const AlertNotificationTemplate = ({
 
               <InputGroup mt={4}>
                 <InputLeftAddon>
-                  {t("notifConfig.alert_mail_title")}:
+                  {t("notifConfig.alertMailTitle")}:
                 </InputLeftAddon>
                 <Input
                   flex="2"
                   spellCheck="false"
                   isDisabled={isTier1}
-                  defaultValue={service.alert_config?.alert_mail_title || ""}
                   {...register("alert_mail_title")}
                 />
               </InputGroup>
               <InputGroup mt={4}>
                 <InputLeftAddon>
-                  {t("notifConfig.recovery_mail_title")}:
+                  {t("notifConfig.recoveryMailTitle")}:
                 </InputLeftAddon>
                 <Input
                   flex="2"
                   spellCheck="false"
                   isDisabled={isTier1}
-                  defaultValue={service.alert_config?.recovery_mail_title || ""}
                   {...register("recovery_mail_title")}
                 />
               </InputGroup>
-              {service.has_extra_email && (
+              {service.alert_config?.has_extra_email && (
                 <FormControl isInvalid={!!errors.extra_mail_to}>
                   <InputGroup mt={4}>
                     <InputLeftAddon>
-                      {t("notifConfig.extra_mail_to")}:
+                      {t("notifConfig.extraMailTo")}:
                       <InfoTooltip label={t("infos.extraMailTo")} />
                     </InputLeftAddon>
                     <Input
                       flex="2"
                       spellCheck="false"
                       isDisabled={isTier1}
-                      defaultValue={service.alert_config?.extra_mail_to || ""}
                       {...register("extra_mail_to", {
                         pattern: multiEmailPattern,
                       })}
@@ -301,11 +296,11 @@ const AlertNotificationTemplate = ({
                   )}
                 </FormControl>
               )}
-              {service.has_teams_slack && (
+              {service.alert_config?.has_teams_slack && (
                 <Tabs variant="enclosed" mt={8}>
                   <TabList>
-                    <Tab>{t("notifConfig.teams_link")}</Tab>
-                    <Tab>{t("notifConfig.slack_link")}</Tab>
+                    <Tab>{t("notifConfig.teamsLink")}</Tab>
+                    <Tab>{t("notifConfig.slackLink")}</Tab>
                   </TabList>
                   <TabPanels>
                     <TabPanel>
@@ -316,7 +311,6 @@ const AlertNotificationTemplate = ({
                           resize="none"
                           height="100px"
                           variant="filled"
-                          defaultValue={service.alert_config?.teams_link || ""}
                           {...register("teams_link", {
                             pattern: webhookPattern,
                           })}
@@ -336,7 +330,6 @@ const AlertNotificationTemplate = ({
                           resize="none"
                           height="100px"
                           variant="filled"
-                          defaultValue={service.alert_config?.slack_link || ""}
                           {...register("slack_link", {
                             pattern: webhookPattern,
                           })}
@@ -352,6 +345,25 @@ const AlertNotificationTemplate = ({
                 </Tabs>
               )}
               <Flex justify="flex-end" gap={4} mt={4}>
+                {currentUser?.is_superuser && (
+                  <>
+                    <Checkbox
+                      {...register("has_extra_email")}
+                      colorScheme="teal"
+                      isDisabled={isTier1}
+                    >
+                      {t("forms.hasExtraAddress")}
+                    </Checkbox>
+                    <Checkbox
+                      {...register("has_teams_slack")}
+                      colorScheme="teal"
+                      isDisabled={isTier1}
+                    >
+                      {t("forms.hasTeamsAndSlack")}
+                    </Checkbox>
+                  </>
+                )}
+                <Spacer />
                 <Button
                   onClick={onCancel}
                   variant="outline"

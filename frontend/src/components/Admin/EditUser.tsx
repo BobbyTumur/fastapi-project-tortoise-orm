@@ -51,8 +51,9 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
     register,
     handleSubmit,
     setValue,
-    formState: { isSubmitting, isDirty },
+    reset,
     trigger, // Use trigger to manually trigger form validation
+    formState: { isSubmitting, isDirty },
   } = useForm<UserUpdateWithRole>({
     mode: "onBlur",
     criteriaMode: "all",
@@ -60,7 +61,7 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: UserUpdateWithRole) =>
+    mutationFn: (data: UserUpdate) =>
       UsersService.updateUser({ userId: user.id, requestBody: data }),
     onSuccess: () => {
       showToast(t("toast.success"), t("toast.userUpdate"), "success");
@@ -74,17 +75,15 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
     },
   });
 
-  const onSubmit: SubmitHandler<UserUpdateWithRole> = async (data) => {
-    const finalData = {
-      ...data,
-      is_superuser: role === "admin",
-      can_edit: role === "tier2",
-    };
-    mutation.mutate(finalData);
+  const onSubmit: SubmitHandler<UserUpdate> = async (data) => {
+    mutation.mutate(data);
   };
 
   const onCancel = () => {
     onClose();
+    setTimeout(() => {
+      reset();
+    }, 1000);
   };
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

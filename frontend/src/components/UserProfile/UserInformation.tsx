@@ -22,10 +22,10 @@ const UserInformation = () => {
   });
 
   const role = currentUser?.is_superuser
-    ? "Admin"
+    ? t("texts.admin")
     : currentUser?.can_edit
-      ? "Tier2"
-      : "Tier1";
+      ? t("texts.tier2")
+      : t("texts.tier1");
   const totp = currentUser?.is_totp_enabled
     ? t("common.enabled")
     : t("common.notEnabled");

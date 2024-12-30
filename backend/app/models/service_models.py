@@ -1,15 +1,16 @@
 import uuid
+from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict, EmailStr, HttpUrl, field_validator, TypeAdapter, ValidationError
 
 class ServiceBase(BaseModel):
     name: str = Field(..., max_length=255)  # Unique and required
     sub_name: str = Field(..., max_length=255)  # Unique and required
-    has_extra_email: bool = False
-    has_teams_slack: bool = False
+    has_alert_notification: bool = False
+    has_auto_publish: bool = False
 
 class ServiceUpdate(BaseModel):
-    has_extra_email: bool = False
-    has_teams_slack: bool = False
+    has_alert_notification: bool = False
+    has_auto_publish: bool = False
 
 class ServiceCreate(ServiceBase):
     pass
@@ -26,6 +27,8 @@ class ServicesPublic(BaseModel):
     count: int
 
 class AlertConfigBase(BaseModel):
+    has_extra_email: bool | None = False
+    has_teams_slack: bool | None = False
     mail_from: EmailStr | None = Field(None, max_length=255)
     mail_cc: str | None = Field(None, max_length=255)
     mail_to: str | None = Field(None, max_length=255)
@@ -69,8 +72,8 @@ class AlertConfigPublic(AlertConfigBase):
 class PublishConfigBase(BaseModel):
     alert_publish_title: str | None = Field(None, max_length=255)  # Optional
     alert_publish_body: str | None = Field(None)  # Optional
-    influenced_user: bool = False
-    send_mail: bool = True
+    show_influenced_user: bool | None = False
+    send_mail: bool | None = True
 
 class PublishConfigCreate(PublishConfigBase):
     pass
@@ -80,3 +83,18 @@ class PublishConfigPublic(PublishConfigBase):
 class ServiceConfig(ServicePublic):
     alert_config: AlertConfigPublic | None 
     publish_config: PublishConfigPublic | None
+
+class LogPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    start_time: datetime | None
+    end_time: datetime | None
+    elapsed_time: float | None = None
+    is_ok: bool | None
+    screenshot: str | None = None  # URL or path to the screenshot
+    content: str | None = None  # Monitoring logs or messages
+
+class ServiceLogs(ServicePublic):
+
+    logs: list[LogPublic] | None
