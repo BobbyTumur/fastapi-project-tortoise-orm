@@ -10,3 +10,4 @@ asgi-lifespan==2.*
 pytest
 python-multipart==0.0.12
 pyotp
+openai

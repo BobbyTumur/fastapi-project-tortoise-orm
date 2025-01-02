@@ -24,8 +24,8 @@ class User(Model):
 
 class Service(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
-    name = fields.CharField(max_length=255)  # Unique and required
-    sub_name = fields.CharField(max_length=255)  # Unique and required
+    name = fields.CharField(max_length=255)  # required
+    sub_name = fields.CharField(max_length=255)  # required
     has_alert_notification = fields.BooleanField(default=False)
     has_auto_publish = fields.BooleanField(default=False)
     alert_config: fields.OneToOneRelation["AlertConfig"]
@@ -33,6 +33,7 @@ class Service(Model):
     log: fields.ReverseRelation["Log"]
     class Meta:
         table = "services"  # Explicitly set the table name
+        unique_together = (("name", "sub_name"),)
 
 class AlertConfig(Model):
     id = fields.IntField(primary_key=True, auto_increment=True)  # Primary key, auto-incremented

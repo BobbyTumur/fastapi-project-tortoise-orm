@@ -1,13 +1,14 @@
+import uuid
 import pytest
 from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
 from app import crud
 from app.models.db_models import User
-from app.models.user_models import UserCreate
 from app.core.config import settings
 from app.core.security import verify_secret
 from app.tests.utils.user import create_random_user
+from app.tests.utils.services import create_random_service
 from app.tests.utils.utils import random_email, random_lower_string, random_integer
 
 @pytest.mark.anyio
@@ -54,7 +55,7 @@ async def test_get_existing_user(
 async def test_get_non_existing_user(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    non_existent_user_id = 999999
+    non_existent_user_id = uuid.uuid4()
     r = await client.get(
         f"{settings.API_V1_STR}/users/{non_existent_user_id}",
         headers=superuser_token_headers,
@@ -282,7 +283,7 @@ async def test_update_user(
 async def test_update_non_existing_user(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    non_existent_user_id = 999999
+    non_existent_user_id = uuid.uuid4()
     data = {"username": "Updated_full_name", "is_superuser": "true", "is_active": "false"}
     r = await client.patch(
         f"{settings.API_V1_STR}/users/{non_existent_user_id}",
@@ -341,7 +342,7 @@ async def test_delete_user_me_as_superuser(
 async def test_delete_non_existing_user(
     client: AsyncClient, superuser_token_headers: dict[str, str]
 ) -> None:
-    non_existent_user_id = 999999
+    non_existent_user_id = uuid.uuid4()
     r = await client.delete(
         f"{settings.API_V1_STR}/users/{non_existent_user_id}",
         headers=superuser_token_headers,
@@ -361,3 +362,44 @@ async def test_delete_user_without_privileges(
     )
     assert r.status_code == 403
     assert r.json()["detail"] == "The user doesn't have enough privileges"
+
+@pytest.mark.anyio
+async def test_get_user_services(
+    client: AsyncClient, superuser_token_headers: dict[str, str]
+) -> None:
+    user = await create_random_user()
+    service1 = await create_random_service()
+    service2 = await create_random_service()
+    data = {
+        "added_services": [str(service1.id), str(service2.id)]
+    }
+    r = await client.get(
+        f"{settings.API_V1_STR}/users/{user.id}/services",
+        headers=superuser_token_headers,
+    )
+    assert r.status_code == 200
+
+@pytest.mark.anyio
+async def test_add_services_to_user(
+    client: AsyncClient, superuser_token_headers: dict[str, str]
+) -> None:
+    user = await create_random_user()
+    service1 = await create_random_service()
+    service2 = await create_random_service()
+    data = {
+        "added_services": [str(service1.id), str(service2.id)]
+    }
+    r = await client.patch(
+        f"{settings.API_V1_STR}/users/{user.id}/services",
+        headers=superuser_token_headers,
+        json=data
+    )
+    assert r.status_code == 200
+
+    r = await client.get(
+        f"{settings.API_V1_STR}/users/{user.id}/services",
+        headers=superuser_token_headers,
+    )
+
+    services = r.json()
+    assert sorted(data["added_services"]) == sorted([service["id"] for service in services])

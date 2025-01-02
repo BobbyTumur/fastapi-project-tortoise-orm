@@ -19,6 +19,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutProfileImport } from './routes/_layout/profile'
+import { Route as LayoutChatImport } from './routes/_layout/chat'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 import { Route as LayoutServicesIndexImport } from './routes/_layout/services/index'
 import { Route as LayoutServicesServiceidTemplateImport } from './routes/_layout/services/$service_id/template'
@@ -63,6 +64,11 @@ const LayoutIndexRoute = LayoutIndexImport.update({
 
 const LayoutProfileRoute = LayoutProfileImport.update({
   path: '/profile',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutChatRoute = LayoutChatImport.update({
+  path: '/chat',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -142,6 +148,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/chat': {
+      id: '/_layout/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof LayoutChatImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/profile': {
       id: '/_layout/profile'
       path: '/profile'
@@ -184,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutChatRoute: typeof LayoutChatRoute
   LayoutProfileRoute: typeof LayoutProfileRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutServicesIndexRoute: typeof LayoutServicesIndexRoute
@@ -193,6 +207,7 @@ interface LayoutRouteChildren {
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutChatRoute: LayoutChatRoute,
   LayoutProfileRoute: LayoutProfileRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutServicesIndexRoute: LayoutServicesIndexRoute,
@@ -211,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/setup-password': typeof SetupPasswordRoute
   '/validate-totp': typeof ValidateTotpRoute
   '/admin': typeof LayoutAdminRoute
+  '/chat': typeof LayoutChatRoute
   '/profile': typeof LayoutProfileRoute
   '/': typeof LayoutIndexRoute
   '/services': typeof LayoutServicesIndexRoute
@@ -225,6 +241,7 @@ export interface FileRoutesByTo {
   '/setup-password': typeof SetupPasswordRoute
   '/validate-totp': typeof ValidateTotpRoute
   '/admin': typeof LayoutAdminRoute
+  '/chat': typeof LayoutChatRoute
   '/profile': typeof LayoutProfileRoute
   '/': typeof LayoutIndexRoute
   '/services': typeof LayoutServicesIndexRoute
@@ -241,6 +258,7 @@ export interface FileRoutesById {
   '/setup-password': typeof SetupPasswordRoute
   '/validate-totp': typeof ValidateTotpRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/chat': typeof LayoutChatRoute
   '/_layout/profile': typeof LayoutProfileRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/services/': typeof LayoutServicesIndexRoute
@@ -258,6 +276,7 @@ export interface FileRouteTypes {
     | '/setup-password'
     | '/validate-totp'
     | '/admin'
+    | '/chat'
     | '/profile'
     | '/'
     | '/services'
@@ -271,6 +290,7 @@ export interface FileRouteTypes {
     | '/setup-password'
     | '/validate-totp'
     | '/admin'
+    | '/chat'
     | '/profile'
     | '/'
     | '/services'
@@ -285,6 +305,7 @@ export interface FileRouteTypes {
     | '/setup-password'
     | '/validate-totp'
     | '/_layout/admin'
+    | '/_layout/chat'
     | '/_layout/profile'
     | '/_layout/'
     | '/_layout/services/'
@@ -335,6 +356,7 @@ export const routeTree = rootRoute
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/admin",
+        "/_layout/chat",
         "/_layout/profile",
         "/_layout/",
         "/_layout/services/",
@@ -359,6 +381,10 @@ export const routeTree = rootRoute
     },
     "/_layout/admin": {
       "filePath": "_layout/admin.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/chat": {
+      "filePath": "_layout/chat.tsx",
       "parent": "/_layout"
     },
     "/_layout/profile": {

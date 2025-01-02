@@ -32,7 +32,7 @@ async def login_access_token(
     if user.is_totp_enabled:
         return Token(
             access_token=security.create_access_token(
-                user.id, 
+                subject=user.id, 
                 expires_delta=access_token_expires/3,
                 totp_verified=False
                 ),
@@ -40,8 +40,8 @@ async def login_access_token(
             )
     
     # Generate tokens
-    access_token = security.create_access_token(user.id, expires_delta=access_token_expires, totp_verified=True)
-    refresh_token =  security.create_refresh_token(user.id)
+    access_token = security.create_access_token(subject=user.id, expires_delta=access_token_expires, totp_verified=True)
+    refresh_token =  security.create_refresh_token(subject=user.id)
 
     # Send the refresh token in an HttpOnly cookie
     response.set_cookie(
@@ -72,11 +72,11 @@ async def validate_totp(
     # If TOTP is valid, issue the access token
     # Generate tokens
     access_token = security.create_access_token(
-        current_user.id, 
+        subject=current_user.id, 
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES), 
         totp_verified=True
         )
-    refresh_token =  security.create_refresh_token(current_user.id)
+    refresh_token =  security.create_refresh_token(subject=current_user.id)
 
     # Send the refresh token in an HttpOnly cookie
     response.set_cookie(
@@ -122,9 +122,9 @@ async def refresh_access_token(
     # Generate a new access token and refresh token
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
-        user_id=user.id, expires_delta=access_token_expires, totp_verified=True
+        subject=user.id, expires_delta=access_token_expires, totp_verified=True
     )
-    new_refresh_token = security.create_refresh_token(user_id=user.id)
+    new_refresh_token = security.create_refresh_token(subject=user.id)
 
     # Set the new refresh token as an HttpOnly cookie
     response.set_cookie(

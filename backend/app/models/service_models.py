@@ -73,7 +73,7 @@ class PublishConfigBase(BaseModel):
     alert_publish_title: str | None = Field(None, max_length=255)  # Optional
     alert_publish_body: str | None = Field(None)  # Optional
     show_influenced_user: bool | None = False
-    send_mail: bool | None = True
+    send_mail: bool | None = False
 
 class PublishConfigCreate(PublishConfigBase):
     pass

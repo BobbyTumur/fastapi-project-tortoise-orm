@@ -79,7 +79,7 @@ async def create_service(service_in: ServiceCreate) -> ServicePublic:
     except IntegrityError:
         raise HTTPException(status_code=409, detail="The service already exists")
     
-@router.patch("/", response_model=ServicePublic)
+@router.patch("/{service_id}", response_model=ServicePublic)
 async def update_service(
     service_id: UUID, service_in: ServiceUpdate, current_user: CurrentUser) -> ServicePublic:
     """
@@ -112,10 +112,8 @@ async def delete_service(service_id: UUID) -> Message:
         Service, 
         id=service_id, 
         prefetch_related=["users"])
-    if service:
-        await service.delete()
-    else:
-        raise HTTPException(status_code=404, detail="Service not found")
+
+    await service.delete()
     
     return Message(message="Successfully deleted the service.")
     

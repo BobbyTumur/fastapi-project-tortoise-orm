@@ -42,3 +42,20 @@ async def get_superuser_token_headers(client: AsyncClient) -> dict[str, str]:
     auth_token = tokens["access_token"]
     headers = {"Authorization": f"Bearer {auth_token}"}
     return headers
+
+
+async def create_user_and_login(client: AsyncClient) -> tuple:
+    """Helper function to create a user and return the login token."""
+    email = random_email()
+    username = random_lower_string()
+    password = random_lower_string()
+    user_in_create = UserCreate(email=email, username=username, password=password)
+    user = await crud.create_user(user_create=user_in_create)
+
+    login_data = {"username": user.email, "password": password}
+    r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    token = r.json()
+    auth_token = token["access_token"]
+    headers = {"Authorization": f"Bearer {auth_token}"}
+    
+    return user, headers
