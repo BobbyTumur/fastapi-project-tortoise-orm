@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def MYSQL_DATABASE_URI(self) -> AnyUrl | None:
+        if self.ENVIRONMENT != "local":
             return MultiHostUrl.build(
                 scheme="mysql",
                 username=self.MYSQL_USER,
@@ -54,6 +55,7 @@ class Settings(BaseSettings):
                 port=self.MYSQL_PORT,
                 path=self.MYSQL_DB,
             )
+        return None
     
     @property
     def TORTOISE_ORM(self) -> dict:
