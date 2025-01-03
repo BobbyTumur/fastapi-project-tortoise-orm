@@ -70,12 +70,12 @@ class Settings(BaseSettings):
                 },
             },
         }
-    FIRST_USER_NAME: str | None = None
-    FIRST_SUPERUSER: EmailStr | None = None
+    FIRST_USER_NAME: str = "Maintainer"
+    FIRST_SUPERUSER: EmailStr = "super_user@example.com"
     FIRST_SUPERUSER_PASSWORD: str = secrets.token_urlsafe(8)
 
     EMAILS_FROM_EMAIL: EmailStr | None = None
-    EMAIL_TEST_USER: EmailStr | None = None
+    EMAIL_TEST_USER: EmailStr = "test@example.com"
 
     EMAIL_PASS_SET_UP_TOKEN_EXPIRE_HOURS: int = 24
     EMAIL_PASS_RESET_TOKEN_EXPIRE_MINUTES: int = 30
