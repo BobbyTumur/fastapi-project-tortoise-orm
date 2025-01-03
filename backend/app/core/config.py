@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
-    OPENAI_API_KEY: str
+    OPENAI_API_KEY: str | None = None
 
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
@@ -37,15 +37,15 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]    
     
-    MYSQL_USER: str = "dummy"
-    MYSQL_PASSWORD: str = "string"
-    MYSQL_SERVER: str = "for"
-    MYSQL_DB: str = "actions"
+    MYSQL_USER: str | None = None
+    MYSQL_PASSWORD: str | None = None
+    MYSQL_SERVER: str | None = None
+    MYSQL_DB: str | None = None
     MYSQL_PORT: int = 3306
     
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def MYSQL_DATABASE_URI(self) -> AnyUrl:
+    def MYSQL_DATABASE_URI(self) -> AnyUrl | None:
             return MultiHostUrl.build(
                 scheme="mysql",
                 username=self.MYSQL_USER,
@@ -68,12 +68,12 @@ class Settings(BaseSettings):
                 },
             },
         }
-    FIRST_USER_NAME: str = "Maintainer"
-    FIRST_SUPERUSER: EmailStr = "johndoe@example.com"
+    FIRST_USER_NAME: str | None = None
+    FIRST_SUPERUSER: EmailStr | None = None
     FIRST_SUPERUSER_PASSWORD: str = secrets.token_urlsafe(8)
 
-    EMAILS_FROM_EMAIL: EmailStr = "no-reply@example.com"
-    EMAIL_TEST_USER: EmailStr = "test@example.com"
+    EMAILS_FROM_EMAIL: EmailStr | None = None
+    EMAIL_TEST_USER: EmailStr | None = None
 
     EMAIL_PASS_SET_UP_TOKEN_EXPIRE_HOURS: int = 24
     EMAIL_PASS_RESET_TOKEN_EXPIRE_MINUTES: int = 30
