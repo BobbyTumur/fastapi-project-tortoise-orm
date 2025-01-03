@@ -5,6 +5,8 @@ from asgi_lifespan import LifespanManager
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
+from unittest.mock import Mock
+
 from app.main import app 
 from app.core.config import settings
 from app.tests.utils.user import get_superuser_token_headers, get_normal_user_token_headers
@@ -31,6 +33,9 @@ async def client() -> ClientManagerType:
     async with client_manager(app) as c:
         yield c
 
+@pytest.fixture(autouse=True)
+def mock_openai_client(mocker):
+    mocker.patch("app.api.routes.websocket.AsyncOpenAI", Mock())
 
 @pytest.fixture(scope="module")
 async def superuser_token_headers(client: AsyncClient) -> dict[str, str]:
