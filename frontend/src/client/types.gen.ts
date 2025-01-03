@@ -235,18 +235,18 @@ export type ServicesCreateServiceData = {
 
 export type ServicesCreateServiceResponse = ServicePublic;
 
+export type ServicesGetServiceData = {
+	serviceId: string;
+};
+
+export type ServicesGetServiceResponse = ServicePublic;
+
 export type ServicesUpdateServiceData = {
 	requestBody: ServiceUpdate;
 	serviceId: string;
 };
 
 export type ServicesUpdateServiceResponse = ServicePublic;
-
-export type ServicesGetServiceData = {
-	serviceId: string;
-};
-
-export type ServicesGetServiceResponse = ServicePublic;
 
 export type ServicesDeleteServiceData = {
 	serviceId: string;

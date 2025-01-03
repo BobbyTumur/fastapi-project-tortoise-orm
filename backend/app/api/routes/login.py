@@ -195,7 +195,7 @@ async def set_up_password(body: NewPassword) -> Message:
 
     if settings.emails_enabled and user.email:
         email_data = utils.generate_new_account_email(
-            email_to=user.email, username=user.email, password=body.new_password
+            email_to=user.email, username=user.email
         )
         await utils.send_email(
             email_to=user.email,

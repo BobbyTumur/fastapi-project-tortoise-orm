@@ -54,16 +54,15 @@ async def send_email(
 
 
 def generate_new_account_email(
-    email_to: str, username: str, password: str
+    email_to: str, username: str
 ) -> EmailData:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New account for user {username}"
     html_content = render_email_template(
         template_name="new_account.html",
         context={
-            "project_name": settings.PROJECT_NAME,
+            "project_name": project_name,
             "username": username,
-            "password": password,
             "email": email_to,
             "link": settings.FRONTEND_HOST,
         },
@@ -75,7 +74,7 @@ def generate_test_email(email_to: str) -> EmailData:
     subject = f"{project_name} - Test email"
     html_content = render_email_template(
         template_name="test_email.html",
-        context={"project_name": settings.PROJECT_NAME, "email": email_to},
+        context={"project_name": project_name, "email": email_to},
     )
     return EmailData(html_content=html_content, subject=subject)
 
@@ -89,7 +88,7 @@ def generate_resetup_password_email(*, email_to: str, email: str, token: str, ac
     elif action == "setup":
         subject = f"{project_name} - Password set up for user {email}"
         link = f"{settings.FRONTEND_HOST}/setup-password?token={token}"
-        template = "set_up_password.html"
+        template = "setup_password.html"
         valid_time = settings.EMAIL_PASS_SET_UP_TOKEN_EXPIRE_HOURS
     else:
         raise ValueError("Invalid action. Must be 'reset' or 'setup'.")

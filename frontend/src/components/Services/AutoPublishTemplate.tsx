@@ -96,9 +96,9 @@ const AutoPublishTemplate = ({ service }: AutoPublishTemplateProps) => {
         onSubmit={handleSubmit(onSubmit)}
         overflow={"hidden"}
       >
-        <Flex>
+        <Flex flexDirection={{ base: "column", md: "row" }} gap={6}>
           {/* Left Section */}
-          <Box flex="1" mr={6}>
+          <Box flex="1">
             <Accordion height="vh" allowToggle defaultIndex={0}>
               <AccordionItem>
                 <h2>
@@ -123,7 +123,7 @@ const AutoPublishTemplate = ({ service }: AutoPublishTemplateProps) => {
             </Accordion>
           </Box>
           {/* Right Section */}
-          <Box flex="1" ml={6}>
+          <Box flex="1">
             <Flex mb={4} direction="column">
               <InputGroup mt={4}>
                 <InputLeftAddon>

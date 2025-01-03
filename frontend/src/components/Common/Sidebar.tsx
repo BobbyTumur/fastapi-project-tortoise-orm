@@ -36,10 +36,11 @@ const Sidebar = () => {
           onClick={onOpen}
           display={{ base: "flex", md: "none" }}
           aria-label="Open Menu"
-          position="absolute"
+          position="fixed"
           fontSize="20px"
           m={4}
           icon={<FiMenu />}
+          zIndex={10}
         />
         <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
           <DrawerOverlay />

@@ -1,8 +1,16 @@
-import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  Icon,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { FiUsers } from "react-icons/fi";
 import { IoDocumentsOutline } from "react-icons/io5";
+import { BsChatLeftText } from "react-icons/bs";
 
 import type { UserPublic } from "../../client";
 
@@ -14,7 +22,7 @@ interface MenuItem {
 
 const items: MenuItem[] = [
   { icon: IoDocumentsOutline, title: "Services", path: "/services" },
-  // { icon: FiSettings, title: "User Settings", path: "/settings" },
+  { icon: BsChatLeftText, title: "AI chat", path: "/chat" },
 ];
 
 interface SidebarItemsProps {
@@ -48,7 +56,16 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
       onClick={onClose}
     >
       <Icon as={icon} alignSelf="center" />
-      <Text ml={2}>{title}</Text>
+      {title == "AI chat" ? (
+        <Text ml={2}>
+          {title}{" "}
+          <Badge ml="1" colorScheme="teal">
+            beta
+          </Badge>
+        </Text>
+      ) : (
+        <Text ml={2}>{title}</Text>
+      )}
     </Flex>
   ));
 

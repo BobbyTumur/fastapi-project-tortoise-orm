@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from tortoise import Tortoise
-from tortoise.exceptions import DoesNotExist, IntegrityError
+from tortoise.exceptions import IntegrityError
 from tortoise.contrib.fastapi import RegisterTortoise
 
 from app import crud
@@ -15,15 +15,15 @@ from app.models.user_models import UserCreate
 #Superuser creation
 async def ensure_superuser_exists():
     try:
-        await User.get(email=settings.FIRST_SUPERUSER)
-    except DoesNotExist:
-        user_in = UserCreate(
-            email=settings.FIRST_SUPERUSER,
-            password=settings.FIRST_SUPERUSER_PASSWORD,
-            username=settings.FIRST_USER_NAME,
-            is_superuser=True,
-        )
-        await crud.create_user(user_create=user_in)
+        user = await User.get_or_none(email=settings.FIRST_SUPERUSER)
+        if user is None:
+            user_in = UserCreate(
+                email=settings.FIRST_SUPERUSER,
+                password=settings.FIRST_SUPERUSER_PASSWORD,
+                username=settings.FIRST_USER_NAME,
+                is_superuser=True,
+            )
+            await crud.create_user(user_create=user_in)
     except IntegrityError:
         pass
 

@@ -19,10 +19,10 @@ import type {
 	ServicesGetServicesResponse,
 	ServicesCreateServiceData,
 	ServicesCreateServiceResponse,
-	ServicesUpdateServiceData,
-	ServicesUpdateServiceResponse,
 	ServicesGetServiceData,
 	ServicesGetServiceResponse,
+	ServicesUpdateServiceData,
+	ServicesUpdateServiceResponse,
 	ServicesDeleteServiceData,
 	ServicesDeleteServiceResponse,
 	ServicesGetServiceUsersData,
@@ -238,32 +238,6 @@ export class ServicesService {
 	}
 
 	/**
-	 * Update Service
-	 * Update a service
-	 * @param data The data for the request.
-	 * @param data.serviceId
-	 * @param data.requestBody
-	 * @returns ServicePublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateService(
-		data: ServicesUpdateServiceData,
-	): CancelablePromise<ServicesUpdateServiceResponse> {
-		return __request(OpenAPI, {
-			method: "PATCH",
-			url: "/api/v1/services/",
-			query: {
-				service_id: data.serviceId,
-			},
-			body: data.requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: "Validation Error",
-			},
-		});
-	}
-
-	/**
 	 * Get Service
 	 * List a user that can edit the service
 	 * @param data The data for the request.
@@ -280,6 +254,32 @@ export class ServicesService {
 			path: {
 				service_id: data.serviceId,
 			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Update Service
+	 * Update a service
+	 * @param data The data for the request.
+	 * @param data.serviceId
+	 * @param data.requestBody
+	 * @returns ServicePublic Successful Response
+	 * @throws ApiError
+	 */
+	public static updateService(
+		data: ServicesUpdateServiceData,
+	): CancelablePromise<ServicesUpdateServiceResponse> {
+		return __request(OpenAPI, {
+			method: "PATCH",
+			url: "/api/v1/services/{service_id}",
+			path: {
+				service_id: data.serviceId,
+			},
+			body: data.requestBody,
+			mediaType: "application/json",
 			errors: {
 				422: "Validation Error",
 			},

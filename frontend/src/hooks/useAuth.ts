@@ -36,9 +36,9 @@ const refreshAuthToken = async () => {
     localStorage.setItem("access_token", newAccessToken);
     return newAccessToken;
   } catch (error) {
-    // localStorage.removeItem("access_token");
-    // window.location.href = "/login"; // Redirect on failure
-    // throw error;
+    localStorage.removeItem("access_token");
+    window.location.href = "/login"; // Redirect on failure
+    throw error;
   }
 };
 

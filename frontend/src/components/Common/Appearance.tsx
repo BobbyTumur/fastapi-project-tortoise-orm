@@ -6,7 +6,7 @@ const Appearance = () => {
 
   return (
     <Box
-      display={{ base: "flex", md: "block" }}
+      display={{ base: "none", md: "block" }}
       position="fixed"
       top={4}
       right={20}

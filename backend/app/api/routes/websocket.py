@@ -1,9 +1,8 @@
 from openai import AsyncOpenAI
-from starlette.websockets import WebSocketState
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import AsyncGenerator, NoReturn
-from app.core.config import settings
+from app.api.dep import SocketUser
 
 
 router = APIRouter(prefix="/ws", tags=["websocket"])
@@ -19,8 +18,9 @@ async def get_ai_response(message: str) -> AsyncGenerator[str, None]:
             {
                 "role": "system",
                 "content": (
-                    "You are a helpful assistant, skilled in explaining "
-                    "complex concepts in simple terms."
+                    "You are a helpful assistant."
+                    "Generate a short response."
+                    "Use Markdown where applicable for better readability."
                 ),
             },
             {
@@ -38,14 +38,18 @@ async def get_ai_response(message: str) -> AsyncGenerator[str, None]:
             all_content += content
             yield all_content
 
-@router.websocket("/", dependencies=[])
-async def websocket_openai(websocket: WebSocket) -> NoReturn:
+@router.websocket("/{user_id}")
+async def websocket_openai(websocket: WebSocket, current_user: SocketUser) -> NoReturn:
     """
     Websocket for AI responses
     """
     await websocket.accept()
-
+    # try:
     while True:
-        message = await websocket.receive_text()
-        async for text in get_ai_response(message):
-            await websocket.send_text(text)
+        try:
+            message = await websocket.receive_text()
+            async for text in get_ai_response(message):
+                await websocket.send_text(text)
+
+        except WebSocketDisconnect:
+            return None

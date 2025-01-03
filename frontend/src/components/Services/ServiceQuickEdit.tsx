@@ -81,6 +81,7 @@ const InfoAndQuickEdit = ({ service }: InfoAndQuickEditProps) => {
       gap={4}
       alignItems="center" /* Centers items vertically */
       paddingX={20}
+      flexDirection={{ base: "column-reverse", md: "row" }}
     >
       <Box
         flex="1"
@@ -114,7 +115,11 @@ const InfoAndQuickEdit = ({ service }: InfoAndQuickEditProps) => {
           {t("buttons.update")}
         </Button>
       </Box>
-      <Divider orientation="vertical" h={300} />
+      <Divider
+        display={{ base: "none", md: "unset" }}
+        orientation="vertical"
+        h={300}
+      />
       {/* Part 3 */}
       <Box
         flex="1"

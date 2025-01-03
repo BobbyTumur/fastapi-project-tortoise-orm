@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import {
   Box,
   Container,
@@ -5,78 +6,159 @@ import {
   Textarea,
   SkeletonText,
   Heading,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import useAuth from "../../hooks/useAuth";
+import { UserPublic } from "../../client";
 
 export const Route = createFileRoute("/_layout/chat")({
   component: WebSocketComponent,
 });
 
-const socket = new WebSocket("ws://127.0.0.1:8000/api/v1/ws/");
+function initializeSocket(
+  currentUser: UserPublic,
+  onMessage: (data: string) => void,
+  onError: (error: Event) => void
+): WebSocket | null {
+  const token: string | null = localStorage.getItem("access_token");
+  if (!token) {
+    window.location.href = "/login";
+    return null;
+  }
+
+  const socketUrl = `${import.meta.env.VITE_WS_URL}${currentUser?.id}?token=${token}`;
+  const socket = new WebSocket(socketUrl);
+
+  socket.onmessage = (event) => {
+    onMessage(event.data);
+  };
+
+  socket.onerror = (error: Event) => {
+    console.error("WebSocket error: ", error); // Log WebSocket errors
+    onError(error); // Pass the error event to onError handler
+  };
+
+  socket.onclose = (event) => {
+    if (!event.wasClean) {
+      console.warn("WebSocket connection closed unexpectedly. Reconnecting...");
+      // Avoid multiple reconnect attempts at the same time
+      if (socket.readyState === WebSocket.CLOSED) {
+        setTimeout(
+          () => initializeSocket(currentUser, onMessage, onError),
+          5000
+        ); // Reconnect after 5 seconds
+      }
+    }
+  };
+
+  return socket;
+}
 
 function WebSocketComponent() {
-  const [response, setResponse] = useState<string>(""); // Latest response
+  const { user: currentUser } = useAuth();
+  const bgColor = useColorModeValue("ui.light", "ui.dark");
+  const secBgColor = useColorModeValue("ui.secondary", "ui.darkSlate");
+  const [response, setResponse] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<
     { response: string; prompt: string }[]
-  >([]); // Array to hold prompt and response pairs
+  >([]);
   const [question, setQuestion] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    socket.onmessage = (event) => {
-      setLoading(false);
-      setResponse(event.data); // Update latest response
+    if (!currentUser) return; // Skip if no currentUser
+
+    if (!socket) {
+      const socketInstance = initializeSocket(
+        currentUser,
+        (data) => {
+          setLoading(false);
+          setResponse(data);
+        },
+        (error) => {
+          setLoading(false);
+          console.error("Error in WebSocket connection: ", error);
+        }
+      );
+
+      setSocket(socketInstance);
+    }
+
+    // Cleanup socket on component unmount
+    return () => {
+      socket?.close();
     };
-  }, []);
+  }, [currentUser, socket]); // Include socket in the dependency array
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory, response]);
 
   const handleSendMessage = () => {
-    if (question.trim() !== "" && socket.readyState === WebSocket.OPEN) {
+    if (question.trim() !== "" && socket?.readyState === WebSocket.OPEN) {
       setLoading(true);
       socket.send(question);
-      setQuestion(""); // Clear the input field after sending the message
+      setQuestion("");
       setChatHistory((prevHistory) => [
         ...prevHistory,
-        { response, prompt: question }, // Store both prompt and response
+        { response, prompt: question },
       ]);
+    } else {
+      console.warn("Socket is not open or question is empty.");
     }
   };
 
   return (
     <Container
       maxWidth="full"
-      height="100vh"
       display="flex"
       flexDirection="column"
       centerContent
+      backgroundColor={bgColor}
     >
       <Box
-        width="5xl"
+        width={{ base: "full", lg: "5xl" }}
         justifySelf="center"
         display="flex"
         flexDirection="column"
-        flexGrow={1} // Ensure this box takes up available space
+        flexGrow={1}
       >
-        {/* Display chat history */}
-        <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={12}>
+        <Heading
+          size="lg"
+          textAlign={{ base: "center", lg: "left" }}
+          position="fixed"
+          paddingY={4}
+          width={{ base: "full", lg: "5xl" }}
+          backgroundColor={bgColor}
+        >
           AI Assistant
         </Heading>
-        <Box flex="1" overflowY="auto" display="flex" flexDirection="column">
+        <Box
+          flex="1"
+          overflowY="auto"
+          display="flex"
+          flexDirection="column"
+          pt={20}
+        >
           {chatHistory.map((item, index) => (
             <Box key={index} mb={4} display="flex" flexDirection="column">
-              {/* Left-aligned prompt */}
-              <Text p={2} paddingX={4}>
-                {item.response}
-              </Text>
+              <Box display="flex" width="70%" flexDirection="column" gap={1}>
+                <ReactMarkdown>{item.response}</ReactMarkdown>
+              </Box>
               <Box display="flex" justifyContent="flex-end">
                 <Text
-                  textAlign="right"
-                  bg="gray.100"
+                  width="70%"
+                  bg={secBgColor}
                   borderRadius="3xl"
                   maxWidth="fit-content"
                   display="inline-block"
                   paddingY={2}
                   paddingX={4}
+                  marginTop={4}
                 >
                   {item.prompt}
                 </Text>
@@ -85,27 +167,32 @@ function WebSocketComponent() {
           ))}
           {loading && <SkeletonText noOfLines={3} gap="4" />}
           {!loading && response && (
-            <Text p={2} paddingX={4}>
-              {response}
-            </Text>
+            <Box display="flex" width="70%" flexDirection="column">
+              <ReactMarkdown>{response}</ReactMarkdown>
+            </Box>
           )}
+          <div ref={bottomRef}></div>
         </Box>
       </Box>
 
       {/* Textarea at the bottom of the screen */}
       <Textarea
-        width="5xl"
+        id="chat-input"
+        name="chatInput"
+        width={{ base: "full", lg: "5xl" }}
         variant="filled"
+        spellCheck="false"
         borderRadius="3xl"
         paddingX={4}
-        paddingY={2}
+        paddingY={4}
+        marginTop={8}
         marginBottom={4}
         border="none"
         size="md"
         resize="none"
         placeholder="Ask me anything"
         value={question}
-        disabled={loading}
+        disabled={loading || !socket}
         onChange={(e) => setQuestion(e.target.value)}
         onKeyUp={(e) => {
           if (e.key === "Enter") {
@@ -113,12 +200,12 @@ function WebSocketComponent() {
           }
         }}
         _focus={{
-          background: "gray.100",
+          background: secBgColor,
           border: "none",
           outline: "none",
         }}
         _active={{
-          background: "gray.100",
+          background: secBgColor,
           border: "none",
           outline: "none",
         }}
