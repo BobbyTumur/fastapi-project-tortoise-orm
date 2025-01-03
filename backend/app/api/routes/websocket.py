@@ -6,12 +6,20 @@ from app.api.dep import SocketUser
 
 
 router = APIRouter(prefix="/ws", tags=["websocket"])
-client = AsyncOpenAI()
+
+# Lazy initialization for pytest
+client = None
+def get_openai_client():
+    global client
+    if client is None:
+        client = AsyncOpenAI()
+    return client
 
 async def get_ai_response(message: str) -> AsyncGenerator[str, None]:
     """
     OpenAI Response
     """
+    client = get_openai_client()
     response = await client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
