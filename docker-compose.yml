@@ -12,8 +12,6 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./backend/scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-    env_file:
-      - ./.env
     environment:
       - MYSQLDATA=/var/lib/mysql
       - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
@@ -21,56 +19,56 @@ services:
       - MYSQL_DB=${MYSQL_DB?Variable not set}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Variable not set}
 
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   networks:
-  #     - traefik-public
-  #     - default
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - ADMINER_DESIGN=pepa-linha-dark
-  #   labels:
-  #     - traefik.enable=true
-  #     - traefik.docker.network=traefik-public
-  #     - traefik.constraint-label=traefik-public
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.rule=Host(`adminer.${DOMAIN?Variable not set}`)
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.entrypoints=http
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.middlewares=https-redirect
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.rule=Host(`adminer.${DOMAIN?Variable not set}`)
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.entrypoints=https
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls=true
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls.certresolver=myresolver
-  #     - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
-
-  backend:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+  adminer:
+    image: adminer
     restart: always
     networks:
-      # - traefik-public
-      - traefik-internal
+      - traefik-public
+      - default
+    depends_on:
+      - db
+    environment:
+      - ADMINER_DESIGN=pepa-linha-dark
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.rule=Host(`adminer.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.entrypoints=http
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.middlewares=https-redirect
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.rule=Host(`adminer.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls.certresolver=myresolver
+      - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
+
+  backend:
+    # image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    restart: always
+    networks:
+      - traefik-public
+      - default
     depends_on:
       db:
         condition: service_healthy
         restart: true
-    env_file:
-      - ./.env
     environment:
-      - ENVIRONMENT=production
-      # - DOMAIN=${DOMAIN?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT?Variable not set}
+      - PROJECT_NAME=${PROJECT_NAME?Variable not set}
+      - DOMAIN=${DOMAIN?Variable not set}
       - FRONTEND_HOST=https://www.${DOMAIN?Variable not set}
       - BACKEND_CORS_ORIGINS=https://${DOMAIN?Variable not set},https://dashboard.${DOMAIN?Variable not set}, https://www.${DOMAIN?Variable not set}
-      # - SECRET_KEY=${SECRET_KEY?Variable not set}
-      # - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
-      # - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
-      # - SENDGRID_API_KEY=${SENDGRID_API_KEY?Variable not set}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY?Variable not set}
       - MYSQL_SERVER=db
-      # - MYSQL_DB=${MYSQL_DB?Variable not set}
-      # - MYSQL_USER=${MYSQL_USER?Variable not set}
-      # - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
-      # - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL?Variable not set}
-      # - PROJECT_NAME=${PROJECT_NAME?Variable not set}
+      - OPENAI_API_KEY=${OPENAI_API_KEY?Variable not set}
+      - MYSQL_DB=${MYSQL_DB?Variable not set}
+      - MYSQL_USER=${MYSQL_USER?Variable not set}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
+      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL?Variable not set}
+      - PROJECT_NAME=${PROJECT_NAME?Variable not set}
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check/"]
@@ -78,13 +76,13 @@ services:
       timeout: 5s
       retries: 5
 
-    # build:
-    #   context: ./backend
+    build:
+      context: ./backend
 
     labels:
       - traefik.enable=true
-      # - traefik.docker.network=traefik-public
-      # - traefik.constraint-label=traefik-public
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=8000
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`api.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.entrypoints=http
@@ -100,13 +98,14 @@ services:
     restart: always
     networks:
       - traefik-public
-      - traefik-internal
+      - default
     build:
       context: ./frontend
       args:
         - VITE_API_URL=https://api.${DOMAIN?Variable not set}
         - VITE_WS_URL=wss://api.${DOMAIN?Variable not set}/api/v1/ws/
         - NODE_ENV=production
+        - NODE_OPTIONS=--max-old-space-size=1024
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
@@ -145,5 +144,3 @@ networks:
   traefik-public:
     # Allow setting it to false for testing
     external: true
-  traefik-internal:
-    driver: bridge
