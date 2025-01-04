@@ -48,7 +48,7 @@ async def login_access_token(
         key="refresh_token", 
         value=refresh_token, 
         httponly=True, 
-        secure=False,  # HTTPS prod, HTTP local
+        secure=True,  # HTTPS prod, HTTP local
         samesite="None",
         path="/"
     )
@@ -83,7 +83,7 @@ async def validate_totp(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=False,  # Use True for HTTPS in production
+        secure=True,  # Use True for HTTPS in production
         samesite="None",  # Use "None" if CORS is cross-origin and HTTPS is used
         path="/"
     )
@@ -131,7 +131,7 @@ async def refresh_access_token(
         key="refresh_token",
         value=new_refresh_token,
         httponly=True,
-        secure=False,  # Use True for HTTPS in production
+        secure=True,  # Use True for HTTPS in production
         samesite="None",  # Use "None" if CORS is cross-origin and HTTPS is used
         path="/"
     )

@@ -45,7 +45,7 @@ services:
   #     - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
 
   backend:
-    # image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     restart: always
     networks:
       # - traefik-public
@@ -78,8 +78,8 @@ services:
       timeout: 5s
       retries: 5
 
-    build:
-      context: ./backend
+    # build:
+    #   context: ./backend
 
     labels:
       - traefik.enable=true
@@ -105,7 +105,7 @@ services:
       context: ./frontend
       args:
         - VITE_API_URL=https://api.${DOMAIN?Variable not set}
-        - VITE_WS_URL=ws://api.${DOMAIN?Variable not set}/api/v1/ws/
+        - VITE_WS_URL=wss://api.${DOMAIN?Variable not set}/api/v1/ws/
         - NODE_ENV=production
     labels:
       - traefik.enable=true
