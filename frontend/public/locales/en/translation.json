@@ -34,7 +34,8 @@
         "subName": "Sub Name",
         "viewEditTemplate": "View or Edit Template",
         "viewLog": "View Log",
-        "placeholder": "placeholder"
+        "placeholder": "placeholder",
+        "healthCheck": "Health Check"
 
     },
     "titles": {
@@ -64,7 +65,7 @@
     "texts": {
         "totpIsEnabled": "MFA is already set up",
         "totpIsDisabled": "MFA is not set up yet",
-        "admin": "Admin: Every permission",
+        "admin": "Admin: All permission",
         "tier1": "Tier1: Read permission",
         "tier2": "Tier2: Write permission"
     },
@@ -82,7 +83,8 @@
         "reset": "Reset",
         "save": "Save",
         "previous": "Previous",
-        "next": "Next"
+        "next": "Next",
+        "execute": "Execute"
     },
     "required": {
         "totpRequired": "OTP code is required",
@@ -136,16 +138,17 @@
         "userUpdate": "User updated successfully.",
         "passwordUpdate": "Password updated successfully.",
         "userCreateSuccess": "User created successfully.",
-        "userCreated": "We sent an email with a link to the user to set up password",
+        "userCreated": "We sent an email with a link to the user to set up password.",
         "userDeleted": "The user was deleted successfully.",
         "error": "An error occurred.",
-        "totpDisabled": "The MFA was disabled successfully",
-        "totpEnabled": "The MFA was enabled successfully",
-        "totpErrorDetail": "Failed to disable MFA",
+        "totpDisabled": "The MFA was disabled successfully.",
+        "totpEnabled": "The MFA was enabled successfully.",
+        "totpErrorDetail": "Failed to disable MFA.",
         "errorDetail": " deletion has failed.",
-        "serviceCreated": "Service created successfully",
-        "serviceDeleted": "Service deleted successfully",
-        "templateUpdated": "Template updated successfully"
+        "serviceCreated": "Service created successfully.",
+        "serviceDeleted": "Service deleted successfully.",
+        "templateUpdated": "Template updated successfully.",
+        "healthCheck": "Health Check process is done, please check resources."
     },
 
 
@@ -205,5 +208,12 @@
         "extraMailTo": "For different scenarios, use this address.",
         "extraMailBody": "For different scenarios, use this body.",
         "notYetImplemented": "Not yet implemented"
+    },
+    "healthCheck": {
+        "warning": {
+            "Sendgrid": "This would send an email through Sendgrid to your account",
+            "Firebase": "This would send non silent push notification to every devices"
+        },
+        "agree": "Do you agree"
     }
 }
