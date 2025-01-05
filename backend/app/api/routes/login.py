@@ -101,13 +101,13 @@ async def refresh_access_token(
     # Check if the refresh token exists in cookies
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
-        raise HTTPException(status_code=400, detail="Refresh token missing")
+        raise HTTPException(status_code=401, detail="Refresh token missing")
     
     # Validate and decode the refresh token
     try:
         payload = security.decode_jwt_token(refresh_token)
     except security.InvalidTokenError:
-        raise HTTPException(status_code=400, detail="Invalid or expired refresh token")
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
     # Extract user ID from the token payload
     user_id = payload.get("sub")
@@ -169,7 +169,7 @@ async def reset_password(body: NewPassword) -> Message:
     """
     email = utils.verify_password_reset_token(token=body.token)
     if not email:
-        raise HTTPException(status_code=400, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token")
     user = await crud.get_or_404(User, email=email)
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
@@ -185,7 +185,7 @@ async def set_up_password(body: NewPassword) -> Message:
     """
     email = utils.verify_password_reset_token(token=body.token)
     if not email:
-        raise HTTPException(status_code=400, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token")
     user = await crud.get_or_404(User, email=email)
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")

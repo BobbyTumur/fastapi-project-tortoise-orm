@@ -11,3 +11,4 @@ pytest
 python-multipart==0.0.12
 pyotp
 openai
+tomli_w

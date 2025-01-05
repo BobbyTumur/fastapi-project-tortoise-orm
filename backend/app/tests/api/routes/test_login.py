@@ -154,7 +154,7 @@ async def test_reset_password_invalid_token(client: AsyncClient) -> None:
     response = r.json()
 
     assert "detail" in response
-    assert r.status_code == 400
+    assert r.status_code == 401
     assert response["detail"] == "Invalid token"
 
 @pytest.mark.anyio
@@ -191,5 +191,5 @@ async def test_setup_password_invalid_token(client: AsyncClient) -> None:
     response = r.json()
 
     assert "detail" in response
-    assert r.status_code == 400
+    assert r.status_code == 401
     assert response["detail"] == "Invalid token"
