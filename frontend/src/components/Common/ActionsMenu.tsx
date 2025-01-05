@@ -13,6 +13,7 @@ import {
   FiFolder,
   FiFileText,
   FiClipboard,
+  FiActivity,
 } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
@@ -21,6 +22,7 @@ import type { UserPublic, ServicePublic } from "../../client";
 import EditUser from "../Admin/EditUser";
 import EditUserService from "../Admin/EditUserService";
 import Delete from "./DeleteAlert";
+import HealthCheck from "../Services/HealthCheck";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface ActionsMenuProps {
@@ -32,6 +34,7 @@ interface ActionsMenuProps {
 const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
   const editModal = useDisclosure();
   const editUserServiceModal = useDisclosure();
+  const healthCheckModal = useDisclosure();
   const deleteModal = useDisclosure();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -99,6 +102,17 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
               >
                 {t("common.viewEditTemplate")}
               </MenuItem>
+              <MenuItem
+                onClick={healthCheckModal.onOpen}
+                icon={<FiActivity fontSize="16px" />}
+              >
+                {t("common.healthCheck")}
+              </MenuItem>
+              <HealthCheck
+                service={value as ServicePublic}
+                isOpen={healthCheckModal.isOpen}
+                onClose={healthCheckModal.onClose}
+              />
             </>
           )}
           {currentUser?.is_superuser && (
