@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # Minutes
     REFRESH_TOKEN_EXPIRE_HOURS: int = 1  # Hours
     FRONTEND_HOST: str = "http://localhost:5173"
-    ENVIRONMENT: Literal["local", "staging", "production"] = "local"
+    ENVIRONMENT: Literal["testing", "local", "staging", "production"] = "testing"
 
     OPENAI_API_KEY: str | None = None
 
@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def MYSQL_DATABASE_URI(self) -> AnyUrl | None:
-        if self.ENVIRONMENT != "local":
+        if self.ENVIRONMENT != "testing":
             return MultiHostUrl.build(
                 scheme="mysql",
                 username=self.MYSQL_USER,
