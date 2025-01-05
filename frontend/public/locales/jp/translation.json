@@ -34,7 +34,8 @@
         "subName": "サブ名",
         "viewEditTemplate": "テンプレート 閲覧・編集",
         "viewLog": "ログ 閲覧",
-        "placeholder": "プレースホルダー"
+        "placeholder": "プレースホルダー",
+        "healthCheck": "正常性確認"
     },
     "titles": {
         "userManagement": "ユーザー管理",
@@ -81,7 +82,8 @@
         "reset": "リセット",
         "save": "保存",
         "previous": "前のページ",
-        "next": "次のページ"
+        "next": "次のページ",
+        "execute": "実行"
     },
     "required": {
         "totpRequired": "OTPコードが必須です。",
@@ -143,7 +145,8 @@
         "totpErrorDetail": "MFAの無効化に失敗しました",
         "serviceCreated": "サービスを追加しました。",
         "serviceDeleted": "サービスを削除しました。",
-        "templateUpdated": "テンプレートを編集しました。"
+        "templateUpdated": "テンプレートを編集しました。",
+        "healthCheck": "正常性確認は完了しました。ご確認ください。"
         
     },
 
@@ -204,5 +207,12 @@
         "extraMailTo": "アラートの結果によって宛先が異なる場合は、このアドレスをご利用ください。",
         "extraMailBody": "アラートの結果によって宛先が異なる場合のメールの本文です。",
         "notYetImplemented": "まだ実施されていません。"
+    },
+    "healthCheck": {
+        "warning": {
+            "Sendgrid": "これは、Sendgridを通してあなたのアカウントにメールを送信します。",
+            "Firebase": "これは、すべてのデバイスに無音プッシュ通知を送信します。"
+        },
+        "agree": "上記を確認済み"
     }
 }
