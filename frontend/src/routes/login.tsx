@@ -95,6 +95,7 @@ function Login() {
             placeholder={t("common.email")}
             type="email"
             required
+            autoComplete="email"
           />
           {errors.username && (
             <FormErrorMessage>{errors.username.message}</FormErrorMessage>
