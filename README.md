@@ -1,20 +1,55 @@
-Fast API with tortoise orm and test with AsyncClient from httpx.
-The tools are same as full-fastapi-template, as it has 
+# FastAPI Backend with Tortoise ORM and Async Functionality
 
-api.example.com
-traefik.example.com
-dashboard.example.com
-adminer.example.com
+## Features
 
-Backend logic differs with the template as:
--there is no signup, instead admin adds the users and users need to set up password upon the invite.
--users can't delete themselves, can't change email which should be done by admins.
--JWT token logic differs as there is authentication whether it's the dependancy token or password reset, setup tokens.
+### Backend Logic
 
-Traefik logic differs with the template as:
--it has DNS challenge with AWS Route 53 access keys rather just TLS challenge.
--regex redirection logic for naked domain to www
+- **User Management**:
+  - No signup functionality; admins add users.
+  - Users receive an invite to set up their password.
+  - Users cannot delete themselves or change their email; these actions are restricted to admins.
+- **Authentication**:
+  - JWT-based authentication with access and refresh tokens.
+  - Refresh tokens are stored as `HttpOnly` cookies for added security.
 
-Later will update README with much greater detail and explanation.
+### API and Database Handling
 
-Anything else want to clarify, contact me at: bobbytumur@gmail.com
+- Fully asynchronous API and database interactions:
+  - **Async API Handling**: Built with FastAPI for high performance.
+  - **Async Database I/O**: Powered by Tortoise ORM with asynchronous database operations.
+- **Testing**:
+  - API routes are tested using `httpx.AsyncClient` for comprehensive and efficient async testing.
+- **WebSocket Endpoint**:
+  - Designed to interact with OpenAI services, enabling real-time communication.
+
+---
+
+## Traefik Configuration
+
+### Features
+
+- **DNS Challenge**:
+  - SSL certificates are automatically managed via DNS challenge using AWS Route 53 access keys.
+- **Redirection**:
+  - Regex-based logic to redirect traffic from the naked domain (`example.com`) to the `www` subdomain (`www.example.com`).
+
+---
+
+## Tools and Technologies
+
+- **Backend**: FastAPI, Tortoise ORM
+- **Testing**: `httpx.AsyncClient`
+- **Authentication**: JWT with `HttpOnly` cookies
+- **WebSockets**: Real-time endpoint for OpenAI integration
+- **Traefik**: Reverse proxy with automatic SSL management and domain redirection
+- **AWS Route 53**: DNS hosting for domain management
+
+---
+
+## Example Use Cases
+
+- Admin invites users to set up their accounts securely.
+- Users access APIs and WebSocket services with robust authentication mechanisms.
+- Traefik handles domain-level redirections and SSL with minimal configuration effort.
+
+This architecture ensures high performance, scalability, and security for modern web applications.
