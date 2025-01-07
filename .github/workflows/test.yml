@@ -3,7 +3,7 @@ name: Test on push
 on:
   push:
     paths:
-      - "backend/**" # Only run when files in the backend directory change
+      - "backend/**"
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10" # Specify your Python version
+          python-version: "3.10"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
