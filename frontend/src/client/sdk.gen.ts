@@ -41,6 +41,14 @@ import type {
 	TotpDisableTotpResponse,
 	TotpAdminDisableTotpData,
 	TotpAdminDisableTotpResponse,
+	UploadGenerateUrlData,
+	UploadGenerateUrlResponse,
+	UploadValidateUrlRouteData,
+	UploadValidateUrlRouteResponse,
+	UploadLoginAccessTokenData,
+	UploadLoginAccessTokenResponse,
+	UploadUploadFileData,
+	UploadUploadFileResponse,
 	UsersReadUsersData,
 	UsersReadUsersResponse,
 	UsersReadUserMeResponse,
@@ -503,6 +511,95 @@ export class TotpService {
 			path: {
 				user_id: data.userId,
 			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+}
+
+export class UploadService {
+	/**
+	 * Generate Url
+	 * @param data The data for the request.
+	 * @param data.requestBody
+	 * @returns ResponseURL Successful Response
+	 * @throws ApiError
+	 */
+	public static generateUrl(
+		data: UploadGenerateUrlData,
+	): CancelablePromise<UploadGenerateUrlResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/upload/generate-url",
+			body: data.requestBody,
+			mediaType: "application/json",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Validate Url Route
+	 * When the customer first clicks the URL, this route validates the token.
+	 * @param data The data for the request.
+	 * @param data.token
+	 * @returns boolean Successful Response
+	 * @throws ApiError
+	 */
+	public static validateUrlRoute(
+		data: UploadValidateUrlRouteData,
+	): CancelablePromise<UploadValidateUrlRouteResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/upload/validate-url",
+			query: {
+				token: data.token,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Login Access Token
+	 * OAuth2 compatible token login, get an access token for future requests
+	 * @param data The data for the request.
+	 * @param data.formData
+	 * @returns Token Successful Response
+	 * @throws ApiError
+	 */
+	public static loginAccessToken(
+		data: UploadLoginAccessTokenData,
+	): CancelablePromise<UploadLoginAccessTokenResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/upload/login/access-token",
+			formData: data.formData,
+			mediaType: "application/x-www-form-urlencoded",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Upload File
+	 * @param data The data for the request.
+	 * @param data.formData
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static uploadFile(
+		data: UploadUploadFileData,
+	): CancelablePromise<UploadUploadFileResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/upload/upload",
+			formData: data.formData,
+			mediaType: "multipart/form-data",
 			errors: {
 				422: "Validation Error",
 			},

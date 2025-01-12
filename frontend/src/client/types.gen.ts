@@ -41,6 +41,19 @@ export type Body_login___login_access_token = {
 	client_secret?: string | null;
 };
 
+export type Body_upload___login_access_token = {
+	grant_type?: string | null;
+	username: string;
+	password: string;
+	scope?: string;
+	client_id?: string | null;
+	client_secret?: string | null;
+};
+
+export type Body_upload___upload_file = {
+	file: Blob | File;
+};
+
 export type HTTPValidationError = {
 	detail?: Array<ValidationError>;
 };
@@ -64,6 +77,11 @@ export type NewPassword = {
 	new_password: string;
 };
 
+export type PromptURL = {
+	company_name: string;
+	expiry_minutes: number;
+};
+
 export type PublishConfigCreate = {
 	alert_publish_title?: string | null;
 	alert_publish_body?: string | null;
@@ -80,6 +98,12 @@ export type PublishConfigPublic = {
 
 export type QRUri = {
 	uri: string;
+};
+
+export type ResponseURL = {
+	url: string;
+	username: string;
+	password: string;
 };
 
 export type ServiceConfig = {
@@ -303,6 +327,30 @@ export type TotpAdminDisableTotpData = {
 };
 
 export type TotpAdminDisableTotpResponse = Message;
+
+export type UploadGenerateUrlData = {
+	requestBody: PromptURL;
+};
+
+export type UploadGenerateUrlResponse = ResponseURL;
+
+export type UploadValidateUrlRouteData = {
+	token: string;
+};
+
+export type UploadValidateUrlRouteResponse = boolean;
+
+export type UploadLoginAccessTokenData = {
+	formData: Body_upload___login_access_token;
+};
+
+export type UploadLoginAccessTokenResponse = Token;
+
+export type UploadUploadFileData = {
+	formData: Body_upload___upload_file;
+};
+
+export type UploadUploadFileResponse = Message;
 
 export type UsersReadUsersData = {
 	limit?: number;
