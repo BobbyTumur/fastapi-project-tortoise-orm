@@ -21,11 +21,20 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(64)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # Minutes
     REFRESH_TOKEN_EXPIRE_HOURS: int = 1  # Hours
+    UPLOAD_TOKEN_EXPIRY_HOURS: int = 9 # Hours
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["testing", "local", "staging", "production"] = "testing"
 
     OPENAI_API_KEY: str | None = None
+    CIPHER_KEY: str | None = None
+    S3_BUCKET_NAME: str | None = None
 
+    @computed_field
+    @property
+    def BASE_URL(self) -> AnyUrl | None:
+        return f"{self.FRONTEND_HOST}/validate"
+
+    
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
     ] = []
