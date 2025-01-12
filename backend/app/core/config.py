@@ -1,6 +1,7 @@
 import secrets
 from typing import Annotated, Any, Literal
 
+from cryptography.fernet import Fernet
 from pydantic import BeforeValidator, computed_field, AnyUrl, EmailStr
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -26,7 +27,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: Literal["testing", "local", "staging", "production"] = "testing"
 
     OPENAI_API_KEY: str | None = None
-    CIPHER_KEY: str | None = None
+    CIPHER_KEY: str = Fernet.generate_key()
     S3_BUCKET_NAME: str | None = None
 
     @computed_field
