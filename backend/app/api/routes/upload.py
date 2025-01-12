@@ -1,7 +1,6 @@
 import boto3, time, secrets, string, json
 from typing import Annotated
 from uuid import UUID
-import logging
 
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -119,46 +118,23 @@ async def upload_file(
     file: UploadFile = File(...)
 ) -> Message:
     try:
-        logging.info(f"File received: {file.filename}")
-        logging.info(f"Uploader's company name: {current_uploader.company_name}")
-
-        # Validate inputs
-        if not file.filename or not current_uploader.company_name:
-            raise ValueError("Invalid file name or company name")
-
         # Read the file content
         file_content = await file.read()
-        logging.info(f"File content size: {len(file_content) if file_content else 'None'}")
-
-        # Validate file content
-        if not file_content:
-            raise ValueError("File content is empty")
-
-        # Construct file location
         file_location = f"問い合わせ/{file.filename}-{current_uploader.company_name}"
-        logging.info(f"Constructed file location: {file_location}")
-
-        # Ensure valid content type
-        content_type = file.content_type or "application/octet-stream"
-        logging.info(f"File content type: {content_type}")
 
         # Upload the file to S3
         s3_client.put_object(
             Bucket=settings.S3_BUCKET_NAME,
             Key=file_location,
             Body=file_content,
-            ContentType=content_type
+            ContentType=file.content_type
         )
 
         return Message(message="File uploaded successfully")
 
-    except ValueError as ve:
-        logging.error(f"Validation error: {ve}")
-        raise HTTPException(status_code=400, detail=str(ve))
     except NoCredentialsError:
         raise HTTPException(status_code=500, detail="AWS credentials not found")
     except PartialCredentialsError:
         raise HTTPException(status_code=500, detail="Incomplete AWS credentials")
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
