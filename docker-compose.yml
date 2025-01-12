@@ -71,7 +71,9 @@ services:
       - PROJECT_NAME=${PROJECT_NAME?Variable not set}
       - S3_BUCKET_NAME=${S3_BUCKET_NAME?Variable not set}
       - CIPHER_KEY=${CIPHER_KEY?Variable not set}
-
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID?Variable not set}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY?Variable not set}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION?Variable not set}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check"]
       interval: 10s
