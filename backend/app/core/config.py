@@ -29,11 +29,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str | None = None
     CIPHER_KEY: str = Fernet.generate_key()
     S3_BUCKET_NAME: str | None = None
-
-    @computed_field
-    @property
-    def UPLOAD_URL(self) -> AnyUrl | None:
-        return f"{self.FRONTEND_HOST}/validate"
+    UPLOAD_URL: str | None = None
 
     
     BACKEND_CORS_ORIGINS: Annotated[
