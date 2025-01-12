@@ -21,6 +21,8 @@ jobs:
       SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       EMAILS_FROM_EMAIL: ${{ secrets.EMAILS_FROM_EMAIL }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      CIPHER_KEY: ${{ secrets.CIPHER_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

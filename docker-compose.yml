@@ -69,6 +69,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD?Variable not set}
       - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL?Variable not set}
       - PROJECT_NAME=${PROJECT_NAME?Variable not set}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME?Variable not set}
+      - CIPHER_KEY=${CIPHER_KEY?Variable not set}
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check"]
