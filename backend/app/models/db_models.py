@@ -87,3 +87,12 @@ class Log(Model):
 
     class Meta:
         table = "service_logs"
+
+class TempUser(Model):
+    id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
+    name = fields.CharField(max_length=255)  # required
+    pwd = fields.CharField(max_length=255)  # required
+    company_name = fields.CharField(max_length=255) 
+
+    class Meta:
+        table = "temporary_users"
