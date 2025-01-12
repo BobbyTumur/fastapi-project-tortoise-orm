@@ -146,7 +146,7 @@ async def recover_password(email: str) -> Message:
     Password Recovery
     """
     user = await crud.get_or_404(User, email=email)
-    password_reset_token = utils.generate_email_token(email_to_encode=email, action="reset")
+    password_reset_token = utils.generate_utils_token(to_encode=email, action="reset")
     email_data = utils.generate_resetup_password_email(
         email_to=user.email, email=email, token=password_reset_token, action="reset"
     )

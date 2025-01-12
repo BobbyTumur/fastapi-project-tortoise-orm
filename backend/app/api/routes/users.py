@@ -68,7 +68,7 @@ async def register_user(user_in: UserRegister) -> Message:
         user = await crud.create_user(user_create=user_create)
 
         # Generate email token and email data
-        password_setup_token = utils.generate_email_token(email_to_encode=user.email, action="setup")
+        password_setup_token = utils.generate_utils_token(to_encode=user.email, action="setup")
         email_data = utils.generate_resetup_password_email(
             email_to=user.email, email=user.email, token=password_setup_token, action="setup"
         )

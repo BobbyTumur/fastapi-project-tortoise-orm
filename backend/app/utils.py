@@ -105,19 +105,21 @@ def generate_resetup_password_email(*, email_to: str, email: str, token: str, ac
     )
     return EmailData(html_content=html_content, subject=subject)
 
-def generate_email_token(*, email_to_encode: str, action: Literal["reset", "setup"]) -> str:
+def generate_utils_token(*, to_encode: str | Any, action: Literal["reset", "setup", "upload"]) -> str:
     if action == "reset":
         delta = timedelta(minutes=settings.EMAIL_PASS_RESET_TOKEN_EXPIRE_MINUTES)
     elif action == "setup":
         delta = timedelta(hours=settings.EMAIL_PASS_SET_UP_TOKEN_EXPIRE_HOURS)
+    elif action == "upload":
+        delta = timedelta(hours=settings.UPLOAD_TOKEN_EXPIRY_HOURS)
     else:
-        raise ValueError("Invalid action. Must be 'reset' or 'setup'.")
+        raise ValueError("Invalid action. Must be 'reset' or 'setup' or 'upload'.")
 
     now = datetime.now(timezone.utc)
     expires = now + delta
     exp = expires.timestamp()
     encoded_jwt = jwt.encode(
-        {"exp": exp, "nbf": now, "sub": email_to_encode},
+        {"exp": exp, "nbf": now, "sub": str(to_encode)},
         settings.SECRET_KEY,
         algorithm=security.ALGORITHM,
     )

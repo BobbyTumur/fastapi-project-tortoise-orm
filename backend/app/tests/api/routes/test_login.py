@@ -6,7 +6,7 @@ from app import crud, utils
 from app.core import security
 from app.models.db_models import User
 from app.models.user_models import UserCreate
-from app.utils import generate_email_token
+from app.utils import generate_utils_token
 from app.core.config import settings
 from app.core.security import verify_secret, decode_jwt_token
 from app.tests.utils.utils import random_email, random_lower_string
@@ -128,7 +128,7 @@ async def test_recovery_password_non_existing_user(client: AsyncClient) -> None:
 
 @pytest.mark.anyio
 async def test_reset_password(client: AsyncClient) -> None:
-    token = generate_email_token(email_to_encode=settings.FIRST_SUPERUSER, action="reset")
+    token = generate_utils_token(to_encode=settings.FIRST_SUPERUSER, action="reset")
     new_password = random_lower_string()
     data = {"token": token, "new_password": new_password}
     r = await client.post(
@@ -159,7 +159,7 @@ async def test_reset_password_invalid_token(client: AsyncClient) -> None:
 
 @pytest.mark.anyio
 async def test_set_up_password(client: AsyncClient) -> None:
-    token = generate_email_token(email_to_encode=settings.FIRST_SUPERUSER, action="setup")
+    token = generate_utils_token(to_encode=settings.FIRST_SUPERUSER, action="setup")
     new_password = random_lower_string()
     data = {"token": token, "new_password": new_password}
     mock_email_response = AsyncMock()
