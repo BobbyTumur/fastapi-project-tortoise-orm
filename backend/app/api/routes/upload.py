@@ -1,6 +1,7 @@
 import boto3, time, secrets, string, json
 from typing import Annotated
 from uuid import UUID
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -121,6 +122,10 @@ async def upload_file(
         # Read the file content
         file_content = await file.read()
 
+        logging.info(f"File received: {file.filename}")
+        logging.info(f"Uploader's company name: {current_uploader.company_name}")
+
+
         # Upload the file to S3
         file_location = f"問い合わせ/{file.filename}-{current_uploader.company_name}"
         s3_client.put_object(
@@ -137,4 +142,5 @@ async def upload_file(
     except PartialCredentialsError:
         raise HTTPException(status_code=500, detail="Incomplete AWS credentials")
     except Exception as e:
+        logging.error(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
