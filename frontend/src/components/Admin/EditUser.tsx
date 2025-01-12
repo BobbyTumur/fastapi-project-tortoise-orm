@@ -34,11 +34,6 @@ interface EditUserProps {
   onClose: () => void;
 }
 
-// Extend UserUpdate with role
-interface UserUpdateWithRole extends UserUpdate {
-  role: string; // Add the role field
-}
-
 const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   const queryClient = useQueryClient();
   const showToast = useCustomToast();
@@ -46,18 +41,16 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   const [role, setRole] = useState<string>(
     user.is_superuser ? "admin" : user.can_edit ? "tier2" : "tier1"
   );
-
   const {
     register,
     handleSubmit,
     setValue,
     reset,
-    trigger, // Use trigger to manually trigger form validation
     formState: { isSubmitting, isDirty },
-  } = useForm<UserUpdateWithRole>({
+  } = useForm<UserUpdate>({
     mode: "onBlur",
     criteriaMode: "all",
-    defaultValues: { ...user, role }, // Include role in defaultValues
+    defaultValues: { ...user },
   });
 
   const mutation = useMutation({
@@ -81,6 +74,7 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
 
   const onCancel = () => {
     onClose();
+    setRole(user.is_superuser ? "admin" : user.can_edit ? "tier2" : "tier1");
     setTimeout(() => {
       reset();
     }, 1000);
@@ -89,8 +83,17 @@ const EditUser = ({ user, isOpen, onClose }: EditUserProps) => {
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRole = event.target.value;
     setRole(newRole);
-    setValue("role", newRole, { shouldDirty: true }); // Mark field as dirty
-    trigger("role"); // Manually trigger form validation
+
+    if (newRole === "admin") {
+      setValue("is_superuser", true, { shouldDirty: true });
+      setValue("can_edit", false, { shouldDirty: true });
+    } else if (newRole === "tier2") {
+      setValue("is_superuser", false, { shouldDirty: true });
+      setValue("can_edit", true, { shouldDirty: true });
+    } else {
+      setValue("is_superuser", false, { shouldDirty: true });
+      setValue("can_edit", false, { shouldDirty: true });
+    }
   };
 
   return (
