@@ -32,7 +32,7 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def BASE_URL(self) -> AnyUrl | None:
+    def UPLOAD_URL(self) -> AnyUrl | None:
         return f"{self.FRONTEND_HOST}/validate"
 
     
