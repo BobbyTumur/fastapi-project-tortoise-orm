@@ -92,7 +92,9 @@ class TempUser(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
     name = fields.CharField(max_length=255)  # required
     pwd = fields.CharField(max_length=255)  # required
-    company_name = fields.CharField(max_length=255) 
+    company_name = fields.CharField(max_length=255)
+    type = fields.CharField(max_length=10, constraints={"enum": ["download", "upload"]}) 
+    file_name = fields.CharField(max_length=255, null=True)
 
     class Meta:
         table = "temporary_users"
