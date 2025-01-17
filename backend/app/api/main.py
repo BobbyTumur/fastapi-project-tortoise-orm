@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import login, utils, services, users, totp, websocket, upload, user_services
+from app.api.routes import login, utils, services, users, totp, websocket, user_services, file_transfer 
 
 api_router = APIRouter()
 api_router.include_router(login.router)
@@ -10,4 +10,4 @@ api_router.include_router(user_services.router)
 api_router.include_router(services.router)
 api_router.include_router(websocket.router)
 api_router.include_router(utils.router)
-api_router.include_router(upload.router)
+api_router.include_router(file_transfer.router)
