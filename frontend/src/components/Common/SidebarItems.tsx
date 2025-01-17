@@ -9,7 +9,8 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { FiUsers } from "react-icons/fi";
-import { IoDocumentsOutline } from "react-icons/io5";
+import { RiFileTransferLine } from "react-icons/ri";
+import { LuMonitorCog } from "react-icons/lu";
 import { BsChatLeftText } from "react-icons/bs";
 
 import type { UserPublic } from "../../client";
@@ -21,7 +22,8 @@ interface MenuItem {
 }
 
 const items: MenuItem[] = [
-  { icon: IoDocumentsOutline, title: "Services", path: "/services" },
+  { icon: LuMonitorCog, title: "Monitoring", path: "/services" },
+  { icon: RiFileTransferLine, title: "File Transfer", path: "/file-transfer" },
   { icon: BsChatLeftText, title: "AI chat", path: "/chat" },
 ];
 
