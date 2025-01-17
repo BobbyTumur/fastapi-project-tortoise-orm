@@ -4,6 +4,26 @@ import type { CancelablePromise } from "./core/CancelablePromise";
 import { OpenAPI } from "./core/OpenAPI";
 import { request as __request } from "./core/request";
 import type {
+	FileTransferGenerateUrlData,
+	FileTransferGenerateUrlResponse,
+	FileTransferValidateUrlRouteData,
+	FileTransferValidateUrlRouteResponse,
+	FileTransferLoginAccessTokenData,
+	FileTransferLoginAccessTokenResponse,
+	FileTransferUploadFileToCustomerData,
+	FileTransferUploadFileToCustomerResponse,
+	FileTransferUploadFileFromCustomerData,
+	FileTransferUploadFileFromCustomerResponse,
+	FileTransferListFilesData,
+	FileTransferListFilesResponse,
+	FileTransferDownloadFileData,
+	FileTransferDownloadFileResponse,
+	FileTransferDeleteFileData,
+	FileTransferDeleteFileResponse,
+	FileTransferListMyFilesData,
+	FileTransferListMyFilesResponse,
+	FileTransferDownloadMyFileData,
+	FileTransferDownloadMyFileResponse,
 	LoginLoginAccessTokenData,
 	LoginLoginAccessTokenResponse,
 	LoginValidateTotpData,
@@ -41,14 +61,6 @@ import type {
 	TotpDisableTotpResponse,
 	TotpAdminDisableTotpData,
 	TotpAdminDisableTotpResponse,
-	UploadGenerateUrlData,
-	UploadGenerateUrlResponse,
-	UploadValidateUrlRouteData,
-	UploadValidateUrlRouteResponse,
-	UploadLoginAccessTokenData,
-	UploadLoginAccessTokenResponse,
-	UploadUploadFileData,
-	UploadUploadFileResponse,
 	UsersReadUsersData,
 	UsersReadUsersResponse,
 	UsersReadUserMeResponse,
@@ -70,6 +82,236 @@ import type {
 	UtilsTestEmailResponse,
 	UtilsHealthCheckResponse,
 } from "./types.gen";
+
+export class FileTransferService {
+	/**
+	 * Generate Url
+	 * @param data The data for the request.
+	 * @param data.requestBody
+	 * @returns ResponseURL Successful Response
+	 * @throws ApiError
+	 */
+	public static generateUrl(
+		data: FileTransferGenerateUrlData,
+	): CancelablePromise<FileTransferGenerateUrlResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/file-transfer/generate-url",
+			body: data.requestBody,
+			mediaType: "application/json",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Validate Url Route
+	 * When the customer first clicks the URL, this route validates the token.
+	 * @param data The data for the request.
+	 * @param data.token
+	 * @returns boolean Successful Response
+	 * @throws ApiError
+	 */
+	public static validateUrlRoute(
+		data: FileTransferValidateUrlRouteData,
+	): CancelablePromise<FileTransferValidateUrlRouteResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/validate-url",
+			query: {
+				token: data.token,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Login Access Token
+	 * OAuth2 compatible token login, get an access token for future requests
+	 * @param data The data for the request.
+	 * @param data.formData
+	 * @returns Token Successful Response
+	 * @throws ApiError
+	 */
+	public static loginAccessToken(
+		data: FileTransferLoginAccessTokenData,
+	): CancelablePromise<FileTransferLoginAccessTokenResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/file-transfer/login/access-token",
+			formData: data.formData,
+			mediaType: "application/x-www-form-urlencoded",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Upload File To Customer
+	 * Endpoint to upload a file to customer.
+	 * @param data The data for the request.
+	 * @param data.formData
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static uploadFileToCustomer(
+		data: FileTransferUploadFileToCustomerData,
+	): CancelablePromise<FileTransferUploadFileToCustomerResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/file-transfer/upload/to-customer",
+			formData: data.formData,
+			mediaType: "multipart/form-data",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Upload File From Customer
+	 * Endpoint for outside company to upload a file.
+	 * @param data The data for the request.
+	 * @param data.formData
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static uploadFileFromCustomer(
+		data: FileTransferUploadFileFromCustomerData,
+	): CancelablePromise<FileTransferUploadFileFromCustomerResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/file-transfer/upload/from-customer",
+			formData: data.formData,
+			mediaType: "multipart/form-data",
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * List Files
+	 * @param data The data for the request.
+	 * @param data.folder
+	 * @returns S3Object Successful Response
+	 * @throws ApiError
+	 */
+	public static listFiles(
+		data: FileTransferListFilesData,
+	): CancelablePromise<FileTransferListFilesResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/files/{folder}",
+			path: {
+				folder: data.folder,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Download File
+	 * For operator.
+	 * Endpoint to download files.
+	 * file_name: folder/name/file -> Key: transfer/folder/name/file
+	 * @param data The data for the request.
+	 * @param data.fileName
+	 * @returns DownloadUrl Successful Response
+	 * @throws ApiError
+	 */
+	public static downloadFile(
+		data: FileTransferDownloadFileData,
+	): CancelablePromise<FileTransferDownloadFileResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/download/{file_name}",
+			path: {
+				file_name: data.fileName,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Delete File
+	 * For operator.
+	 * Endpoint to delete files.
+	 * file_name: folder/name/file -> Key: transfer/folder/name/file
+	 * @param data The data for the request.
+	 * @param data.fileName
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static deleteFile(
+		data: FileTransferDeleteFileData,
+	): CancelablePromise<FileTransferDeleteFileResponse> {
+		return __request(OpenAPI, {
+			method: "DELETE",
+			url: "/api/v1/file-transfer/delete/{file_name}",
+			path: {
+				file_name: data.fileName,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * List My Files
+	 * Route for outside company to list it's files.
+	 * @param data The data for the request.
+	 * @param data.companyName
+	 * @returns S3Object Successful Response
+	 * @throws ApiError
+	 */
+	public static listMyFiles(
+		data: FileTransferListMyFilesData,
+	): CancelablePromise<FileTransferListMyFilesResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/my-files/{company_name}",
+			path: {
+				company_name: data.companyName,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+
+	/**
+	 * Download My File
+	 * Endpoint for outside company to download it's file.
+	 * @param data The data for the request.
+	 * @param data.fileName
+	 * @returns unknown Successful Response
+	 * @throws ApiError
+	 */
+	public static downloadMyFile(
+		data: FileTransferDownloadMyFileData,
+	): CancelablePromise<FileTransferDownloadMyFileResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/download-my-files/{file_name}",
+			path: {
+				file_name: data.fileName,
+			},
+			errors: {
+				422: "Validation Error",
+			},
+		});
+	}
+}
 
 export class LoginService {
 	/**
@@ -511,95 +753,6 @@ export class TotpService {
 			path: {
 				user_id: data.userId,
 			},
-			errors: {
-				422: "Validation Error",
-			},
-		});
-	}
-}
-
-export class UploadService {
-	/**
-	 * Generate Url
-	 * @param data The data for the request.
-	 * @param data.requestBody
-	 * @returns ResponseURL Successful Response
-	 * @throws ApiError
-	 */
-	public static generateUrl(
-		data: UploadGenerateUrlData,
-	): CancelablePromise<UploadGenerateUrlResponse> {
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/upload/generate-url",
-			body: data.requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: "Validation Error",
-			},
-		});
-	}
-
-	/**
-	 * Validate Url Route
-	 * When the customer first clicks the URL, this route validates the token.
-	 * @param data The data for the request.
-	 * @param data.token
-	 * @returns boolean Successful Response
-	 * @throws ApiError
-	 */
-	public static validateUrlRoute(
-		data: UploadValidateUrlRouteData,
-	): CancelablePromise<UploadValidateUrlRouteResponse> {
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/upload/validate-url",
-			query: {
-				token: data.token,
-			},
-			errors: {
-				422: "Validation Error",
-			},
-		});
-	}
-
-	/**
-	 * Login Access Token
-	 * OAuth2 compatible token login, get an access token for future requests
-	 * @param data The data for the request.
-	 * @param data.formData
-	 * @returns Token Successful Response
-	 * @throws ApiError
-	 */
-	public static loginAccessToken(
-		data: UploadLoginAccessTokenData,
-	): CancelablePromise<UploadLoginAccessTokenResponse> {
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/upload/login/access-token",
-			formData: data.formData,
-			mediaType: "application/x-www-form-urlencoded",
-			errors: {
-				422: "Validation Error",
-			},
-		});
-	}
-
-	/**
-	 * Upload File
-	 * @param data The data for the request.
-	 * @param data.formData
-	 * @returns Message Successful Response
-	 * @throws ApiError
-	 */
-	public static uploadFile(
-		data: UploadUploadFileData,
-	): CancelablePromise<UploadUploadFileResponse> {
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/upload/upload",
-			formData: data.formData,
-			mediaType: "multipart/form-data",
 			errors: {
 				422: "Validation Error",
 			},

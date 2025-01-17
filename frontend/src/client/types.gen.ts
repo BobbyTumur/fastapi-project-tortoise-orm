@@ -32,6 +32,23 @@ export type AlertConfigPublic = {
 	teams_link?: string | null;
 };
 
+export type Body_file_transfer___login_access_token = {
+	grant_type?: string | null;
+	username: string;
+	password: string;
+	scope?: string;
+	client_id?: string | null;
+	client_secret?: string | null;
+};
+
+export type Body_file_transfer___upload_file_from_customer = {
+	file: Blob | File;
+};
+
+export type Body_file_transfer___upload_file_to_customer = {
+	file: Blob | File;
+};
+
 export type Body_login___login_access_token = {
 	grant_type?: string | null;
 	username: string;
@@ -41,17 +58,8 @@ export type Body_login___login_access_token = {
 	client_secret?: string | null;
 };
 
-export type Body_upload___login_access_token = {
-	grant_type?: string | null;
-	username: string;
-	password: string;
-	scope?: string;
-	client_id?: string | null;
-	client_secret?: string | null;
-};
-
-export type Body_upload___upload_file = {
-	file: Blob | File;
+export type DownloadUrl = {
+	url: string;
 };
 
 export type HTTPValidationError = {
@@ -77,10 +85,14 @@ export type NewPassword = {
 	new_password: string;
 };
 
-export type PromptURL = {
+export type PromptUrl = {
 	company_name: string;
-	expiry_minutes: number;
+	expiry_hours: number;
+	type: "download" | "upload";
+	file_name?: string | null;
 };
+
+export type type = "download" | "upload";
 
 export type PublishConfigCreate = {
 	alert_publish_title?: string | null;
@@ -104,6 +116,12 @@ export type ResponseURL = {
 	url: string;
 	username: string;
 	password: string;
+};
+
+export type S3Object = {
+	Key: string;
+	LastModified: string;
+	Size: number;
 };
 
 export type ServiceConfig = {
@@ -213,6 +231,66 @@ export type ValidationError = {
 	msg: string;
 	type: string;
 };
+
+export type FileTransferGenerateUrlData = {
+	requestBody: PromptUrl;
+};
+
+export type FileTransferGenerateUrlResponse = ResponseURL;
+
+export type FileTransferValidateUrlRouteData = {
+	token: string;
+};
+
+export type FileTransferValidateUrlRouteResponse = boolean;
+
+export type FileTransferLoginAccessTokenData = {
+	formData: Body_file_transfer___login_access_token;
+};
+
+export type FileTransferLoginAccessTokenResponse = Token;
+
+export type FileTransferUploadFileToCustomerData = {
+	formData: Body_file_transfer___upload_file_to_customer;
+};
+
+export type FileTransferUploadFileToCustomerResponse = Message;
+
+export type FileTransferUploadFileFromCustomerData = {
+	formData: Body_file_transfer___upload_file_from_customer;
+};
+
+export type FileTransferUploadFileFromCustomerResponse = Message;
+
+export type FileTransferListFilesData = {
+	folder: string;
+};
+
+export type FileTransferListFilesResponse = Array<S3Object>;
+
+export type FileTransferDownloadFileData = {
+	fileName: string;
+};
+
+export type FileTransferDownloadFileResponse = DownloadUrl;
+
+export type FileTransferDeleteFileData = {
+	fileName: string;
+};
+
+export type FileTransferDeleteFileResponse = Message;
+
+export type FileTransferListMyFilesData = {
+	companyName: string;
+};
+
+export type FileTransferListMyFilesResponse = Array<S3Object>;
+
+export type FileTransferDownloadMyFileData = {
+	fileName: string;
+};
+
+export type FileTransferDownloadMyFileResponse = unknown;
 
 export type LoginLoginAccessTokenData = {
 	formData: Body_login___login_access_token;
@@ -327,30 +405,6 @@ export type TotpAdminDisableTotpData = {
 };
 
 export type TotpAdminDisableTotpResponse = Message;
-
-export type UploadGenerateUrlData = {
-	requestBody: PromptURL;
-};
-
-export type UploadGenerateUrlResponse = ResponseURL;
-
-export type UploadValidateUrlRouteData = {
-	token: string;
-};
-
-export type UploadValidateUrlRouteResponse = boolean;
-
-export type UploadLoginAccessTokenData = {
-	formData: Body_upload___login_access_token;
-};
-
-export type UploadLoginAccessTokenResponse = Token;
-
-export type UploadUploadFileData = {
-	formData: Body_upload___upload_file;
-};
-
-export type UploadUploadFileResponse = Message;
 
 export type UsersReadUsersData = {
 	limit?: number;
