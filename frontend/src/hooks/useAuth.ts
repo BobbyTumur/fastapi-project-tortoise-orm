@@ -103,8 +103,8 @@ const useAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: login,
-    onSuccess: (token_class) => {
-      if (token_class === "totp") {
+    onSuccess: (token_type) => {
+      if (token_type === "totp") {
         navigate({ to: "/validate-totp"});
       } else {
         navigate({ to: "/" });
