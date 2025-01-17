@@ -105,15 +105,15 @@ def generate_resetup_password_email(*, email_to: str, email: str, token: str, ac
     )
     return EmailData(html_content=html_content, subject=subject)
 
-def generate_utils_token(*, to_encode: str | Any, action: Literal["reset", "setup", "upload"]) -> str:
+def generate_utils_token(*, to_encode: str | Any, action: Literal["reset", "setup", "file_transfer"]) -> str:
     if action == "reset":
         delta = timedelta(minutes=settings.EMAIL_PASS_RESET_TOKEN_EXPIRE_MINUTES)
     elif action == "setup":
         delta = timedelta(hours=settings.EMAIL_PASS_SET_UP_TOKEN_EXPIRE_HOURS)
-    elif action == "upload":
-        delta = timedelta(hours=settings.UPLOAD_TOKEN_EXPIRY_HOURS)
+    elif action == "file_transfer":
+        delta = timedelta(hours=settings.FILE_TRANSFER_TOKEN_EXPIRY_HOURS)
     else:
-        raise ValueError("Invalid action. Must be 'reset' or 'setup' or 'upload'.")
+        raise ValueError("Invalid action. Must be 'reset' or 'setup' or 'file_transfer'.")
 
     now = datetime.now(timezone.utc)
     expires = now + delta
