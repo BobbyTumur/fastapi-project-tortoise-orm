@@ -82,6 +82,12 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
     };
     mutation.mutate(finalData);
   };
+  const onCancel = () => {
+    onClose();
+    setTimeout(() => {
+      reset();
+    }, 1000);
+  };
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(event.target.value);
@@ -147,7 +153,7 @@ const AddUser = ({ isOpen, onClose }: AddUserProps) => {
             >
               {t("common.save1")}
             </Button>
-            <Button onClick={onClose}>{t("common.cancel")}</Button>
+            <Button onClick={onCancel}>{t("common.cancel")}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

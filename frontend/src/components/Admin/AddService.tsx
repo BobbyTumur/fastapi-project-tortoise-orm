@@ -63,6 +63,13 @@ const AddService = ({ isOpen, onClose }: AddServiceProps) => {
     },
   });
 
+  const onCancel = () => {
+    onClose();
+    setTimeout(() => {
+      reset();
+    }, 1000);
+  };
+
   const onSubmit: SubmitHandler<ServiceCreate> = (data) => {
     mutation.mutate(data);
   };
@@ -134,7 +141,7 @@ const AddService = ({ isOpen, onClose }: AddServiceProps) => {
             >
               {t("buttons.register")}
             </Button>
-            <Button onClick={onClose}>{t("buttons.cancel")}</Button>
+            <Button onClick={onCancel}>{t("buttons.cancel")}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
