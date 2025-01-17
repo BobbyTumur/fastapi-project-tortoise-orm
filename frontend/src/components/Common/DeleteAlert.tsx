@@ -37,7 +37,7 @@ class DeleteEntity {
       this.warning = (
         <span>
           {t("warnings.deleteUserAlert")}{" "}
-          <strong>{t("warnings.permaUserDelete")}</strong>
+          <strong>{t("warnings.permaDelete")}</strong>
         </span>
       );
       this.successMessage = t("toast.userDeleted");
