@@ -35,7 +35,11 @@
         "viewEditTemplate": "View or Edit Template",
         "viewLog": "View Log",
         "placeholder": "placeholder",
-        "healthCheck": "Health Check"
+        "healthCheck": "Health Check",
+        "hour": "hour",
+        "download": "Download",
+        "upload": "Upload",
+        "file": "File"
 
     },
     "titles": {
@@ -51,6 +55,7 @@
         "editUser": "Edit User",
         "deleteUser": "Delete User",
         "deleteService": "Delete Service",
+        "deleteFile": "Delete File",
         "editUserService": "Edit User's Services",
         "disableTotp": "Disable MFA",
         "enableTotp": "Enable MFA",
@@ -60,14 +65,21 @@
         "infoAndQuickEdit": "Quick Edit / Info",
         "peopleWhoCanEdit": "Members who can edit the service",
         "notification": "Notification template",
-        "publish": "Publish template"
+        "publish": "Publish template",
+        "fileTransfer": "File Transfer",
+        "createUrl": "Create URL",
+        "fileTransferred": "Transferred files",
+        "fileToBeTransferred": "Files to be transferred",
+        "uploadFile": "Upload File"
     },
     "texts": {
         "totpIsEnabled": "MFA is already set up",
         "totpIsDisabled": "MFA is not set up yet",
         "admin": "Admin: All permission",
         "tier1": "Tier1: Read permission",
-        "tier2": "Tier2: Write permission"
+        "tier2": "Tier2: Write permission",
+        "fileTransferred": "Transferred files",
+        "fileToBeTransferred": "Files to be transferred"
     },
     "buttons": {
         "enableTotp": "Enable MFA",
@@ -84,12 +96,16 @@
         "save": "Save",
         "previous": "Previous",
         "next": "Next",
-        "execute": "Execute"
+        "execute": "Execute",
+        "create": "Create",
+        "close": "Close",
+        "upload": "Upload"
     },
     "required": {
         "totpRequired": "OTP code is required",
-        "serviceName": "Service name required",
-        "serviceSubName": "Service sub name required"
+        "serviceName": "Service name is required",
+        "serviceSubName": "Service sub name is required",
+        "companyName": "Company name is required"
     },
     "services": {
         "name": "Name",
@@ -125,7 +141,9 @@
         "hasExtraAddress": "Need extra address",
         "hasTeamsAndSlack": "Need Teams & Slack webhooks",
         "hasAlertNotification": "Has Alert Notification",
-        "hasAutoPublish": "Has Auto Publish"
+        "hasAutoPublish": "Has Auto Publish",
+        "companyName": "Company Name",
+        "expiryDuration": "Url Expires in"
 
     },
     "index": {
@@ -148,10 +166,16 @@
         "serviceCreated": "Service created successfully.",
         "serviceDeleted": "Service deleted successfully.",
         "templateUpdated": "Template updated successfully.",
-        "healthCheck": "Health Check process is done, please check resources."
+        "healthCheck": "Health Check process is done, please check resources.",
+        "urlCreated": "URL is created successfully.",
+        "fileDeleted": "File is deleted successfully.",
+        "fileUploaded": "File is uploaded successfully" 
     },
+    "modal": {
+        "createUrl": "URL for customer",
+        "uploadFile": "Upload File"
 
-
+    },
     "error": {
       "oops": "Oops!",
       "somethingWentWrong": "Something went wrong.",
@@ -168,12 +192,13 @@
     },
     "warnings": {
         "deleteUserAlert": "All items associated with this user",
-        "permaUserDelete": "will also be deleted.",
+        "permaDelete": "will be deleted.",
         "disableOtpAlert": "The OTP associated with previous set up",
         "permaOtpDisable": "will no longer be valid.",
         "deleteServiceAlert": "All configs and templates associated with the service",
         "permaServiceDelete": "will also be deleted.",
-        "areYouSure": " Are you sure? This operation cannot be undone."
+        "areYouSure": " Are you sure? This operation cannot be undone.",
+        "deleteFileAlert": "This file on cloud"
     },
     "responses": {
         "recoverPassword": "メールが送信されました。\nパスワードをリセットするためのリンクをメールでお送りしました。\nサクセス"

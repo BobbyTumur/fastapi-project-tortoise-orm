@@ -35,7 +35,11 @@
         "viewEditTemplate": "テンプレート 閲覧・編集",
         "viewLog": "ログ 閲覧",
         "placeholder": "プレースホルダー",
-        "healthCheck": "正常性確認"
+        "healthCheck": "正常性確認",
+        "hour": "時間",
+        "download": "ダウンロード",
+        "upload": "アップロード",
+        "file": "ファイル"
     },
     "titles": {
         "userManagement": "ユーザー管理",
@@ -50,6 +54,7 @@
         "editUser": "ユーザー更新",
         "deleteUser": "ユーザー削除",
         "deleteService": "サービス削除",
+        "deleteFile": "ファイル削除",
         "editUserService": "ユーザーのサービスを編集",
         "disableTotp": "MFAの無効化",
         "enableTotp": "MFAの有効化",
@@ -59,14 +64,21 @@
         "infoAndQuickEdit": "クイック編集 / インフォ",
         "peopleWhoCanEdit": "本テンプレを編集できるメンバー",
         "notification": "通知テンプレ",
-        "publish": "掲載テンプレ"
+        "publish": "掲載テンプレ",
+        "fileTransfer": "ファイル転送",
+        "createUrl": "URL作成",
+        "fileTransferred": "転送されたファイル",
+        "fileToBeTransferred": "転送するファイル",
+        "uploadFile": "アップロード"
     },
     "texts": {
         "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
         "totpIsDisabled": "ワンタイムパスワードが設定されていません。",
         "admin": "管理者: 全ての権限",
         "tier1": "Tier1: 閲覧",
-        "tier2": "Tier2: 閲覧・編集"
+        "tier2": "Tier2: 閲覧・編集",
+        "fileTransferred": "転送されたファイル",
+        "fileToBeTransferred": "転送するファイル"
     },
     "buttons": {
         "enableTotp": "MFAを有効にする",
@@ -83,12 +95,16 @@
         "save": "保存",
         "previous": "前のページ",
         "next": "次のページ",
-        "execute": "実行"
+        "execute": "実行",
+        "create": "作成",
+        "close": "閉じる",
+        "upload": "アップロード"
     },
     "required": {
         "totpRequired": "OTPコードが必須です。",
         "serviceName": "サービス名が必須です。",
-        "serviceSubName": "サービスサブ名が必須です。"
+        "serviceSubName": "サービスサブ名が必須です。",
+        "companyName": "お客さま企業名が必須です。"
     },
     "services": {
         "name": "名",
@@ -124,7 +140,9 @@
         "hasExtraAddress": "別途宛先メールアドレスが必須",
         "hasTeamsAndSlack": "Teams & Slackウェブフックが必須",
         "hasAlertNotification": "メールにてアラート通知が必須",
-        "hasAutoPublish": "自動掲載テンプレートが必須"
+        "hasAutoPublish": "自動掲載テンプレートが必須",
+        "companyName": "お客さま企業名",
+        "expiryDuration": "URLの有効期限"
     },
     "index": {
         "greet": "こんにちは",
@@ -146,10 +164,15 @@
         "serviceCreated": "サービスを追加しました。",
         "serviceDeleted": "サービスを削除しました。",
         "templateUpdated": "テンプレートを編集しました。",
-        "healthCheck": "正常性確認は完了しました。ご確認ください。"
-        
+        "healthCheck": "正常性確認は完了しました。ご確認ください。",
+        "urlCreated": "URLを作成しました。",
+        "fileDeleted": "ファイルを削除しました。",
+        "fileUploaded": "ファイルをアップロードしました。" 
     },
-
+    "modal": {
+        "createUrl":"用URL作成",
+        "uploadFile": "ファイルアップロード"
+    },
     "error": {
         "oops": "おっと!",
         "somethingWentWrong": "何かの問題が発生しました。",
@@ -163,15 +186,17 @@
         "passwordConfirmRequired": "パスワードの確認が必要です。",
         "invalidWebhook": "無効なウェブフックです。",
         "invalidMultiMail": "無効なメールアドレスまたはスペーシングに問題があります。"
+    
     },
     "warnings": {
         "deleteUserAlert": "このユーザーに関連付けられているものすべてが",
-        "permaUserDelete": "削除されます。",
+        "permaDelete": "削除されます。",
         "disableOtpAlert": "既存の設定されたOTPコードが",
         "permaOtpDisable": "使えなくなります。",
         "deleteServiceAlert": "サービスに関連するすべての設定やテンプレートなどが",
         "permaServiceDelete": "削除されます。",
-        "areYouSure": "よろしいですか？この操作を取り消すことはできません。"
+        "areYouSure": "よろしいですか？この操作を取り消すことはできません。",
+        "deleteFileAlert": "このファイルがクラウド上で"
     },
 
     "responses": {
