@@ -22,6 +22,9 @@ import { Route as LayoutProfileImport } from './routes/_layout/profile'
 import { Route as LayoutChatImport } from './routes/_layout/chat'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
 import { Route as LayoutServicesIndexImport } from './routes/_layout/services/index'
+import { Route as LayoutFileTransferIndexImport } from './routes/_layout/file-transfer/index'
+import { Route as LayoutFileTransferOutsideImport } from './routes/_layout/file-transfer/outside'
+import { Route as LayoutFileTransferInsideImport } from './routes/_layout/file-transfer/inside'
 import { Route as LayoutServicesServiceidTemplateImport } from './routes/_layout/services/$service_id/template'
 import { Route as LayoutServicesServiceidLogImport } from './routes/_layout/services/$service_id/log'
 
@@ -79,6 +82,21 @@ const LayoutAdminRoute = LayoutAdminImport.update({
 
 const LayoutServicesIndexRoute = LayoutServicesIndexImport.update({
   path: '/services/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutFileTransferIndexRoute = LayoutFileTransferIndexImport.update({
+  path: '/file-transfer/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutFileTransferOutsideRoute = LayoutFileTransferOutsideImport.update({
+  path: '/file-transfer/outside',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutFileTransferInsideRoute = LayoutFileTransferInsideImport.update({
+  path: '/file-transfer/inside',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -169,6 +187,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/file-transfer/inside': {
+      id: '/_layout/file-transfer/inside'
+      path: '/file-transfer/inside'
+      fullPath: '/file-transfer/inside'
+      preLoaderRoute: typeof LayoutFileTransferInsideImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/file-transfer/outside': {
+      id: '/_layout/file-transfer/outside'
+      path: '/file-transfer/outside'
+      fullPath: '/file-transfer/outside'
+      preLoaderRoute: typeof LayoutFileTransferOutsideImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/file-transfer/': {
+      id: '/_layout/file-transfer/'
+      path: '/file-transfer'
+      fullPath: '/file-transfer'
+      preLoaderRoute: typeof LayoutFileTransferIndexImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/services/': {
       id: '/_layout/services/'
       path: '/services'
@@ -200,6 +239,9 @@ interface LayoutRouteChildren {
   LayoutChatRoute: typeof LayoutChatRoute
   LayoutProfileRoute: typeof LayoutProfileRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutFileTransferInsideRoute: typeof LayoutFileTransferInsideRoute
+  LayoutFileTransferOutsideRoute: typeof LayoutFileTransferOutsideRoute
+  LayoutFileTransferIndexRoute: typeof LayoutFileTransferIndexRoute
   LayoutServicesIndexRoute: typeof LayoutServicesIndexRoute
   LayoutServicesServiceidLogRoute: typeof LayoutServicesServiceidLogRoute
   LayoutServicesServiceidTemplateRoute: typeof LayoutServicesServiceidTemplateRoute
@@ -210,6 +252,9 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutChatRoute: LayoutChatRoute,
   LayoutProfileRoute: LayoutProfileRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutFileTransferInsideRoute: LayoutFileTransferInsideRoute,
+  LayoutFileTransferOutsideRoute: LayoutFileTransferOutsideRoute,
+  LayoutFileTransferIndexRoute: LayoutFileTransferIndexRoute,
   LayoutServicesIndexRoute: LayoutServicesIndexRoute,
   LayoutServicesServiceidLogRoute: LayoutServicesServiceidLogRoute,
   LayoutServicesServiceidTemplateRoute: LayoutServicesServiceidTemplateRoute,
@@ -229,6 +274,9 @@ export interface FileRoutesByFullPath {
   '/chat': typeof LayoutChatRoute
   '/profile': typeof LayoutProfileRoute
   '/': typeof LayoutIndexRoute
+  '/file-transfer/inside': typeof LayoutFileTransferInsideRoute
+  '/file-transfer/outside': typeof LayoutFileTransferOutsideRoute
+  '/file-transfer': typeof LayoutFileTransferIndexRoute
   '/services': typeof LayoutServicesIndexRoute
   '/services/$service_id/log': typeof LayoutServicesServiceidLogRoute
   '/services/$service_id/template': typeof LayoutServicesServiceidTemplateRoute
@@ -244,6 +292,9 @@ export interface FileRoutesByTo {
   '/chat': typeof LayoutChatRoute
   '/profile': typeof LayoutProfileRoute
   '/': typeof LayoutIndexRoute
+  '/file-transfer/inside': typeof LayoutFileTransferInsideRoute
+  '/file-transfer/outside': typeof LayoutFileTransferOutsideRoute
+  '/file-transfer': typeof LayoutFileTransferIndexRoute
   '/services': typeof LayoutServicesIndexRoute
   '/services/$service_id/log': typeof LayoutServicesServiceidLogRoute
   '/services/$service_id/template': typeof LayoutServicesServiceidTemplateRoute
@@ -261,6 +312,9 @@ export interface FileRoutesById {
   '/_layout/chat': typeof LayoutChatRoute
   '/_layout/profile': typeof LayoutProfileRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/file-transfer/inside': typeof LayoutFileTransferInsideRoute
+  '/_layout/file-transfer/outside': typeof LayoutFileTransferOutsideRoute
+  '/_layout/file-transfer/': typeof LayoutFileTransferIndexRoute
   '/_layout/services/': typeof LayoutServicesIndexRoute
   '/_layout/services/$service_id/log': typeof LayoutServicesServiceidLogRoute
   '/_layout/services/$service_id/template': typeof LayoutServicesServiceidTemplateRoute
@@ -279,6 +333,9 @@ export interface FileRouteTypes {
     | '/chat'
     | '/profile'
     | '/'
+    | '/file-transfer/inside'
+    | '/file-transfer/outside'
+    | '/file-transfer'
     | '/services'
     | '/services/$service_id/log'
     | '/services/$service_id/template'
@@ -293,6 +350,9 @@ export interface FileRouteTypes {
     | '/chat'
     | '/profile'
     | '/'
+    | '/file-transfer/inside'
+    | '/file-transfer/outside'
+    | '/file-transfer'
     | '/services'
     | '/services/$service_id/log'
     | '/services/$service_id/template'
@@ -308,6 +368,9 @@ export interface FileRouteTypes {
     | '/_layout/chat'
     | '/_layout/profile'
     | '/_layout/'
+    | '/_layout/file-transfer/inside'
+    | '/_layout/file-transfer/outside'
+    | '/_layout/file-transfer/'
     | '/_layout/services/'
     | '/_layout/services/$service_id/log'
     | '/_layout/services/$service_id/template'
@@ -359,6 +422,9 @@ export const routeTree = rootRoute
         "/_layout/chat",
         "/_layout/profile",
         "/_layout/",
+        "/_layout/file-transfer/inside",
+        "/_layout/file-transfer/outside",
+        "/_layout/file-transfer/",
         "/_layout/services/",
         "/_layout/services/$service_id/log",
         "/_layout/services/$service_id/template"
@@ -393,6 +459,18 @@ export const routeTree = rootRoute
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/file-transfer/inside": {
+      "filePath": "_layout/file-transfer/inside.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/file-transfer/outside": {
+      "filePath": "_layout/file-transfer/outside.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/file-transfer/": {
+      "filePath": "_layout/file-transfer/index.tsx",
       "parent": "/_layout"
     },
     "/_layout/services/": {
