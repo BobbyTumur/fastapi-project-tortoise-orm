@@ -12,7 +12,7 @@ ENV PYTHONPATH=/app
 
 # Install dependencies from requirements.txt and copy necessary files
 COPY pyproject.toml requirements.txt scripts/migrate.sh ./
-# Add this in your Dockerfile before any other commands
+
 RUN apt-get update && apt-get install -y curl
 RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x migrate.sh
