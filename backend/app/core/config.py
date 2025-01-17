@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(64)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # Minutes
     REFRESH_TOKEN_EXPIRE_HOURS: int = 1  # Hours
-    UPLOAD_TOKEN_EXPIRY_HOURS: int = 9 # Hours
+    FILE_TRANSFER_TOKEN_EXPIRY_HOURS: int = 9 # Hours
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["testing", "local", "staging", "production"] = "testing"
 
