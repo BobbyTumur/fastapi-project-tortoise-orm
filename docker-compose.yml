@@ -137,13 +137,13 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls.certresolver=myresolver
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.middlewares=rate-limit-10
 
-  upload:
+  transfer:
     restart: always
     networks:
       - traefik-public
       - default
     build:
-      context: ./upload
+      context: ./transfer
       args:
         - VITE_API_URL=https://api.${DOMAIN?Variable not set}
         - NODE_ENV=production
@@ -153,15 +153,15 @@ services:
       - traefik.docker.network=traefik-public
       - traefik.constraint-label=traefik-public
 
-      - traefik.http.services.${STACK_NAME?Variable not set}-upload.loadbalancer.server.port=80
+      - traefik.http.services.${STACK_NAME?Variable not set}-transfer.loadbalancer.server.port=80
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-upload-http.rule=Host(`upload.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-upload-http.entrypoints=http
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-http.rule=Host(`transfer.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-http.entrypoints=http
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-upload-https.rule=Host(`upload.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-upload-https.entrypoints=https
-      - traefik.http.routers.${STACK_NAME?Variable not set}-upload-https.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-upload-https.tls.certresolver=myresolver
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.rule=Host(`transfer.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.tls.certresolver=myresolver
 
 volumes:
   mysql-data:
