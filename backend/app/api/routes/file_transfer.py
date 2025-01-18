@@ -14,10 +14,10 @@ from app.core.config import settings
 from app.core.security import decode_jwt_token
 from app.models.db_models import TempUser
 from app.models.general_models import Token, Message
-from app.models.file_transfer import ResponseURL, PromptUrl, S3Object, DownloadUrl
+from app.models.file_transfer import ResponseURL, PromptUrl, S3Object, DownloadUrl, TempUserPublic
 
 # Token dependency
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/file-transfer/login/access-token")
 TokenDep = Annotated[str, Depends(reusable_oauth2)]
 
 async def check_temp_user(token: TokenDep):
@@ -25,8 +25,6 @@ async def check_temp_user(token: TokenDep):
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     uploader = await crud.get_or_404(TempUser, id=payload["sub"])
-    if not uploader:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
     return uploader
 
 router = APIRouter(prefix="/file-transfer", tags=["file-transfer"])
@@ -96,6 +94,15 @@ async def validate_url_route(token: str) -> bool:
         return True
     except Exception:
         return False
+    
+@router.get("/me", response_model=TempUserPublic)
+async def get_current_temp_user(
+    current_temp_user: Annotated[TempUser, Depends(check_temp_user)]
+    ) -> TempUserPublic:
+    """
+    Temp user to know what file or what company it has.
+    """
+    return current_temp_user 
 
 @router.post("/login/access-token", response_model=Token)
 async def login_access_token(
@@ -198,6 +205,36 @@ async def list_files(folder: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     
+@router.get("/download/myfile")
+async def download_own_file(
+    current_temp_user: Annotated[TempUser, Depends(check_temp_user)], 
+    ) -> DownloadUrl:
+    """
+    For customer.
+    Endpoint to download own file.
+    file_name: directly fetch from db.
+    """
+    if current_temp_user.type != "download":
+        raise HTTPException(status_code=403, detail="Unauthorized")
+    try:
+        # Fetch the url from S3
+        url = s3_client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": settings.S3_BUCKET_NAME, 
+                "Key": f"{prefix}/{current_temp_user.file_name}",
+                "ResponseContentDisposition": "attachment"
+                },
+            ExpiresIn=30 # Expire in 30s
+            )
+        
+        # Return the url to the client
+        return DownloadUrl(
+            url=url
+        )
+    except Exception as e:
+        return {"error": str(e)}
+    
 @router.get("/download/{file_name:path}")
 async def download_file(
     current_user: CurrentUser, 
@@ -227,6 +264,8 @@ async def download_file(
     except Exception as e:
         return {"error": str(e)}
     
+
+    
 @router.delete("/delete/{file_name:path}", response_model=Message)
 async def delete_file(
     current_user: CurrentUser, 
@@ -249,55 +288,31 @@ async def delete_file(
     except Exception as e:
         return {"error": str(e)}
 
-@router.get(
-    "/my-files/{company_name}", 
-    dependencies=[Depends(check_temp_user)], 
-    response_model=list[S3Object],
-    )
-async def list_my_files(company_name: str):
-    """
-    Route for outside company to list it's files.
-    """
-    try:
-        # Request to the S3
-        response = s3_client.list_objects_v2(
-            Bucket=settings.S3_BUCKET_NAME,
-            Prefix=f"{prefix}/{company_name}/"
-        )
-        object_details = [
-            S3Object(
-                Key=obj['Key'].rsplit('/', 1)[-1],  # /transfer/company/fileName -> fileName
-                LastModified=obj['LastModified'],
-                Size=obj['Size']
-            )
-            for obj in response.get('Contents', []) # /transfer/company 0 bytes, deletion
-            if obj['Size'] > 0
-        ]
-        return object_details
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+# @router.get(
+#     "/my-files/{company_name}", 
+#     dependencies=[Depends(check_temp_user)], 
+#     response_model=list[S3Object],
+#     )
+# async def list_my_files(company_name: str):
+#     """
+#     Route for outside company to list it's files.
+#     """
+#     try:
+#         # Request to the S3
+#         response = s3_client.list_objects_v2(
+#             Bucket=settings.S3_BUCKET_NAME,
+#             Prefix=f"{prefix}/{company_name}/"
+#         )
+#         object_details = [
+#             S3Object(
+#                 Key=obj['Key'].rsplit('/', 1)[-1],  # /transfer/company/fileName -> fileName
+#                 LastModified=obj['LastModified'],
+#                 Size=obj['Size']
+#             )
+#             for obj in response.get('Contents', []) # /transfer/company 0 bytes, deletion
+#             if obj['Size'] > 0
+#         ]
+#         return object_details
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     
-@router.get("/download-my-files/{file_name}")
-async def download_my_file(
-    file_name: str, 
-    current_temp_user: Annotated[TempUser, Depends(check_temp_user)]
-    ):
-    """
-    Endpoint for outside company to download it's file.
-    """
-    try:
-        # Fetch the file from S3
-        s3_object = s3_client.get_object(
-            Bucket=settings.S3_BUCKET_NAME, 
-            Key=f"{prefix}/{current_temp_user.company_name}/{file_name}"
-            )
-        file_stream = io.BytesIO(s3_object["Body"].read())
-        
-        # Stream the file to the client
-        return StreamingResponse(
-            file_stream,
-            media_type="application/octet-stream",
-            headers={"Content-Disposition": f"attachment; filename={file_name}"},
-        )
-    except Exception as e:
-        return {"error": str(e)}
