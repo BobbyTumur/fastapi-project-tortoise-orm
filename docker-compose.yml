@@ -57,7 +57,7 @@ services:
       - DOMAIN=${DOMAIN?Variable not set}
       - FRONTEND_HOST=https://www.${DOMAIN?Variable not set}
       - FILE_TRANSFER_URL=https://transfer.${DOMAIN?Variable not set}/validate
-      - BACKEND_CORS_ORIGINS=https://${DOMAIN?Variable not set},https://dashboard.${DOMAIN?Variable not set}, https://www.${DOMAIN?Variable not set},https://upload.${DOMAIN?Variable not set}
+      - BACKEND_CORS_ORIGINS=https://${DOMAIN?Variable not set},https://dashboard.${DOMAIN?Variable not set}, https://www.${DOMAIN?Variable not set},https://transfer.${DOMAIN?Variable not set}
       - SECRET_KEY=${SECRET_KEY?Variable not set}
       - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
       - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
