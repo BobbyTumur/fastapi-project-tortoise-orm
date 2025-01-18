@@ -7,6 +7,9 @@ import {
   StepsPrevTrigger,
   Text,
   Heading,
+  Flex,
+  Spinner,
+  Highlight,
 } from "@chakra-ui/react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
@@ -31,7 +34,7 @@ import {
 import { Toaster, toaster } from "../components/ui/toaster";
 import {
   FileTransferService,
-  Body_file_transfer___upload_file as fileUpload,
+  Body_file_transfer___upload_file_from_customer as fileUpload,
 } from "../client";
 import { handleError } from "../utils";
 import { useRef, useState } from "react";
@@ -63,11 +66,16 @@ function RouteComponent() {
     setChecked((prevChecked) => !prevChecked);
   };
 
-  const { logout } = useAuth();
+  const { deleteToken, finish, user: currentUser, isLoading } = useAuth();
 
   const handleLogout = async () => {
-    logout();
+    finish();
   };
+
+  const handleDelToken = async () => {
+    deleteToken();
+  };
+
   const stepsNextTriggerRef = useRef<HTMLButtonElement | null>(null);
   const {
     control,
@@ -83,11 +91,12 @@ function RouteComponent() {
   const file = useWatch({ control, name: "file" });
   const mutation = useMutation({
     mutationFn: (data: fileUpload) =>
-      FileTransferService.uploadFile({ formData: data }),
+      FileTransferService.uploadFileFromCustomer({ formData: data }),
     onSuccess: () => {
       stepsNextTriggerRef.current?.click();
       setSuccessful(false);
       setTimeout(() => setSuccessful(true), 1);
+      handleDelToken();
     },
     onError: (err: ApiError) => {
       const errorMessage = handleError(err);
@@ -109,148 +118,169 @@ function RouteComponent() {
   ];
 
   return (
-    <>
-      <Container
-        h="70vh"
-        alignItems="stretch"
-        justifyContent="center"
-        textAlign="center"
-        maxW="460px"
-        centerContent
-      >
-        <Box
-          height="150px"
-          justifyContent="center"
-          display="flex"
-          flexDirection="column"
-        >
-          <Heading>
-            {checked ? "アップロード画面" : "こにちは、お客さま"}
-          </Heading>
-          <Text m={6} display={checked ? "none" : "block"}>
-            こちらはファイル転送するためのツールです。
-            下記の項目を確認し、アップロード
-            <br />
-            画面へお進みください。
-          </Text>
-        </Box>
-        <StepsRoot
-          defaultValue={2}
-          count={2}
-          linear={true}
-          colorPalette={"green"}
-        >
-          <StepsList>
-            <StepsItem index={0} title="確認事項" />
-            <StepsItem index={1} title="アップロード" />
-          </StepsList>
-          <StepsContent index={0} height="300px">
-            <List.Root as="ol" listStyle="decimal" gap={8} mt={8}>
-              {items.map((item, index) => (
-                <List.Item key={index} _marker={{ color: "inherit" }}>
-                  <p key={index}>
-                    {item.split("\n").map((line, lineIndex) => (
-                      <span key={lineIndex}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
-                  </p>
-                </List.Item>
-              ))}
-            </List.Root>
-            <StepsNextTrigger asChild>
-              <Button mt={4} colorPalette="red" onClick={handleCheck}>
-                確認しました
-              </Button>
-            </StepsNextTrigger>
-          </StepsContent>
-          <StepsContent
-            as="form"
-            onSubmit={handleSubmit(onSubmit)}
-            index={1}
-            height="300px"
+    <Container
+      h="70vh"
+      alignItems="stretch"
+      justifyContent="center"
+      textAlign="center"
+      maxW="460px"
+      centerContent
+      mt={4}
+    >
+      {isLoading ? (
+        <Flex justify="center" height="100vh" align="center" width="full">
+          {" "}
+          <Spinner size="xl" color="blackAlpha.50" />
+        </Flex>
+      ) : (
+        <>
+          <Box
+            height="150px"
+            justifyContent="center"
+            display="flex"
+            flexDirection="column"
           >
-            <Controller
-              name="file"
-              control={control}
-              render={({ field }) => (
-                <FileUploadRoot
-                  maxW="xl"
-                  alignItems="stretch"
-                  maxFiles={1}
-                  onFileChange={(event) => {
-                    const acceptedFiles = event.acceptedFiles;
-                    field.onChange(acceptedFiles[0] || null);
-                  }}
-                  disabled={mutation.isPending}
-                >
-                  {!file && (
-                    <FileUploadDropzone
-                      label="Drag and drop"
-                      description="ドラッグ＆ドロップ"
-                    />
-                  )}
-
-                  <FileUploadList clearable />
-                </FileUploadRoot>
-              )}
-            />
-            {errors.file && (
-              <Box color="red.500" mt={2}>
-                {errors.file.message}
-              </Box>
-            )}
-            <VStack>
-              {file ? (
-                <Button
-                  mt={4}
-                  type="submit"
-                  loading={mutation.isPending}
-                  loadingText="アップロード中"
-                >
-                  アップロード
-                </Button>
+            <Heading>
+              {checked ? (
+                "アップロード画面"
               ) : (
-                <StepsPrevTrigger asChild>
-                  <Button colorPalette="red" mt={4} onClick={handleCheck}>
-                    確認事項へ戻る
-                  </Button>
-                </StepsPrevTrigger>
+                <Highlight
+                  query={currentUser?.company_name || ""}
+                  styles={{ px: "0.5", color: "teal" }}
+                >
+                  {`${currentUser?.company_name || ""}さま`}
+                </Highlight>
               )}
-
+            </Heading>
+            <Text m={6} display={checked ? "none" : "block"}>
+              こちらはファイル転送するためのツールです。
+              下記の項目を確認し、アップロード
+              <br />
+              画面へお進みください。
+            </Text>
+          </Box>
+          <StepsRoot
+            defaultValue={2}
+            count={2}
+            linear={true}
+            colorPalette={"green"}
+          >
+            <StepsList>
+              <StepsItem index={0} title="確認事項" />
+              <StepsItem index={1} title="アップロード" />
+            </StepsList>
+            <StepsContent index={0} height="300px">
+              <List.Root as="ol" listStyle="decimal" gap={8} mt={8}>
+                {items.map((item, index) => (
+                  <List.Item key={index} _marker={{ color: "inherit" }}>
+                    <p key={index}>
+                      {item.split("\n").map((line, lineIndex) => (
+                        <span key={lineIndex}>
+                          {line}
+                          <br />
+                        </span>
+                      ))}
+                    </p>
+                  </List.Item>
+                ))}
+              </List.Root>
               <StepsNextTrigger asChild>
-                <Button visibility="hidden" ref={stepsNextTriggerRef}>
-                  Next
+                <Button mt={4} colorPalette="red" onClick={handleCheck}>
+                  確認しました
                 </Button>
               </StepsNextTrigger>
-            </VStack>
-          </StepsContent>
-          <StepsCompletedContent height="300px">
-            {successful && (
-              <>
-                <Text m={6}>ファイル名: {getValues("file")?.name}</Text>
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <AnimatedCheckIcon />
+            </StepsContent>
+            <StepsContent
+              as="form"
+              onSubmit={handleSubmit(onSubmit)}
+              index={1}
+              height="300px"
+            >
+              <Controller
+                name="file"
+                control={control}
+                render={({ field }) => (
+                  <FileUploadRoot
+                    maxW="xl"
+                    alignItems="stretch"
+                    maxFiles={1}
+                    onFileChange={(event) => {
+                      const acceptedFiles = event.acceptedFiles;
+                      field.onChange(acceptedFiles[0] || null);
+                    }}
+                    disabled={mutation.isPending}
+                  >
+                    {!file && (
+                      <FileUploadDropzone
+                        label="Drag and drop"
+                        description="ドラッグ＆ドロップ"
+                      />
+                    )}
+
+                    <FileUploadList clearable />
+                  </FileUploadRoot>
+                )}
+              />
+              {errors.file && (
+                <Box color="red.500" mt={2}>
+                  {errors.file.message}
                 </Box>
-                <Text color="green" m={6}>
-                  <br />
-                  <strong>アップロードが完了しました。</strong>
-                </Text>
-                <Text>
-                  サポート窓口より回答いたしますので、
-                  <br />
-                  しばらくお待ちください。
-                </Text>
-              </>
-            )}
-            <Button mt={4} onClick={handleLogout} colorPalette="red">
-              終了する
-            </Button>
-          </StepsCompletedContent>
-        </StepsRoot>
-        <Toaster />
-      </Container>
-    </>
+              )}
+              <VStack>
+                {file ? (
+                  <Button
+                    mt={4}
+                    type="submit"
+                    loading={mutation.isPending}
+                    loadingText="アップロード中"
+                  >
+                    アップロード
+                  </Button>
+                ) : (
+                  <StepsPrevTrigger asChild>
+                    <Button colorPalette="red" mt={4} onClick={handleCheck}>
+                      確認事項へ戻る
+                    </Button>
+                  </StepsPrevTrigger>
+                )}
+
+                <StepsNextTrigger asChild>
+                  <Button visibility="hidden" ref={stepsNextTriggerRef}>
+                    Next
+                  </Button>
+                </StepsNextTrigger>
+              </VStack>
+            </StepsContent>
+            <StepsCompletedContent height="300px">
+              {successful && (
+                <>
+                  <Text m={6}>ファイル名: {getValues("file")?.name}</Text>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <AnimatedCheckIcon />
+                  </Box>
+                  <Text color="green" m={6}>
+                    <br />
+                    <strong>アップロードが完了しました。</strong>
+                  </Text>
+                  <Text>
+                    サポート窓口より回答いたしますので、
+                    <br />
+                    しばらくお待ちください。
+                  </Text>
+                </>
+              )}
+              <Button mt={4} onClick={handleLogout} colorPalette="red">
+                終了する
+              </Button>
+            </StepsCompletedContent>
+          </StepsRoot>
+        </>
+      )}
+      <Toaster />
+    </Container>
   );
 }
