@@ -44,6 +44,5 @@ docker-compose.test.yml
 docker-compose-adminer.yml
 memo.txt
 
-migrations/
 .pytest__pycache__
 .pytest_cache
