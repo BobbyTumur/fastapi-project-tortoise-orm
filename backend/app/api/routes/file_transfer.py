@@ -42,7 +42,7 @@ def generate_random_url(exp_hours: int, customer_id: UUID) -> str:
     payload = {"exp": expiration_time, "user": str(customer_id)} 
     payload_bytes = json.dumps(payload).encode()
     encrypted_payload = cipher.encrypt(payload_bytes).decode()
-    return f"{settings.UPLOAD_URL}?token={encrypted_payload}"
+    return f"{settings.FILE_TRANSFER_URL}?token={encrypted_payload}"
 
 def generate_random_string(length: int=10) -> str:
     """
