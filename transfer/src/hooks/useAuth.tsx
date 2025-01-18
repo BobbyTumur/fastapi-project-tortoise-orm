@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AxiosError } from "axios";
 
@@ -7,6 +7,7 @@ import {
   type Body_file_transfer___login_access_token as AccessToken,
   type ApiError,
   FileTransferService,
+  TempUserPublic,
 } from "../client";
 
 const isLoggedIn = () => {
@@ -16,6 +17,10 @@ const isLoggedIn = () => {
 const useAuth = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const { data: user, isLoading } = useQuery<TempUserPublic | null, Error>({
+    queryKey: ["currentUser"],
+    queryFn: FileTransferService.getCurrentTempUser,
+  });
 
   const login = async (data: AccessToken) => {
     const response = await FileTransferService.loginAccessToken({
@@ -48,15 +53,20 @@ const useAuth = () => {
       setError(errDetail);
     },
   });
-
-  const logout = (): void => {
+  const deleteToken = (): void => {
     sessionStorage.removeItem("access_token");
+  };
+
+  const finish = (): void => {
     window.location.replace("https://support.ntt.com/");
   };
 
   return {
     loginMutation,
-    logout,
+    deleteToken,
+    finish,
+    user,
+    isLoading,
     error,
     resetError: () => setError(null),
   };
