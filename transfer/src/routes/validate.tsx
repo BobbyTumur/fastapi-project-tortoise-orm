@@ -91,7 +91,7 @@ function Validate() {
         <Fieldset.Root size="lg" maxW="md">
           <Stack>
             <Fieldset.Legend textAlign={"center"}>
-              アップロードツール
+              データ転送ツール
             </Fieldset.Legend>
             <Fieldset.HelperText mb={4} textAlign={"center"}>
               お送りしたログイン情報を入力してください。
