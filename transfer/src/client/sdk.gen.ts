@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { FileTransferGenerateUrlData, FileTransferGenerateUrlResponse, FileTransferValidateUrlRouteData, FileTransferValidateUrlRouteResponse, FileTransferLoginAccessTokenData, FileTransferLoginAccessTokenResponse, FileTransferUploadFileData, FileTransferUploadFileResponse, FileTransferListFilesResponse } from './types.gen';
+import type { FileTransferGenerateUrlData, FileTransferGenerateUrlResponse, FileTransferValidateUrlRouteData, FileTransferValidateUrlRouteResponse, FileTransferGetCurrentTempUserResponse, FileTransferLoginAccessTokenData, FileTransferLoginAccessTokenResponse, FileTransferUploadFileToCustomerData, FileTransferUploadFileToCustomerResponse, FileTransferUploadFileFromCustomerData, FileTransferUploadFileFromCustomerResponse, FileTransferListFilesData, FileTransferListFilesResponse, FileTransferDownloadFileData, FileTransferDownloadFileResponse, FileTransferDownloadOwnFileResponse, FileTransferDeleteFileData, FileTransferDeleteFileResponse } from './types.gen';
 
 export class FileTransferService {
     /**
@@ -47,6 +47,19 @@ export class FileTransferService {
     }
     
     /**
+     * Get Current Temp User
+     * Temp user to know what file or what company it has.
+     * @returns TempUserPublic Successful Response
+     * @throws ApiError
+     */
+    public static getCurrentTempUser(): CancelablePromise<FileTransferGetCurrentTempUserResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/file-transfer/me'
+        });
+    }
+    
+    /**
      * Login Access Token
      * OAuth2 compatible token login, get an access token for future requests
      * @param data The data for the request.
@@ -67,16 +80,37 @@ export class FileTransferService {
     }
     
     /**
-     * Upload File
+     * Upload File To Customer
+     * Endpoint to upload a file to customer.
      * @param data The data for the request.
      * @param data.formData
      * @returns Message Successful Response
      * @throws ApiError
      */
-    public static uploadFile(data: FileTransferUploadFileData): CancelablePromise<FileTransferUploadFileResponse> {
+    public static uploadFileToCustomer(data: FileTransferUploadFileToCustomerData): CancelablePromise<FileTransferUploadFileToCustomerResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/file-transfer/upload',
+            url: '/api/v1/file-transfer/upload/to-customer',
+            formData: data.formData,
+            mediaType: 'multipart/form-data',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Upload File From Customer
+     * Endpoint for outside company to upload a file.
+     * @param data The data for the request.
+     * @param data.formData
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static uploadFileFromCustomer(data: FileTransferUploadFileFromCustomerData): CancelablePromise<FileTransferUploadFileFromCustomerResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/file-transfer/upload/from-customer',
             formData: data.formData,
             mediaType: 'multipart/form-data',
             errors: {
@@ -87,13 +121,82 @@ export class FileTransferService {
     
     /**
      * List Files
+     * @param data The data for the request.
+     * @param data.folder
      * @returns S3Object Successful Response
      * @throws ApiError
      */
-    public static listFiles(): CancelablePromise<FileTransferListFilesResponse> {
+    public static listFiles(data: FileTransferListFilesData): CancelablePromise<FileTransferListFilesResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/file-transfer/files'
+            url: '/api/v1/file-transfer/files/{folder}',
+            path: {
+                folder: data.folder
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Download File
+     * For operator.
+     * Endpoint to download files.
+     * file_name: folder/name/file -> Key: transfer/folder/name/file
+     * @param data The data for the request.
+     * @param data.fileName
+     * @returns DownloadUrl Successful Response
+     * @throws ApiError
+     */
+    public static downloadFile(data: FileTransferDownloadFileData): CancelablePromise<FileTransferDownloadFileResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/file-transfer/download/{file_name}',
+            path: {
+                file_name: data.fileName
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Download Own File
+     * For customer.
+     * Endpoint to download own file.
+     * file_name: directly fetch from db.
+     * @returns DownloadUrl Successful Response
+     * @throws ApiError
+     */
+    public static downloadOwnFile(): CancelablePromise<FileTransferDownloadOwnFileResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/file-transfer/download/myfile'
+        });
+    }
+    
+    /**
+     * Delete File
+     * For operator.
+     * Endpoint to delete files.
+     * file_name: folder/name/file -> Key: transfer/folder/name/file
+     * @param data The data for the request.
+     * @param data.fileName
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static deleteFile(data: FileTransferDeleteFileData): CancelablePromise<FileTransferDeleteFileResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/file-transfer/delete/{file_name}',
+            path: {
+                file_name: data.fileName
+            },
+            errors: {
+                422: 'Validation Error'
+            }
         });
     }
     
