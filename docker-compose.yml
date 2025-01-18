@@ -127,9 +127,11 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.entrypoints=http
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=to-https-www
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.rule=Host(`${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.entrypoints=https
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http-www.middlewares=to-https-www
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https-non-www.rule=Host(`${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https-non-www.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https-non-www.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https-non-www.tls.certresolver=myresolver
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https-non-www.middlewares=to-https-www
 
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.rule=Host(`www.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.entrypoints=https
