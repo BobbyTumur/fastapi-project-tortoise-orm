@@ -71,10 +71,12 @@ function RouteComponent() {
 
             return (
               <Card size="md" variant="outline" key={obj.Key}>
-                <CardHeader as={Flex} flexDirection="row">
-                  <Heading size="xs">{companyName}</Heading>
-                  <Spacer />
-                  <MenuFile fileKey={obj.Key} />
+                <CardHeader>
+                  <Flex>
+                    <Heading size="xs">{companyName}</Heading>
+                    <Spacer />
+                    <MenuFile fileKey={obj.Key} />
+                  </Flex>
                 </CardHeader>
                 <CardBody fontSize="xs">
                   {truncatedFileName}
