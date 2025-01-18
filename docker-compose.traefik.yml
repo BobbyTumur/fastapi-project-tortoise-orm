@@ -22,6 +22,8 @@ services:
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
 
+      - traefik.http.middlewares.rate-limit-10.ratelimit.average=10
+
       # HTTP Router (with middleware to redirect to HTTPS)
       - traefik.http.routers.traefik-dashboard-http.entrypoints=http
       - traefik.http.routers.traefik-dashboard-http.rule=Host(`traefik.${DOMAIN?Variable not set}`)
@@ -35,7 +37,7 @@ services:
       - traefik.http.routers.traefik-dashboard-https.rule=Host(`traefik.${DOMAIN?Variable not set}`)
       - traefik.http.routers.traefik-dashboard-https.tls=true
       - traefik.http.routers.traefik-dashboard-https.tls.certresolver=myresolver
-      - traefik.http.routers.traefik-dashboard-https.middlewares=admin-auth
+      - traefik.http.routers.traefik-dashboard-https.middlewares=admin-auth,rate-limit-10
       # Use the special Traefik service api@internal with the web UI/Dashboard
       - traefik.http.routers.traefik-dashboard-https.service=api@internal
 
