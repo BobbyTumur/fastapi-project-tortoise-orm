@@ -287,32 +287,4 @@ async def delete_file(
         return Message(message="Successfully deleted")
     except Exception as e:
         return {"error": str(e)}
-
-# @router.get(
-#     "/my-files/{company_name}", 
-#     dependencies=[Depends(check_temp_user)], 
-#     response_model=list[S3Object],
-#     )
-# async def list_my_files(company_name: str):
-#     """
-#     Route for outside company to list it's files.
-#     """
-#     try:
-#         # Request to the S3
-#         response = s3_client.list_objects_v2(
-#             Bucket=settings.S3_BUCKET_NAME,
-#             Prefix=f"{prefix}/{company_name}/"
-#         )
-#         object_details = [
-#             S3Object(
-#                 Key=obj['Key'].rsplit('/', 1)[-1],  # /transfer/company/fileName -> fileName
-#                 LastModified=obj['LastModified'],
-#                 Size=obj['Size']
-#             )
-#             for obj in response.get('Contents', []) # /transfer/company 0 bytes, deletion
-#             if obj['Size'] > 0
-#         ]
-#         return object_details
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     
