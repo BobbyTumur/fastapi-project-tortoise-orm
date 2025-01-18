@@ -19,28 +19,28 @@ services:
       - MYSQL_DB=${MYSQL_DB?Variable not set}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Variable not set}
 
-  adminer:
-    image: adminer
-    restart: always
-    networks:
-      - traefik-public
-      - default
-    depends_on:
-      - db
-    environment:
-      - ADMINER_DESIGN=pepa-linha-dark
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.constraint-label=traefik-public
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.rule=Host(`adminer.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.entrypoints=http
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.middlewares=https-redirect
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.rule=Host(`adminer.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.entrypoints=https
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls.certresolver=myresolver
-      - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   networks:
+  #     - traefik-public
+  #     - default
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - ADMINER_DESIGN=pepa-linha-dark
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.docker.network=traefik-public
+  #     - traefik.constraint-label=traefik-public
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.rule=Host(`adminer.${DOMAIN?Variable not set}`)
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.entrypoints=http
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.middlewares=https-redirect
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.rule=Host(`adminer.${DOMAIN?Variable not set}`)
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.entrypoints=https
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls=true
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls.certresolver=myresolver
+  #     - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
 
   backend:
     restart: always
@@ -137,7 +137,6 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls.certresolver=myresolver
-      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.middlewares=rate-limit-10
 
   transfer:
     restart: always
@@ -159,11 +158,13 @@ services:
 
       - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-http.rule=Host(`transfer.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-http.entrypoints=http
+      - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-http.middlewares=https-redirect
 
       - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.rule=Host(`transfer.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-transfer-https.tls.certresolver=myresolver
+      
 
 volumes:
   mysql-data:
