@@ -21,4 +21,4 @@ RUN chmod +x migrate.sh
 COPY ./app /app/app
 
 # ENTRYPOINT to run migrations first, then start the FastAPI server
-ENTRYPOINT ["sh", "-c", "./migrate.sh && fastapi run --workers 1 app/main.py"]
+ENTRYPOINT ["sh", "-c", "./migrate.sh && fastapi run --workers 4 app/main.py"]
