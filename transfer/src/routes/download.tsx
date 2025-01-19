@@ -15,6 +15,7 @@ import {
   Flex,
   Heading,
   Highlight,
+  Link,
   Spinner,
   Text,
   VStack,
@@ -104,7 +105,7 @@ function RouteComponent() {
             </Highlight>
           </Heading>
           <Text m={6}>
-            弊社サポート窓口よりお客へ
+            サイト管理者よりお客へ
             <br />
             以下のファイルが共有されています。
           </Text>
@@ -114,7 +115,10 @@ function RouteComponent() {
             disabled={successful}
           >
             <Collapsible.Trigger paddingY="3" fontStyle={"italic"}>
-              <strong>{currentUser?.file_name}</strong>
+              <Link variant="underline">
+                {" "}
+                <strong>{currentUser?.file_name}</strong>
+              </Link>
             </Collapsible.Trigger>
             <Collapsible.Content>
               <Box padding="4" borderWidth="1px">
@@ -131,7 +135,7 @@ function RouteComponent() {
                     colorPalette={"teal"}
                     disabled={successful}
                   >
-                    確認済み
+                    <strong>確認しました</strong>
                   </Checkbox>
                 </VStack>
               </Box>
@@ -145,7 +149,7 @@ function RouteComponent() {
               onClick={handleMutation}
               disabled={successful}
             >
-              Download
+              ダウンロード
             </Button>
           </Box>
         </>
