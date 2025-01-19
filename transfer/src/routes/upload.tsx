@@ -146,7 +146,7 @@ function RouteComponent() {
               ) : (
                 <Highlight
                   query={currentUser?.company_name || ""}
-                  styles={{ px: "0.5", color: "teal" }}
+                  styles={{ px: "0.5", color: "green.600" }}
                 >
                   {`${currentUser?.company_name || ""}さま`}
                 </Highlight>
