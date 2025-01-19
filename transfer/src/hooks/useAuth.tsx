@@ -20,6 +20,7 @@ const useAuth = () => {
   const { data: user, isLoading } = useQuery<TempUserPublic | null, Error>({
     queryKey: ["currentUser"],
     queryFn: FileTransferService.getCurrentTempUser,
+    enabled: isLoggedIn,
   });
 
   const login = async (data: AccessToken) => {
