@@ -1,9 +1,8 @@
-import boto3, time, secrets, string, json, io
+import boto3, time, secrets, string, json
 from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Path
-from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from cryptography.fernet import Fernet
@@ -24,8 +23,8 @@ async def check_temp_user(token: TokenDep):
     payload = decode_jwt_token(token=token)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
-    uploader = await crud.get_or_404(TempUser, id=payload["sub"])
-    return uploader
+    temp_user = await crud.get_or_404(TempUser, id=payload["sub"])
+    return temp_user
 
 router = APIRouter(prefix="/file-transfer", tags=["file-transfer"])
 s3_client = boto3.client('s3')
@@ -111,11 +110,10 @@ async def login_access_token(
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    temp_user = await crud.get_or_404(
-        TempUser, 
+    temp_user = await TempUser.get_or_none(
         name=form_data.username, 
-        pwd=form_data.password
-        )
+        pwd=form_data.password,
+    )
     if temp_user is None:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     # Generate tokens
@@ -157,18 +155,18 @@ async def upload_file_to_customer(
 
 @router.post("/upload/from-customer", response_model=Message)
 async def upload_file_from_customer(
-    temp_user: Annotated[TempUser, Depends(check_temp_user)], 
+    current_temp_user: Annotated[TempUser, Depends(check_temp_user)], 
     file: UploadFile = File(...)
 ) -> Message:
     """
     Endpoint for outside company to upload a file.
     """
-    if temp_user.type != "upload":
+    if current_temp_user.type != "upload":
         raise HTTPException(status_code=403, detail="Unauthorized")
     try:
         # Read the file content
         file_content = await file.read()
-        file_location = f"{prefix}/from_customer/{temp_user.company_name}/{file.filename}"
+        file_location = f"{prefix}/from_customer/{current_temp_user.company_name}/{file.filename}"
         # Upload the file to S3
         s3_client.put_object(
             Bucket=settings.S3_BUCKET_NAME,
@@ -176,8 +174,9 @@ async def upload_file_from_customer(
             Body=file_content,
             ContentType=file.content_type
         )
+        await current_temp_user.delete()
         return Message(message="File uploaded successfully")
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Please try again later")
 
 @router.get(
@@ -227,6 +226,7 @@ async def download_own_file(
                 },
             ExpiresIn=30 # Expire in 30s
             )
+        await current_temp_user.delete()
         
         # Return the url to the client
         return DownloadUrl(
