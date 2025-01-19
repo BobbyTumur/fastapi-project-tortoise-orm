@@ -153,7 +153,7 @@ const CreateUrl = ({ type, fileKey, isOpen, onClose }: CreateUrlProps) => {
                     {t("forms.expiryDuration")}
                   </FormLabel>
                   <Flex gap={4} alignItems={"center"}>
-                    <NumberInput min={1} max={50} maxW={20}>
+                    <NumberInput min={1} maxW={20}>
                       <NumberInputField
                         id="expiryHours"
                         {...register("expiry_hours")}
