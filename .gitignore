@@ -46,3 +46,4 @@ memo.txt
 
 .pytest__pycache__
 .pytest_cache
+firebase-admin-sdk.json
