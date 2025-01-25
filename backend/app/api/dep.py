@@ -1,6 +1,7 @@
-from typing import Annotated
+import jwt, aioredis
 
-import jwt
+from typing import Annotated
+from fastapi import FastAPI
 from fastapi import Depends, HTTPException, Query, status
 from fastapi.exceptions import WebSocketException
 from fastapi.security import OAuth2PasswordBearer
@@ -12,6 +13,12 @@ from app.core import security
 from app.core.config import settings
 from app.models.db_models import User
 from app.models.general_models import TokenPayLoad
+
+# Redis dependency
+# def get_redis(app: FastAPI) -> aioredis.Redis:
+#     return app.state.redis
+
+# RedisClient = Annotated[aioredis.Redis, Depends(get_redis)]
 
 # Token dependency
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
