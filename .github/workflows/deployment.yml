@@ -37,6 +37,6 @@ jobs:
       - name: Build and Deploy
         run: |
           # Create the firebase-admin-sdk.json file from the secret
-          echo "${{ secrets.FIREBASE_ADMIN_SDK_JSON }}" > ./backend/firebase-admin-sdk.json
+          echo "${{ secrets.FIREBASE_ADMIN_SDK_JSON }}" | base64 -d > ./backend/firebase-admin-sdk.json
           docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_PRODUCTION }} build
           docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_PRODUCTION }} up -d
