@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["testing", "local", "staging", "production"] = "testing"
 
+    @computed_field
+    @property
+    def is_local(self) -> bool:
+        return self.ENVIRONMENT.lower() == "local"
+
     OPENAI_API_KEY: str | None = None
     CIPHER_KEY: str = Fernet.generate_key()
     S3_BUCKET_NAME: str | None = None
@@ -63,6 +68,24 @@ class Settings(BaseSettings):
             )
         return None
     
+    # REDIS_DB: str = "0"
+    # REDIS_PORT: int = 6379
+    
+    # @computed_field  # type: ignore[prop-decorator]
+    # @property
+    # def REDIS_DATABASE_URI(self) -> str | None:
+    #     if self.ENVIRONMENT != "testing":
+    #         url = MultiHostUrl.build(
+    #             scheme="redis",
+    #             username=self.MYSQL_USER,
+    #             password=self.MYSQL_PASSWORD,
+    #             host=self.MYSQL_SERVER,
+    #             port=self.REDIS_PORT,
+    #             path=self.REDIS_DB,
+    #         )
+    #         return str(url)
+    #     return None
+
     @property
     def TORTOISE_ORM(self) -> dict:
         return {
@@ -76,6 +99,7 @@ class Settings(BaseSettings):
                 },
             },
         }
+    
     FIRST_USER_NAME: str = "Maintainer"
     FIRST_SUPERUSER: EmailStr = "super_user@example.com"
     FIRST_SUPERUSER_PASSWORD: str = secrets.token_urlsafe(8)
@@ -92,6 +116,6 @@ class Settings(BaseSettings):
     @property
     def emails_enabled(self) -> bool:
         return bool(self.SENDGRID_API_KEY and self.EMAILS_FROM_EMAIL)
-
+    
 settings = Settings()
 tortoise_orm = settings.TORTOISE_ORM
