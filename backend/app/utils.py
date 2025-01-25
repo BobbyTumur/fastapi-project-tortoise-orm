@@ -1,20 +1,18 @@
-import logging
+import logging, jwt, random, string
 from datetime import timedelta, datetime, timezone
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
-
-
-
-import jwt
 from jinja2 import Template
 from jwt.exceptions import InvalidTokenError
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from firebase_admin import messaging, exceptions
 
 from app.core import security
 from app.core.config import settings
 from app.models.db_models import User
+from app.models.db_models import FcmToken
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -48,8 +46,8 @@ async def send_email(
     try:
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
         response = sg.send(message)
-        return response
-    except Exception as e:
+        return response.status_code
+    except Exception:
         return None
 
 
@@ -175,4 +173,45 @@ async def check_privileges(*, user: User, service_id: int, privilege: str = "rea
     
     return False  # Default fallback
 
+
+# 通知IDに使用するランドムジェネレーター
+def generate_short_id(length: int = 6) -> str:
+    """Generate a short, numeric ID."""
+    return ''.join(random.choices(string.digits, k=length))
+
+def create_message(id: str, registration_token: str, is_silent: bool) -> messaging.Message:
+    common_data = {
+        "notification_id": id,
+        "body": "無音通知" if is_silent else "音付き通知",
+    }
+    if is_silent:
+        return messaging.Message(
+            data=common_data,
+            token=registration_token,
+            android=messaging.AndroidConfig(priority="high", ttl=3600),
+            apns=messaging.APNSConfig(
+                payload=messaging.APNSPayload(
+                    aps=messaging.Aps(content_available=True)
+                )
+            ),
+        )
+    else:
+        return messaging.Message(
+            notification=messaging.Notification(
+                title="正常生確認", body="サーバから通知されました。"
+            ),
+            token=registration_token,
+            data=common_data,
+        )
+
+async def send_notif(id: str, registration_tokens: list, is_silent: bool = False):
+    all_result = ""
+    for registration_token in registration_tokens:
+        try:
+            message = create_message(id, registration_token, is_silent)
+            messaging.send(message)
+            all_result += f"Sent: {registration_token[:5]}"
+        except Exception as e:
+            all_result += f"Error: {registration_token[:5]}: {str(e)}"
+    return all_result
 
