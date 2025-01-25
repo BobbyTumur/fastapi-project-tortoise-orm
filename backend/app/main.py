@@ -14,6 +14,8 @@ app = FastAPI(
     lifespan=lifespan,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
+    docs_url="/" if settings.is_local else None,
+    redoc_url=None,
     )
 
 # Set all CORS enabled origins
