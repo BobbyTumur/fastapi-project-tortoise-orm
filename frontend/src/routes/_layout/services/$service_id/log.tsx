@@ -19,6 +19,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { z } from "zod";
+import { format } from "date-fns";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ServicesService } from "../../../../client";
@@ -90,23 +91,20 @@ function LogsTable() {
         <Table size={{ base: "sm", md: "sm" }} align="center">
           <Thead>
             <Tr>
-              <Th width="15%" textAlign="center">
+              <Th width="20%" textAlign="center">
                 {t("logs.startTime")}
               </Th>
-              <Th width="15%" textAlign="center">
+              <Th width="20%" textAlign="center">
                 {t("logs.endTime")}
               </Th>
-              <Th width="15%" textAlign="center">
+              <Th width="20%" textAlign="center">
                 {t("logs.elapsedTime")}
               </Th>
-              <Th width="15%" textAlign="center">
+              <Th width="20%" textAlign="center">
                 {t("logs.status")}
               </Th>
-              <Th width="15%" textAlign="center">
-                {t("logs.content")}
-              </Th>
               <Th width="20%" textAlign="center">
-                {t("logs.screenshot")}
+                {t("logs.content")}
               </Th>
             </Tr>
           </Thead>
@@ -137,9 +135,15 @@ function LogsTable() {
               {service?.logs?.map((log) => (
                 <Tr key={log.id}>
                   <Td color={!log.id ? "ui.dim" : "inherit"} textAlign="center">
-                    {log.start_time}
+                    {log.start_time
+                      ? format(new Date(log.start_time), "MM/dd HH:mm")
+                      : "-"}
                   </Td>
-                  <Td textAlign="center">{log.end_time}</Td>
+                  <Td textAlign="center">
+                    {log.end_time
+                      ? format(new Date(log.end_time), "MM/dd HH:mm")
+                      : "-"}
+                  </Td>
                   <Td textAlign="center">{log.elapsed_time}</Td>
                   <Td>
                     <Flex gap={2} justify="center">
