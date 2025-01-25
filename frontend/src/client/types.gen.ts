@@ -80,6 +80,13 @@ export type Message = {
 	message: string;
 };
 
+export type MessageFromClient = {
+	token: string;
+	os: string;
+	notification_id: string;
+	is_silent: boolean;
+};
+
 export type NewPassword = {
 	token: string;
 	new_password: string;
@@ -172,9 +179,29 @@ export type ServiceUpdate = {
 	has_auto_publish?: boolean;
 };
 
+export type TempUserPublic = {
+	id: string;
+	company_name: string;
+	file_name?: string | null;
+};
+
 export type Token = {
 	access_token: string;
 	token_type?: string;
+};
+
+export type TokenIn = {
+	token: string;
+};
+
+export type TokenOut = {
+	token: string;
+	id: number;
+};
+
+export type TokensOut = {
+	data: Array<TokenOut>;
+	count: number;
 };
 
 export type TOTPToken = {
@@ -244,6 +271,8 @@ export type FileTransferValidateUrlRouteData = {
 
 export type FileTransferValidateUrlRouteResponse = boolean;
 
+export type FileTransferGetCurrentTempUserResponse = TempUserPublic;
+
 export type FileTransferLoginAccessTokenData = {
 	formData: Body_file_transfer___login_access_token;
 };
@@ -268,6 +297,8 @@ export type FileTransferListFilesData = {
 
 export type FileTransferListFilesResponse = Array<S3Object>;
 
+export type FileTransferDownloadOwnFileResponse = DownloadUrl;
+
 export type FileTransferDownloadFileData = {
 	fileName: string;
 };
@@ -280,17 +311,23 @@ export type FileTransferDeleteFileData = {
 
 export type FileTransferDeleteFileResponse = Message;
 
-export type FileTransferListMyFilesData = {
-	companyName: string;
+export type FirebaseHealthCheckResponse = Message;
+
+export type FirebaseHealthCheckPhoneResponse = Message;
+
+export type FirebaseReceiveMessageData = {
+	requestBody: MessageFromClient;
 };
 
-export type FileTransferListMyFilesResponse = Array<S3Object>;
+export type FirebaseReceiveMessageResponse = Message;
 
-export type FileTransferDownloadMyFileData = {
-	fileName: string;
+export type FirebaseGetTokensResponse = TokensOut;
+
+export type FirebaseRegisterTokenData = {
+	requestBody: TokenIn;
 };
 
-export type FileTransferDownloadMyFileResponse = unknown;
+export type FirebaseRegisterTokenResponse = Message;
 
 export type LoginLoginAccessTokenData = {
 	formData: Body_login___login_access_token;

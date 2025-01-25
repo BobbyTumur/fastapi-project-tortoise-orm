@@ -8,6 +8,7 @@ import type {
 	FileTransferGenerateUrlResponse,
 	FileTransferValidateUrlRouteData,
 	FileTransferValidateUrlRouteResponse,
+	FileTransferGetCurrentTempUserResponse,
 	FileTransferLoginAccessTokenData,
 	FileTransferLoginAccessTokenResponse,
 	FileTransferUploadFileToCustomerData,
@@ -16,14 +17,18 @@ import type {
 	FileTransferUploadFileFromCustomerResponse,
 	FileTransferListFilesData,
 	FileTransferListFilesResponse,
+	FileTransferDownloadOwnFileResponse,
 	FileTransferDownloadFileData,
 	FileTransferDownloadFileResponse,
 	FileTransferDeleteFileData,
 	FileTransferDeleteFileResponse,
-	FileTransferListMyFilesData,
-	FileTransferListMyFilesResponse,
-	FileTransferDownloadMyFileData,
-	FileTransferDownloadMyFileResponse,
+	FirebaseHealthCheckResponse,
+	FirebaseHealthCheckPhoneResponse,
+	FirebaseReceiveMessageData,
+	FirebaseReceiveMessageResponse,
+	FirebaseGetTokensResponse,
+	FirebaseRegisterTokenData,
+	FirebaseRegisterTokenResponse,
 	LoginLoginAccessTokenData,
 	LoginLoginAccessTokenResponse,
 	LoginValidateTotpData,
@@ -129,6 +134,19 @@ export class FileTransferService {
 	}
 
 	/**
+	 * Get Current Temp User
+	 * Temp user to know what file or what company it has.
+	 * @returns TempUserPublic Successful Response
+	 * @throws ApiError
+	 */
+	public static getCurrentTempUser(): CancelablePromise<FileTransferGetCurrentTempUserResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/me",
+		});
+	}
+
+	/**
 	 * Login Access Token
 	 * OAuth2 compatible token login, get an access token for future requests
 	 * @param data The data for the request.
@@ -217,6 +235,21 @@ export class FileTransferService {
 	}
 
 	/**
+	 * Download Own File
+	 * For customer.
+	 * Endpoint to download own file.
+	 * file_name: directly fetch from db.
+	 * @returns DownloadUrl Successful Response
+	 * @throws ApiError
+	 */
+	public static downloadOwnFile(): CancelablePromise<FileTransferDownloadOwnFileResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/file-transfer/download/myfile",
+		});
+	}
+
+	/**
 	 * Download File
 	 * For operator.
 	 * Endpoint to download files.
@@ -265,24 +298,48 @@ export class FileTransferService {
 			},
 		});
 	}
+}
 
+export class FirebaseService {
 	/**
-	 * List My Files
-	 * Route for outside company to list it's files.
-	 * @param data The data for the request.
-	 * @param data.companyName
-	 * @returns S3Object Successful Response
+	 * Health Check
+	 * @returns Message Successful Response
 	 * @throws ApiError
 	 */
-	public static listMyFiles(
-		data: FileTransferListMyFilesData,
-	): CancelablePromise<FileTransferListMyFilesResponse> {
+	public static healthCheck(): CancelablePromise<FirebaseHealthCheckResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
-			url: "/api/v1/file-transfer/my-files/{company_name}",
-			path: {
-				company_name: data.companyName,
-			},
+			url: "/api/v1/firebase/all",
+		});
+	}
+
+	/**
+	 * Health Check Phone
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static healthCheckPhone(): CancelablePromise<FirebaseHealthCheckPhoneResponse> {
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/firebase/my-health",
+		});
+	}
+
+	/**
+	 * Receive Message
+	 * @param data The data for the request.
+	 * @param data.requestBody
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static receiveMessage(
+		data: FirebaseReceiveMessageData,
+	): CancelablePromise<FirebaseReceiveMessageResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/firebase/reply",
+			body: data.requestBody,
+			mediaType: "application/json",
 			errors: {
 				422: "Validation Error",
 			},
@@ -290,22 +347,32 @@ export class FileTransferService {
 	}
 
 	/**
-	 * Download My File
-	 * Endpoint for outside company to download it's file.
-	 * @param data The data for the request.
-	 * @param data.fileName
-	 * @returns unknown Successful Response
+	 * Get Tokens
+	 * @returns TokensOut Successful Response
 	 * @throws ApiError
 	 */
-	public static downloadMyFile(
-		data: FileTransferDownloadMyFileData,
-	): CancelablePromise<FileTransferDownloadMyFileResponse> {
+	public static getTokens(): CancelablePromise<FirebaseGetTokensResponse> {
 		return __request(OpenAPI, {
 			method: "GET",
-			url: "/api/v1/file-transfer/download-my-files/{file_name}",
-			path: {
-				file_name: data.fileName,
-			},
+			url: "/api/v1/firebase/tokens",
+		});
+	}
+
+	/**
+	 * Register Token
+	 * @param data The data for the request.
+	 * @param data.requestBody
+	 * @returns Message Successful Response
+	 * @throws ApiError
+	 */
+	public static registerToken(
+		data: FirebaseRegisterTokenData,
+	): CancelablePromise<FirebaseRegisterTokenResponse> {
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/firebase/register-token",
+			body: data.requestBody,
+			mediaType: "application/json",
 			errors: {
 				422: "Validation Error",
 			},
