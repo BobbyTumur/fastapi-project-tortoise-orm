@@ -69,7 +69,11 @@
         "createUrl": "URL作成",
         "fileTransferred": "転送されたファイル",
         "fileToBeTransferred": "転送するファイル",
-        "uploadFile": "アップロード"
+        "uploadFile": "アップロード",
+        "aiChat": "生成AI",
+        "monitoring": "監視",
+        "transfer": "転送",
+        "management": "管理"
     },
     "texts": {
         "totpIsEnabled": "ワンタイムパスワードが既に設定されています。",
@@ -236,8 +240,8 @@
     "healthCheck": {
         "warning": {
             "Sendgrid": "これは、Sendgridを通してあなたのアカウントにメールを送信します。",
-            "Firebase": "これは、すべてのデバイスに無音プッシュ通知を送信します。"
+            "Firebase": "これは、Firebaseを通してあなたのデバイスにプッシュ通知を送信します。"
         },
-        "agree": "上記を確認済み"
+        "agree": "確認しました"
     }
 }

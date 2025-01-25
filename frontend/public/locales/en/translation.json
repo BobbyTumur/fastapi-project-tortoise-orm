@@ -40,7 +40,6 @@
         "download": "Download",
         "upload": "Upload",
         "file": "File"
-
     },
     "titles": {
         "userManagement": "User Management",
@@ -70,7 +69,11 @@
         "createUrl": "Create URL",
         "fileTransferred": "Transferred files",
         "fileToBeTransferred": "Files to be transferred",
-        "uploadFile": "Upload File"
+        "uploadFile": "Upload File",
+        "aiChat": "AI Chat",
+        "monitoring": "Monitoring",
+        "transfer": "Transfer",
+        "management": "Management"
     },
     "texts": {
         "totpIsEnabled": "MFA is already set up",
