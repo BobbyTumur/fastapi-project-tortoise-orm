@@ -12,15 +12,15 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
   type ApiError,
+  FirebaseService,
   type ServicePublic,
   UserPublic,
   UtilsService,
-  UtilsTestEmailData,
 } from "../../client";
 import useCustomToast from "../../hooks/useCustomToast";
 import { handleError } from "../../utils";
@@ -38,18 +38,18 @@ const HealthCheck = ({ service, isOpen, onClose }: HealthCheckProps) => {
   const showToast = useCustomToast();
   const { t } = useTranslation();
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<UtilsTestEmailData>({
-    mode: "onBlur",
-    criteriaMode: "all",
-    defaultValues: { emailTo: currentUser?.email },
-  });
+  const { handleSubmit } = useForm();
 
   const mutation = useMutation({
-    mutationFn: (data: UtilsTestEmailData) =>
-      UtilsService.testEmail({ emailTo: data.emailTo }),
+    mutationFn: async () => {
+      if (service.name === "Sendgrid") {
+        await UtilsService.testEmail({ emailTo: currentUser?.email || "" });
+      } else if (service.name === "Firebase") {
+        await FirebaseService.healthCheckPhone();
+      } else {
+        throw new Error(`Unexpected service`);
+      }
+    },
     onSuccess: () => {
       showToast(t("toast.success"), t("toast.healthCheck"), "success");
       onClose();
@@ -59,8 +59,8 @@ const HealthCheck = ({ service, isOpen, onClose }: HealthCheckProps) => {
     },
   });
 
-  const onSubmit: SubmitHandler<UtilsTestEmailData> = async (data) => {
-    mutation.mutate(data);
+  const onSubmit = async () => {
+    mutation.mutate();
   };
 
   const onCancel = () => {
@@ -104,8 +104,8 @@ const HealthCheck = ({ service, isOpen, onClose }: HealthCheckProps) => {
             <Button
               variant="primary"
               type="submit"
-              isLoading={isSubmitting}
-              isDisabled={!isChecked}
+              isLoading={mutation.isPending}
+              isDisabled={!isChecked || mutation.isPending}
             >
               {t("buttons.execute")}
             </Button>
