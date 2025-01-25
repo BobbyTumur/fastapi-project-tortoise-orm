@@ -1,11 +1,12 @@
 from typing import Any, Optional, List
+from datetime import datetime
 from fastapi import HTTPException
 from pydantic import BaseModel
 from tortoise.models import Model
 from tortoise.queryset import QuerySet
 
 from app.core.security import get_secret_hash
-from app.models.db_models import User, Service, AlertConfig, PublishConfig
+from app.models.db_models import User, Service, AlertConfig, PublishConfig, Log
 from app.models.user_models import UserCreate, UserUpdate
 from app.models.service_models import AlertConfigCreate, PublishConfigCreate
 
@@ -84,3 +85,23 @@ async def create_or_update_config(service: Service, config_data: AlertConfigCrea
         await instance.save()
     
     return instance
+
+async def add_log_entry(service_name: str, service_sub_name: str, log_data: dict):
+    # Fetch the Service object by name and sub_name
+    service = await Service.filter(name=service_name, sub_name=service_sub_name).first()
+
+    if not service:
+        raise ValueError(f"Service with name '{service_name}' and sub_name '{service_sub_name}' not found.")
+
+    # Create a Log entry associated with the fetched Service
+    log_entry = await Log.create(
+        service=service,
+        start_time=log_data.get("start_time"),
+        end_time=log_data.get("end_time"),
+        elapsed_time=log_data.get("elapsed_time"),
+        is_ok=log_data.get("is_ok", True),
+        screenshot=log_data.get("screenshot"),
+        content=log_data.get("content"),
+    )
+
+    return log_entry
