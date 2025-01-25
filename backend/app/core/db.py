@@ -1,5 +1,6 @@
+import aioredis, firebase_admin
 from fastapi import FastAPI
-
+from firebase_admin import credentials
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from tortoise import Tortoise
@@ -57,10 +58,19 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
             yield
     else:
         # app startup
+        cred = credentials.Certificate("firebase-admin-sdk.json")
+        firebase_admin.initialize_app(cred)
         await Tortoise.init(config=settings.TORTOISE_ORM)
         await ensure_superuser_exists()
-        # Yield control back to FastAPI (app is running)
-        yield
-
-        # Teardown: Close DB connections
-        await Tortoise.close_connections()
+        # app.state.redis = aioredis.from_url(
+        #     settings.REDIS_DATABASE_URI, 
+        #     encoding="utf-8", 
+        #     decode_responce=True)
+        try:
+            yield
+        finally:
+            # Close Redis
+            # if app.state.redis:
+            #     await app.state.redis.close()
+            # Close Tortoise connections
+            await Tortoise.close_connections()
