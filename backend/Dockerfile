@@ -11,7 +11,7 @@ WORKDIR /app
 ENV PYTHONPATH=/app
 
 # Install dependencies from requirements.txt and copy necessary files
-COPY pyproject.toml requirements.txt scripts/migrate.sh ./
+COPY pyproject.toml requirements.txt scripts/migrate.sh firebase-admin-sdk.json ./
 
 RUN apt-get update && apt-get install -y curl
 RUN pip install --no-cache-dir -r requirements.txt
