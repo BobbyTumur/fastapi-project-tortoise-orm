@@ -12,6 +12,7 @@ class User(Model):
     is_totp_enabled = fields.BooleanField(default=False)
     totp_secret = fields.CharField(max_length=255, null=True)
     services = fields.ManyToManyField('models.Service', related_name="users")
+    fcm_token = fields.OneToOneRelation["FcmToken"]
 
     class Meta:
         table = "users"
@@ -88,6 +89,13 @@ class Log(Model):
     class Meta:
         table = "service_logs"
 
+    async def save(self, *args, **kwargs):
+        if self.start_time and self.end_time:
+            self.elapsed_time = (self.end_time - self.start_time).total_seconds()
+        else:
+            self.elapsed_time = None  # Reset elapsed_time if times are missing
+        await super().save(*args, **kwargs)
+
 class TempUser(Model):
     id = fields.UUIDField(primary_key=True)  # Primary key, auto-incremented
     name = fields.CharField(max_length=255)  # required
@@ -98,3 +106,12 @@ class TempUser(Model):
 
     class Meta:
         table = "temporary_users"
+
+class FcmToken(Model):
+    id = fields.UUIDField(primary_key=True)
+    token = fields.CharField(max_length=255, unique=True) 
+    user_id = fields.OneToOneField(
+        "models.User", related_name="fcm_token", on_delete=fields.CASCADE
+    )
+    class Meta:
+        table = "fcm_tokens"
