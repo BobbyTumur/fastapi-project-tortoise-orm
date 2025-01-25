@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 # Set environment variables to prevent Python from writing .pyc files to disc
 # and to ensure the output is sent to the terminal in a non-buffered manner
