@@ -9,7 +9,6 @@ import {
   Heading,
   Flex,
   Spinner,
-  Highlight,
 } from "@chakra-ui/react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
@@ -144,12 +143,15 @@ function RouteComponent() {
               {checked ? (
                 "アップロード画面"
               ) : (
-                <Highlight
-                  query={currentUser?.company_name || ""}
-                  styles={{ px: "0.5", color: "green.600" }}
-                >
-                  {`${currentUser?.company_name || ""}さま`}
-                </Highlight>
+                // <Highlight
+                //   query={currentUser?.company_name || ""}
+                //   styles={{ px: "0.5", color: "green.600" }}
+                // >
+                //   {`${currentUser?.company_name || ""}さま`}
+                // </Highlight>
+                <Text color={"green.600"}>
+                  {currentUser?.company_name || ""} さま
+                </Text>
               )}
             </Heading>
             <Text m={6} display={checked ? "none" : "block"}>

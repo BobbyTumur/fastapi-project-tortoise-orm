@@ -14,7 +14,6 @@ import {
   Container,
   Flex,
   Heading,
-  Highlight,
   Link,
   Spinner,
   Text,
@@ -96,13 +95,14 @@ function RouteComponent() {
         </Flex>
       ) : (
         <>
-          <Heading>
-            <Highlight
+          <Heading color={"teal"}>
+            {/* <Highlight
               query={currentUser?.company_name || ""}
               styles={{ px: "0.5", color: "teal" }}
             >
               {`${currentUser?.company_name || ""}さま`}
-            </Highlight>
+            </Highlight> */}
+            {currentUser?.company_name || ""} さま
           </Heading>
           <Text m={6}>
             サイト管理者よりお客へ
