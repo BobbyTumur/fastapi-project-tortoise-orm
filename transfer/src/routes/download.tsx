@@ -124,7 +124,7 @@ function RouteComponent() {
               <Box padding="4" borderWidth="1px">
                 <VStack fontSize={"sm"}>
                   <Text color="red.500">
-                    ファイルのダウンロードが成功たら、
+                    ファイルのダウンロードが成功したら、
                     <br />
                     再びリンクを利用することができませんので、
                     <br />
